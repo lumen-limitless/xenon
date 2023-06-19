@@ -1,30 +1,20 @@
-import { Button } from '@/components/ui/button'
+import Hero from '@/components/Hero'
+import ProductGrid from '@/components/ProductGrid'
+import { Product } from '@/lib/types'
 
-async function getData() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-
-  if (!res.ok) {
-    throw new Error('Something went wrong')
-  }
-
-  return res.json()
+async function getProducts() {
+  const res = await fetch('https://fakestoreapi.com/products')
+  const json = await res.json()
+  return json as Product[]
 }
 
 export default async function Page() {
-  const data = await getData()
+  const products = await getProducts()
 
   return (
-    <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-12">
-      <object
-        data="/next.svg"
-        width={200}
-        height={48}
-        className="animate-pulse"
-      />
-      <Button variant={'default'}>Click Me!</Button>
-      <Button variant={'secondary'}>No, Click Me!</Button>
-      <Button variant={'outline'}>No, Click Me!</Button>
-      <Button variant={'destructive'}>Don&apos;t Click Me.</Button>
-    </div>
+    <>
+      <Hero />
+      <ProductGrid products={products} />
+    </>
   )
 }

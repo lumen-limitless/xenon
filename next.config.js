@@ -11,6 +11,7 @@ const nextConfig = {
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: undefined,
+    domains: ['fakestoreapi.com'],
   },
 
   webpack(config) {

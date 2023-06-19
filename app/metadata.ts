@@ -1,19 +1,21 @@
 import { Metadata } from 'next'
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || ''
-const APP_DESCRIPTION = process.env.NEXT_PUBLIC_APP_DESCRIPTION || ''
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || ''
+const APP_DESCRIPTION = 'lorem ipsum dolor sit amet'
+
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'Next.js'
+const TWITTER_CREATOR = process.env.NEXT_PUBLIC_TWITTER_CREATOR || '@nextjs'
+const TWITTER_SITE =
+  process.env.NEXT_PUBLIC_TWITTER_SITE || 'https://vercel.com'
 
 export const defaultMetadata: Metadata = {
   title: {
-    absolute: APP_NAME,
-    default: APP_NAME,
-    template: `%s | ${APP_NAME}`,
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  applicationName: APP_NAME,
+  applicationName: SITE_NAME,
   description: APP_DESCRIPTION,
   themeColor: '#FFFFFF',
-  metadataBase: new URL(APP_URL),
+  // metadataBase: new URL(APP_URL),
   generator: 'Next.js',
   keywords: [],
   icons: [
@@ -81,39 +83,29 @@ export const defaultMetadata: Metadata = {
 
   openGraph: {
     type: 'website',
-    url: APP_URL,
-    siteName: APP_NAME,
-    title: APP_NAME,
+    siteName: SITE_NAME,
+    title: SITE_NAME,
     description: APP_DESCRIPTION,
     locale: 'en_US',
   },
 
   twitter: {
-    title: APP_NAME,
-    site: APP_URL,
-    creator: '@lumenlimitless',
+    title: SITE_NAME,
+    site: TWITTER_SITE,
+    creator: TWITTER_CREATOR,
     description: APP_DESCRIPTION,
     card: 'summary_large_image',
   },
 
   appleWebApp: {
     statusBarStyle: 'black-translucent',
-    title: APP_NAME,
+    title: SITE_NAME,
     capable: true,
   },
 
   robots: {
-    index: false,
+    index: true,
     follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: false,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
 
   formatDetection: {

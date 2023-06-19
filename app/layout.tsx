@@ -4,6 +4,7 @@ import { defaultMetadata } from './metadata'
 import Header from '../components/Header'
 import Main from '../components/Main'
 import Footer from '../components/Footer'
+import { Toaster } from '@/components/ui/toaster'
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -28,6 +29,7 @@ export default function RootLayout({
         <a href="#main" className="sr-only" aria-label="skip">
           skip to content
         </a>
+        <Toaster />
 
         <Header />
 
