@@ -1,6 +1,7 @@
 'use client'
 
 import useCartStore from '@/lib/store'
+import {} from '@radix-ui/react-icons'
 import { ShoppingCartIcon } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn } from 'next-auth/react'
@@ -22,7 +23,7 @@ export const Nav: React.FC<NavProps> = ({ session }) => {
 
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <NavigationMenuList className="hidden md:flex">
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -61,7 +62,7 @@ export const Nav: React.FC<NavProps> = ({ session }) => {
         <div className="relative">
           <Link href="/cart">
             <Button variant={'ghost'}>
-              <ShoppingCartIcon />
+              <ShoppingCartIcon size={24} />
             </Button>
           </Link>
           {items.length > 0 && (

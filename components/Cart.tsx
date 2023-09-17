@@ -1,6 +1,10 @@
 'use client'
 
 import useCartStore from '@/lib/store'
+import { ArrowRightIcon, TrashIcon } from '@radix-ui/react-icons'
+import Image from 'next/image'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
 import {
   Table,
   TableBody,
@@ -10,10 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { ArrowRightIcon, Trash2Icon } from 'lucide-react'
-import Image from 'next/image'
 
 export default function Cart() {
   const { items, removeItem, updateQuantity } = useCartStore()
@@ -55,7 +55,7 @@ export default function Cart() {
                       removeItem(item.product.id)
                     }}
                   >
-                    <Trash2Icon className="h-4" />
+                    <TrashIcon className="h-4" />
                     Remove
                   </Button>
                 </div>

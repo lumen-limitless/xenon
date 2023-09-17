@@ -1,9 +1,9 @@
 'use client'
-import Image from 'next/image'
-import { Button } from './ui/button'
 import useCartStore from '@/lib/store'
-import { toast } from './ui/use-toast'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Button } from './ui/button'
+import { toast } from './ui/use-toast'
 
 export default function ProductDetails({ product }: { product: any }) {
   const { addItem } = useCartStore()

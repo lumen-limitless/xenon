@@ -1,13 +1,13 @@
 'use client'
 
-import Image from 'next/image'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
-import { Button } from './ui/button'
-import { truncateText } from '@/lib/utils'
 import useCartStore from '@/lib/store'
-import { useToast } from './ui/use-toast'
-import { useRouter } from 'next/navigation'
 import { Product } from '@/lib/types'
+import { truncateText } from '@/lib/utils'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { Button } from './ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
+import { useToast } from './ui/use-toast'
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCartStore()
