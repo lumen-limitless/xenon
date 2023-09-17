@@ -46,7 +46,7 @@ export default function ProductCard({ product }: { product: Product }) {
               addItem(product)
               toast({
                 title: 'Added to cart',
-                description: `${product.title} was added to your cart`,
+                description: `${product.title} was added to your cart.`,
                 action: (
                   <Button
                     className="w-32 whitespace-nowrap"

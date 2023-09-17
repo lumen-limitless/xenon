@@ -1,10 +1,12 @@
-import './globals.css'
+import { Toaster } from '@/components/ui/toaster'
+import { cn } from '@/lib/utils'
 import { Roboto } from 'next/font/google'
-import { defaultMetadata } from './metadata'
+import Footer from '../components/Footer'
 import Header from '../components/Header'
 import Main from '../components/Main'
-import Footer from '../components/Footer'
-import { Toaster } from '@/components/ui/toaster'
+import './globals.css'
+import { defaultMetadata } from './metadata'
+import { Providers } from './provider'
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -19,23 +21,33 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
 
-      <body className={`${roboto.className}`}>
-        <a href="#main" className="sr-only" aria-label="skip">
-          skip to content
-        </a>
-        <Toaster />
+      <body
+        style={{
+          textRendering: 'optimizeLegibility',
+        }}
+        className={cn(
+          roboto.className,
+          'flex min-h-screen touch-manipulation flex-col bg-background text-foreground antialiased',
+        )}
+      >
+        <Providers>
+          <a href="#main" className="sr-only" aria-label="skip">
+            skip to content
+          </a>
+          <Toaster />
 
-        <Header />
+          <Header />
 
-        <Main>{children}</Main>
+          <Main>{children}</Main>
 
-        <Footer />
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

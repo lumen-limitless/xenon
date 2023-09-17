@@ -1,5 +1,6 @@
-import Hero from '@/components/Hero'
+import Carousel from '@/components/Carousel'
 import ProductGrid from '@/components/ProductGrid'
+import { Section } from '@/components/ui/section'
 import { Product } from '@/lib/types'
 
 async function getProducts() {
@@ -13,7 +14,9 @@ export default async function Page() {
 
   return (
     <>
-      <Hero />
+      <Section className="h-[60vh] bg-muted">
+        <Carousel products={products} />
+      </Section>
       <ProductGrid products={products} />
     </>
   )
