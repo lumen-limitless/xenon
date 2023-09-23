@@ -5,7 +5,7 @@ import { Session } from 'next-auth'
 import { useEffect, useState } from 'react'
 import Nav from './Nav'
 
-const scrollThreshold = 500
+const scrollThreshold = 100
 
 type HeaderProps = {
   session: Session | null
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
     <header
       id="header"
       className={cn(
-        'sticky top-0 z-40 w-full border-b bg-background transition-all duration-500 ease-in-out',
+        'sticky top-0 z-40 w-full border-b bg-background transition-all duration-300 ease-in-out',
         visible ? 'translate-y-0' : '-translate-y-full',
       )}
     >

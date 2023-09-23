@@ -5,7 +5,7 @@ import { Section } from './ui/section'
 
 export default function ProductGrid({ products }: { products: Product[] }) {
   return (
-    <Section className="flex-col py-20">
+    <Section className="flex-col py-10">
       <Container>
         <h1 className="text-center text-3xl font-bold">Products</h1>
 

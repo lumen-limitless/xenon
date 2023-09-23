@@ -16,6 +16,7 @@ export default function ProductDetails({ product }: { product: any }) {
       <Container className="container flex flex-col items-center gap-20 lg:flex-row">
         <div className="flex h-full flex-1 items-center justify-center">
           <Image
+            className="h-auto w-auto"
             src={product.image}
             alt={product.title}
             width={400}

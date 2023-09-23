@@ -1,3 +1,4 @@
+import { Banner } from '@/components/Banner'
 import { Toaster } from '@/components/ui/toaster'
 import { authOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
@@ -45,9 +46,7 @@ export default async function RootLayout({
             skip to content
           </a>
           <Toaster />
-          <div className="flex w-full items-center justify-center bg-blue-800 py-2 text-white">
-            Free shipping on all orders over $50!
-          </div>
+          <Banner />
           <Header session={session} />
 
           <Main>{children}</Main>
