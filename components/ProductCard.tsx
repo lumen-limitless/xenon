@@ -1,8 +1,8 @@
 'use client'
 
 import useCartStore from '@/lib/store'
-import { Product } from '@/lib/types'
 import { truncateText } from '@/lib/utils'
+import { Product } from '@prisma/client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
@@ -19,15 +19,10 @@ export default function ProductCard({ product }: { product: Product }) {
         <CardHeader>
           <CardTitle>{product.title}</CardTitle>
         </CardHeader>
-        <CardContent
-          className="flex-grow cursor-pointer"
-          onClick={() => {
-            router.push(`/products/${product.id}`)
-          }}
-        >
+        <CardContent className="flex-grow">
           <div className="flex flex-col gap-5">
             <Image
-              className="mx-auto"
+              className="mx-auto h-auto w-auto"
               src={product.image}
               alt={product.title}
               quality={100}
@@ -35,11 +30,13 @@ export default function ProductCard({ product }: { product: Product }) {
               width={100}
             />
 
-            <p className="prose">{truncateText(product.description, 200)}</p>
+            <p className="prose break-words">
+              {truncateText(product.description, 200)}
+            </p>
             <span className="font-semibold">${product.price}</span>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex-col gap-3">
           <Button
             className="w-full"
             onClick={() => {
@@ -61,6 +58,15 @@ export default function ProductCard({ product }: { product: Product }) {
             }}
           >
             Add to cart
+          </Button>
+          <Button
+            variant={'secondary'}
+            className="w-full"
+            onClick={() => {
+              router.push(`/products/${product.id}`)
+            }}
+          >
+            View Details
           </Button>
         </CardFooter>
       </Card>

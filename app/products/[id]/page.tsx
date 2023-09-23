@@ -1,18 +1,23 @@
 import ProductDetails from '@/components/ProductDetails'
-import { Section } from '@/components/ui/section'
+import { prisma } from '@/lib/prisma'
+import { Product } from '@prisma/client'
 
-async function getProduct(id: string) {
-  const res = await fetch(`https://fakestoreapi.com/products/${id}`)
-  const json = await res.json()
-  return json
+async function getProduct(id: string): Promise<Product | null> {
+  const product = await prisma.product.findUnique({
+    where: {
+      id: id,
+    },
+  })
+
+  return product
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id)
 
-  return (
-    <Section>
-      <ProductDetails product={product} />
-    </Section>
-  )
+  if (product === null) {
+    return <div>Product not found</div>
+  }
+
+  return <ProductDetails product={product} />
 }

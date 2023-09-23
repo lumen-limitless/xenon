@@ -1,77 +1,115 @@
 'use client'
 
 import useCartStore from '@/lib/store'
-import {} from '@radix-ui/react-icons'
-import { ShoppingCartIcon } from 'lucide-react'
+
+import { ShoppingBag, User2 } from 'lucide-react'
 import { Session } from 'next-auth'
-import { signIn } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
+import LogoSVG from 'public/logo.svg'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu'
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from './ui/navigation-menu'
 
 type NavProps = {
   session: Session | null
 }
-export const Nav: React.FC<NavProps> = ({ session }) => {
+
+const Nav: React.FC<NavProps> = ({ session }) => {
   const { items } = useCartStore()
 
+  // This is a hack to prevent the cart icon from showing a badge on the server
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList className="hidden md:flex">
-        <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Home
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+    <div className="flex w-full items-center px-5 py-3 md:px-10">
+      <Link href="/">
+        <LogoSVG className="h-6 md:h-8" />
+      </Link>
+      <NavigationMenu className="ml-auto">
+        <NavigationMenuList>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant={'ghost'}>
+                <User2 />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {session ? (
+                <>
+                  {' '}
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>Orders</DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
 
-        <NavigationMenuItem>
-          <Link href="/orders" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Orders
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+                    <DropdownMenuItem onClick={() => signOut()}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              ) : (
+                <>
+                  {' '}
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => signIn()}>
+                      Log in
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )}
 
-        <NavigationMenuItem>
-          <Link href="/about" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              About
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-      <div className="flex gap-5">
-        {session ? (
-          <Button variant={'default'} onClick={() => signIn()}>
-            Logout
-          </Button>
-        ) : (
-          <Button variant={'default'} onClick={() => signIn()}>
-            Login
-          </Button>
-        )}
+              <DropdownMenuSeparator />
 
-        <div className="relative">
-          <Link href="/cart">
-            <Button variant={'ghost'}>
-              <ShoppingCartIcon size={24} />
-            </Button>
-          </Link>
-          {items.length > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
-              {items.length}
-            </span>
-          )}
-        </div>
-      </div>
-    </NavigationMenu>
+              <DropdownMenuItem>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://github.com/lumen-limitless/xenon"
+                >
+                  GitHub
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <NavigationMenuItem>
+            <div className="relative">
+              <Link href="/cart">
+                <Button variant={'ghost'}>
+                  <ShoppingBag />
+                </Button>
+              </Link>
+              {isClient && items.length > 0 && (
+                <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
+                  {items.length}
+                </div>
+              )}
+            </div>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
   )
 }
+
+export default Nav

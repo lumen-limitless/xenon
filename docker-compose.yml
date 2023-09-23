@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: explor3
+      POSTGRES_USER: default
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  app:
+    image: node:18
+    volumes:
+      - ./:/app
+      - ./prisma:/app/prisma
+    working_dir: /app
+    command: bash -c "npm install -g pnpm concurrently && pnpm install && concurrently \"pnpm dev\" \"pnpm prisma studio --port 5555\""
+    ports:
+      - '3000:3000'
+      - '5555:5555'
+    depends_on:
+      - db
+    environment:
+      POSTGRES_PRISMA_URL: postgres://default:mypassword@db:5432/explor3
+      POSTGRES_PRISMA_URL_NON_POOLING: postgres://default:mypassword@db:5432/explor3?connection_limit=1

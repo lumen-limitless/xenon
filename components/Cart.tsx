@@ -1,8 +1,11 @@
 'use client'
 
 import useCartStore from '@/lib/store'
-import { ArrowRightIcon, TrashIcon } from '@radix-ui/react-icons'
+import { formatPrice } from '@/lib/utils'
+import { ArrowRightIcon } from '@radix-ui/react-icons'
+import { Trash2 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
@@ -10,6 +13,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -34,8 +38,9 @@ export default function Cart() {
           {items.map((item) => (
             <TableRow key={item.product.id}>
               <TableCell>
-                <div className="flex flex-col gap-1">
+                <div className="flex w-32 gap-3">
                   <Input
+                    className="flex-grow"
                     type="number"
                     min={1}
                     value={item.quantity}
@@ -50,21 +55,25 @@ export default function Cart() {
                   />
                   <Button
                     variant={'destructive'}
-                    size={'sm'}
+                    size={'icon'}
                     onClick={() => {
                       removeItem(item.product.id)
                     }}
                   >
-                    <TrashIcon className="h-4" />
-                    Remove
+                    <Trash2 className="h-4" />
+                    <span className="sr-only">Remove</span>
                   </Button>
                 </div>
               </TableCell>
               <TableCell>
                 <Image
                   className="mx-auto"
-                  src={item.product.image}
-                  alt={item.product.title}
+                  src={
+                    item.product.image
+                      ? item.product.image
+                      : '/images/placeholder.png'
+                  }
+                  alt={item.product.title || ''}
                   height={50}
                   width={50}
                 />
@@ -72,18 +81,34 @@ export default function Cart() {
               <TableCell>{item.product.title}</TableCell>
               <TableCell className="text-right">
                 {' '}
-                {item.product.price * item.quantity}
+                {formatPrice(item.product.price * item.quantity)}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3} className="text-right">
+              Total
+            </TableCell>
+            <TableCell className="text-right">
+              {formatPrice(
+                items.reduce((acc, item) => {
+                  return acc + item.product.price * item.quantity
+                }, 0),
+              )}
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </Table>
       <div className="mx-auto my-5 flex w-full max-w-xl">
         {items.length > 0 && (
-          <Button className="w-full">
-            Proceed to checkout
-            <ArrowRightIcon />
-          </Button>
+          <Link href="/checkout" passHref className="w-full">
+            <Button className="w-full">
+              Proceed to checkout
+              <ArrowRightIcon />
+            </Button>
+          </Link>
         )}
       </div>
     </div>

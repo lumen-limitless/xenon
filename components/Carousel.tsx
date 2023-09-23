@@ -1,16 +1,14 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Product } from '@/lib/types'
-import Image from 'next/image'
-import ExampleIMG from '@/public/carousel-1.png'
 
-const images = [ExampleIMG]
+import { AnimatePresence, motion } from 'framer-motion'
+import Image, { StaticImageData } from 'next/image'
+import { useEffect, useState } from 'react'
+
 type CarouselProps = {
-  products: Product[]
+  slides: Array<StaticImageData | string>
 }
 // The main component
-const Carousel: React.FC<CarouselProps> = () => {
+const Carousel: React.FC<CarouselProps> = ({ slides }) => {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(0)
 
@@ -23,7 +21,7 @@ const Carousel: React.FC<CarouselProps> = () => {
   // Swipe handlers
   const paginate = (newDirection: number) => {
     setCurrent(
-      (current) => (current + newDirection + images.length) % images.length
+      (current) => (current + newDirection + slides.length) % slides.length,
     )
     setDirection(newDirection)
   }
@@ -65,7 +63,7 @@ const Carousel: React.FC<CarouselProps> = () => {
         }}
       >
         <Image
-          src={images[current]}
+          src={slides[current]}
           fill
           alt=""
           className="object-cover object-center"

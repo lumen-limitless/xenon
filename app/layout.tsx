@@ -1,5 +1,7 @@
 import { Toaster } from '@/components/ui/toaster'
+import { authOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
+import { getServerSession } from 'next-auth'
 import { Roboto } from 'next/font/google'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
@@ -15,11 +17,13 @@ const roboto = Roboto({
 
 export const metadata = defaultMetadata
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -41,8 +45,10 @@ export default function RootLayout({
             skip to content
           </a>
           <Toaster />
-
-          <Header />
+          <div className="flex w-full items-center justify-center bg-blue-800 py-2 text-white">
+            Free shipping on all orders over $50!
+          </div>
+          <Header session={session} />
 
           <Main>{children}</Main>
 

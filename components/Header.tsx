@@ -1,23 +1,47 @@
-import { authOptions } from '@/lib/auth'
-import { getServerSession } from 'next-auth'
-import Link from 'next/link'
-import { Nav } from './Nav'
+'use client'
 
-export default async function Header() {
-  const session = await getServerSession(authOptions)
+import { cn } from '@/lib/utils'
+import { Session } from 'next-auth'
+import { useEffect, useState } from 'react'
+import Nav from './Nav'
+
+const scrollThreshold = 500
+
+type HeaderProps = {
+  session: Session | null
+}
+
+const Header: React.FC<HeaderProps> = ({ session }) => {
+  const [prevScrollPos, setPrevScrollPos] = useState<number>(0)
+  const [visible, setVisible] = useState<boolean>(true)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY
+
+      setVisible(
+        prevScrollPos > currentScrollPos || currentScrollPos < scrollThreshold,
+      )
+      setPrevScrollPos(currentScrollPos)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [prevScrollPos])
+
   return (
-    <header id="header" className="sticky top-0 z-20 border-b border-secondary">
-      <div className="relative flex h-16 w-full items-center justify-between bg-background px-5">
-        <Link href="/">
-          <object data="logo.svg" className="h-10 cursor-pointer" />
-        </Link>
-
-        {/* <div className="mx-5 hidden w-full max-w-lg items-center gap-3 lg:flex">
-          <Search />
-          <Input placeholder="Search products..." />
-        </div> */}
-        <Nav session={session} />
-      </div>
+    <header
+      id="header"
+      className={cn(
+        'sticky top-0 z-40 w-full border-b bg-background transition-all duration-500 ease-in-out',
+        visible ? 'translate-y-0' : '-translate-y-full',
+      )}
+    >
+      <Nav session={session} />
     </header>
   )
 }
+
+export default Header

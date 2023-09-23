@@ -1,4 +1,4 @@
-import { APP_NAME, APP_DESCRIPTION, APP_URL } from '@/lib/constants'
+import { APP_DESCRIPTION, APP_NAME, APP_URL } from '@/lib/constants'
 import { Metadata } from 'next'
 
 export const defaultMetadata: Metadata = {
@@ -40,6 +40,7 @@ export const defaultMetadata: Metadata = {
   },
 
   formatDetection: {
+    date: false,
     email: false,
     address: false,
     telephone: false,
