@@ -1,5 +1,6 @@
 import Carousel from '@/components/Carousel'
 import ProductGrid from '@/components/ProductGrid'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import carousel1IMG from '@/public/carousel-1.png'
@@ -25,8 +26,10 @@ export default async function Page({}: PageProps) {
 
   return (
     <>
-      <Section className="h-[60vh] bg-muted">
+      <Section className="h-[25rem] bg-muted">
+
         <Carousel slides={[carousel1IMG, carousel1IMG, carousel1IMG]} />
+
       </Section>
       <ProductGrid products={products} />
     </>

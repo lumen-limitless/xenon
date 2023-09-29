@@ -1,6 +1,6 @@
 'use client'
 
-export default function Footer() {
+const Footer = () => {
   return (
     <footer
       id="footer"
@@ -12,3 +12,5 @@ export default function Footer() {
     </footer>
   )
 }
+
+export default Footer

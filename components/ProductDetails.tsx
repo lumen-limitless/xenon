@@ -6,8 +6,13 @@ import { Button } from './ui/button'
 import { Container } from './ui/container'
 import { Section } from './ui/section'
 import { toast } from './ui/use-toast'
+import { Product } from '@prisma/client'
 
-export default function ProductDetails({ product }: { product: any }) {
+type ProductDetailsProps = {
+  product: Product
+}
+
+const ProductDetails:React.FC<ProductDetailsProps> = ({ product }) =>  {
   const { addItem } = useCartStore()
   const router = useRouter()
 
@@ -58,3 +63,5 @@ export default function ProductDetails({ product }: { product: any }) {
     </Section>
   )
 }
+
+export default ProductDetails

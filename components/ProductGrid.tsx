@@ -3,7 +3,11 @@ import ProductCard from './ProductCard'
 import { Container } from './ui/container'
 import { Section } from './ui/section'
 
-export default function ProductGrid({ products }: { products: Product[] }) {
+type ProductGridProps = {
+  products: Product[]
+}
+
+const ProductGrid:React.FC<ProductGridProps> = ({ products }) => {
   return (
     <Section className="flex-col py-10">
       <Container>
@@ -23,3 +27,5 @@ export default function ProductGrid({ products }: { products: Product[] }) {
     </Section>
   )
 }
+
+export default ProductGrid

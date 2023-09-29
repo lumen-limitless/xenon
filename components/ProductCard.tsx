@@ -9,7 +9,11 @@ import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { useToast } from './ui/use-toast'
 
-export default function ProductCard({ product }: { product: Product }) {
+type ProductCardProps = {
+  product: Product
+}
+
+const ProductCard:React.FC<ProductCardProps> = ({ product }) => {
   const { addItem } = useCartStore()
   const { toast } = useToast()
   const router = useRouter()
@@ -73,3 +77,5 @@ export default function ProductCard({ product }: { product: Product }) {
     </>
   )
 }
+
+export default ProductCard
