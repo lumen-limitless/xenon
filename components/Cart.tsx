@@ -24,7 +24,9 @@ const Cart = () => {
   return (
     <div className="container mx-auto flex flex-col">
       <Table>
-        {items.length === 0 && <TableCaption>Your cart is empty</TableCaption>}
+        {items.length === 0 && (
+          <TableCaption>Your shopping bag is empty.</TableCaption>
+        )}
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Quantity</TableHead>
@@ -84,20 +86,22 @@ const Cart = () => {
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3} className="text-right">
-              Total
-            </TableCell>
-            <TableCell className="text-right">
-              {formatPrice(
-                items.reduce((acc, item) => {
-                  return acc + item.product.price * item.quantity
-                }, 0),
-              )}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
+        {items && items.length > 0 && (
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3} className="text-right">
+                Total
+              </TableCell>
+              <TableCell className="text-right">
+                {formatPrice(
+                  items.reduce((acc, item) => {
+                    return acc + item.product.price * item.quantity
+                  }, 0),
+                )}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        )}
       </Table>
       <div className="mx-auto my-5 flex w-full max-w-xl">
         {items.length > 0 && (

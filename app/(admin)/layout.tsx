@@ -1,17 +1,17 @@
 import { authOptions } from '@/lib/auth'
 import { type CustomSession } from '@/types'
 import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const session = (await getServerSession(authOptions)) as CustomSession
+  const session: CustomSession | null = await getServerSession(authOptions)
 
-  if (session === null) redirect('/')
-  if (session.user.role !== 'ADMIN') redirect('/')
+  if (session === null) notFound()
+  if (session.user.role !== 'ADMIN') notFound()
 
   return <>{children}</>
 }

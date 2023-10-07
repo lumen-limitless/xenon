@@ -1,13 +1,14 @@
 import { Banner } from '@/components/Banner'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import Main from '@/components/Main'
 import { Toaster } from '@/components/ui/toaster'
 import { authOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import { type CustomSession } from '@/types'
 import { getServerSession } from 'next-auth'
 import { Roboto } from 'next/font/google'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import Main from '../components/Main'
+import Analytics from './analytics'
 import './globals.css'
 import { defaultMetadata } from './metadata'
 import { Providers } from './providers'
@@ -39,7 +40,7 @@ export default async function RootLayout({
         }}
         className={cn(
           roboto.className,
-          'flex min-h-screen touch-manipulation flex-col bg-background text-foreground antialiased',
+          'flex min-h-screen touch-manipulation flex-col antialiased',
         )}
       >
         <Providers>
@@ -54,6 +55,7 @@ export default async function RootLayout({
 
           <Footer />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

@@ -64,17 +64,19 @@ const Nav: React.FC<NavProps> = ({ session }) => {
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
                   {session.user.role === 'ADMIN' && (
                     <>
+                      <DropdownMenuSeparator />
                       <DropdownMenuLabel>Administration</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem>
-                          <Link href="/admin/add-product">Add Product</Link>
+                          <Link href="/add-product">Add Product</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Link href="/admin/products">Order Fulfillment</Link>
+                          <Link href="/order-fulfillment">
+                            Order Fulfillment
+                          </Link>
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </>

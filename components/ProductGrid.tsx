@@ -9,7 +9,8 @@ type ProductGridProps = {
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
-    <Section className="flex-col py-10">
+    <Section className="flex-col py-10 md:flex-row">
+      <nav className="sticky top-0 h-10 bg-background"> filter&sort</nav>
       <Container>
         <h1 className="text-center text-3xl font-bold">Products</h1>
 
@@ -17,7 +18,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
           {products ? (
             products.map((product) => (
               <div
-                className="col-span-12 flex place-content-center sm:col-span-6 lg:col-span-3"
+                className="col-span-12 flex place-content-center md:col-span-6 lg:col-span-3"
                 key={product.id}
               >
                 <ProductCard product={product} />

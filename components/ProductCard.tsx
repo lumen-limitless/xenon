@@ -11,13 +11,16 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { useToast } from './ui/use-toast'
 
 type ProductCardProps = {
-  product: Product
+  product?: Product
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addItem } = useCartStore()
   const { toast } = useToast()
   const router = useRouter()
+
+  if (!product) return null
+
   return (
     <>
       <Card className="flex w-80 flex-col">
@@ -27,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <CardContent className="flex-grow">
           <div className="flex flex-col gap-5">
             <Image
-              className="mx-auto h-auto w-auto"
+              className="mx-auto h-auto max-h-32 w-auto"
               src={product.image}
               alt={product.title}
               quality={100}
