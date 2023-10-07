@@ -7,13 +7,13 @@ import { authOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import { type CustomSession } from '@/types'
 import { getServerSession } from 'next-auth'
-import { Roboto } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import Analytics from './analytics'
 import './globals.css'
 import { defaultMetadata } from './metadata'
 import { Providers } from './providers'
 
-const roboto = Roboto({
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
 })
@@ -39,7 +39,7 @@ export default async function RootLayout({
           textRendering: 'optimizeLegibility',
         }}
         className={cn(
-          roboto.className,
+          inter.className,
           'flex min-h-screen touch-manipulation flex-col antialiased',
         )}
       >

@@ -34,8 +34,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           />
         </div>
       </CardContent>
-      <CardFooter className="flex-col gap-3">
-        <h1 className="text-lg font-bold">{product.title}</h1>
+      <CardFooter className="flex-col gap-2">
+        <h2 className="text-left">{product.title}</h2>
         <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
 
         <Button
