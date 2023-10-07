@@ -10,7 +10,6 @@ type ProductGridProps = {
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <Section className="flex-col py-10 md:flex-row">
-      <nav className="sticky top-0 h-10 bg-background"> filter&sort</nav>
       <Container>
         <h1 className="text-center text-3xl font-bold">Products</h1>
 

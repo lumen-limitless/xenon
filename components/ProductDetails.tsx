@@ -20,7 +20,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   return (
     <Section className="py-10">
-      <Container className="container flex flex-col items-center gap-20 lg:flex-row">
+      <Container className="flex flex-col items-center gap-20 lg:flex-row">
         <div className="flex h-full flex-1 items-center justify-center">
           <Image
             className="h-auto w-auto"
