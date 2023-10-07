@@ -2,6 +2,7 @@ import { Banner } from '@/components/Banner'
 import { Toaster } from '@/components/ui/toaster'
 import { authOptions } from '@/lib/auth'
 import { cn } from '@/lib/utils'
+import { type CustomSession } from '@/types'
 import { getServerSession } from 'next-auth'
 import { Roboto } from 'next/font/google'
 import Footer from '../components/Footer'
@@ -9,7 +10,7 @@ import Header from '../components/Header'
 import Main from '../components/Main'
 import './globals.css'
 import { defaultMetadata } from './metadata'
-import { Providers } from './provider'
+import { Providers } from './providers'
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -23,7 +24,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authOptions)
+  const session: CustomSession | null = await getServerSession(authOptions)
 
   return (
     <html lang="en" className="scroll-smooth">

@@ -1,9 +1,8 @@
 'use client'
 
-import useCartStore from '@/lib/store'
-
+import { useCartStore } from '@/lib/store'
+import { type CustomSession } from '@/types'
 import { ShoppingBag, User2 } from 'lucide-react'
-import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import LogoSVG from 'public/logo.svg'
@@ -25,7 +24,7 @@ import {
 } from './ui/navigation-menu'
 
 type NavProps = {
-  session: Session | null
+  session: CustomSession | null
 }
 
 const Nav: React.FC<NavProps> = ({ session }) => {
@@ -65,10 +64,24 @@ const Nav: React.FC<NavProps> = ({ session }) => {
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  {session.user.role === 'ADMIN' && (
+                    <>
+                      <DropdownMenuLabel>Administration</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          <Link href="/admin/add-product">Add Product</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link href="/admin/products">Order Fulfillment</Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </>
+                  )}
                 </>
               ) : (
                 <>
-                  {' '}
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => signIn()}>
                       Log in

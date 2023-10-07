@@ -1,11 +1,10 @@
 'use client'
 
-import useCartStore from '@/lib/store'
+import { useCartStore } from '@/lib/store'
 import { formatPrice } from '@/lib/utils'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
@@ -19,7 +18,7 @@ import {
   TableRow,
 } from './ui/table'
 
-export default function Cart() {
+const Cart = () => {
   const { items, removeItem, updateQuantity } = useCartStore()
 
   return (
@@ -80,7 +79,6 @@ export default function Cart() {
               </TableCell>
               <TableCell>{item.product.title}</TableCell>
               <TableCell className="text-right">
-                {' '}
                 {formatPrice(item.product.price * item.quantity)}
               </TableCell>
             </TableRow>
@@ -103,14 +101,21 @@ export default function Cart() {
       </Table>
       <div className="mx-auto my-5 flex w-full max-w-xl">
         {items.length > 0 && (
-          <Link href="/checkout" passHref className="w-full">
+          <a
+            href="https://checkout.stripe.dev/preview"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full"
+          >
             <Button className="w-full">
               Proceed to checkout
               <ArrowRightIcon />
             </Button>
-          </Link>
+          </a>
         )}
       </div>
     </div>
   )
 }
+
+export default Cart

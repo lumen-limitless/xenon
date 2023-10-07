@@ -34,7 +34,7 @@ export default async function main() {
         description: product.description,
         category: product.category,
         image: product.image,
-        price: product.price,
+        price: parseInt((product.price * 100).toFixed(0)),
       },
     })
   }

@@ -11,7 +11,13 @@ const nextConfig = {
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: undefined,
-    domains: ['fakestoreapi.com'],
+    domains: ['fakestoreapi.com', 'res.cloudinary.com'],
+  },
+  experimental: {
+    serverActions: true,
+    logging: {
+      level: 'verbose',
+    },
   },
 
   webpack(config) {

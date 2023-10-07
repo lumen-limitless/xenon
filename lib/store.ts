@@ -3,7 +3,7 @@ import { Product } from '@prisma/client'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-const useCartStore = create<CartState>()(
+export const useCartStore = create<CartState>()(
   persist(
     devtools((set) => ({
       items: [],
@@ -53,5 +53,3 @@ const useCartStore = create<CartState>()(
     },
   ),
 )
-
-export default useCartStore

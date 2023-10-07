@@ -1,9 +1,9 @@
 import Carousel from '@/components/Carousel'
 import ProductGrid from '@/components/ProductGrid'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import carousel1IMG from '@/public/carousel-1.png'
+import carousel2IMG from '@/public/carousel-2.jpeg'
 import { Product } from '@prisma/client'
 
 async function getProducts(): Promise<Array<Product>> {
@@ -27,9 +27,7 @@ export default async function Page({}: PageProps) {
   return (
     <>
       <Section className="h-[25rem] bg-muted">
-
-        <Carousel slides={[carousel1IMG, carousel1IMG, carousel1IMG]} />
-
+        <Carousel slides={[carousel1IMG, carousel2IMG]} />
       </Section>
       <ProductGrid products={products} />
     </>

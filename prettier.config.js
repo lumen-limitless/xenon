@@ -1,4 +1,4 @@
 // prettier.config.js
 module.exports = {
-    tailwindFunctions: ['clsx', 'cn', 'cva'],
-  }
+  tailwindFunctions: ['clsx', 'cn', 'cva'],
+}

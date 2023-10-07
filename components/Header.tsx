@@ -1,14 +1,14 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Session } from 'next-auth'
+import { type CustomSession } from '@/types'
 import { useEffect, useState } from 'react'
 import Nav from './Nav'
 
 const scrollThreshold = 100
 
 type HeaderProps = {
-  session: Session | null
+  session: CustomSession | null
 }
 
 const Header: React.FC<HeaderProps> = ({ session }) => {

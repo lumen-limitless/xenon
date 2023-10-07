@@ -1,10 +1,11 @@
 'use client'
 
-import useCartStore from '@/lib/store'
-import { truncateText } from '@/lib/utils'
+import { useCartStore } from '@/lib/store'
+import { formatPrice, truncateText } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { useToast } from './ui/use-toast'
@@ -13,7 +14,7 @@ type ProductCardProps = {
   product: Product
 }
 
-const ProductCard:React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addItem } = useCartStore()
   const { toast } = useToast()
   const router = useRouter()
@@ -33,11 +34,11 @@ const ProductCard:React.FC<ProductCardProps> = ({ product }) => {
               height={100}
               width={100}
             />
+            <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
 
             <p className="prose break-words">
               {truncateText(product.description, 200)}
             </p>
-            <span className="font-semibold">${product.price}</span>
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-3">

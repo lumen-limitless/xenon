@@ -4,24 +4,30 @@ import { Container } from './ui/container'
 import { Section } from './ui/section'
 
 type ProductGridProps = {
-  products: Product[]
+  products?: Product[]
 }
 
-const ProductGrid:React.FC<ProductGridProps> = ({ products }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <Section className="flex-col py-10">
       <Container>
         <h1 className="text-center text-3xl font-bold">Products</h1>
 
         <div className="container mt-5 grid w-full grid-cols-12 gap-5">
-          {products?.map((product) => (
-            <div
-              className="col-span-12 flex justify-center sm:col-span-6 lg:col-span-3"
-              key={product.id}
-            >
-              <ProductCard product={product} />
+          {products ? (
+            products.map((product) => (
+              <div
+                className="col-span-12 flex place-content-center sm:col-span-6 lg:col-span-3"
+                key={product.id}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))
+          ) : (
+            <div className="col-span-12">
+              <p>No products found.</p>
             </div>
-          ))}
+          )}
         </div>
       </Container>
     </Section>
