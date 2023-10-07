@@ -26,11 +26,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardContent className="flex-grow">
         <div className="relative h-48">
           <Image
-            className="mx-auto h-auto w-auto bg-center object-contain"
+            className="object-contain object-center"
             src={product.image}
             alt={product.title}
-            quality={100}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       </CardContent>

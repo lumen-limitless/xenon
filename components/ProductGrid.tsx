@@ -11,8 +11,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <Section className="flex-col py-10 md:flex-row">
       <Container>
-        <h1 className="text-center text-3xl font-bold">Products</h1>
-
         <div className="container mt-5 grid w-full grid-cols-12 gap-5">
           {products ? (
             products.map((product) => (
