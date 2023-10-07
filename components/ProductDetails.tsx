@@ -35,7 +35,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <div className="flex-1 space-y-5">
           <h1 className="text-3xl font-bold">Product {product.title}</h1>
           <Badge className="text-lg">{formatPrice(product.price)}</Badge>
-          <p className="prose text-2xl">{product.description}</p>
+          <p className="prose break-words text-xl">{product.description}</p>
 
           <div className="w-full">
             <Button
