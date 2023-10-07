@@ -26,4 +26,4 @@ services:
       - db
     environment:
       POSTGRES_PRISMA_URL: postgres://default:mypassword@db:5432/explor3
-      POSTGRES_PRISMA_URL_NON_POOLING: postgres://default:mypassword@db:5432/explor3?connection_limit=1
+      POSTGRES_URL_NON_POOLING: postgres://default:mypassword@db:5432/explor3?connection_limit=1
