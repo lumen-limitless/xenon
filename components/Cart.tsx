@@ -22,7 +22,7 @@ const Cart = () => {
   const { items, removeItem, updateQuantity } = useCartStore()
 
   return (
-    <div className="container mx-auto flex flex-col">
+    <>
       <Table>
         {items.length === 0 && (
           <TableCaption>Your shopping bag is empty.</TableCaption>
@@ -118,7 +118,7 @@ const Cart = () => {
           </a>
         )}
       </div>
-    </div>
+    </>
   )
 }
 

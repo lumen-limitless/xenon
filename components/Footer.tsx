@@ -4,11 +4,14 @@ const Footer = () => {
   return (
     <footer
       id="footer"
-      className="flex h-16 items-center border-t border-secondary px-5"
+      className="flex h-16 items-center border-t border-secondary"
     >
-      <p className="text-sm">
-        &copy; {new Date().getFullYear()} Lumen Limitless. All rights reserved.
-      </p>
+      <div className="container">
+        <p className="text-center text-sm">
+          &copy; {new Date().getFullYear()} Lumen Limitless. All rights
+          reserved.
+        </p>
+      </div>
     </footer>
   )
 }

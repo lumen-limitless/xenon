@@ -1,16 +1,20 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import Image, { StaticImageData } from 'next/image'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type CarouselProps = {
-  slides: Array<StaticImageData | string>
+  children?: React.ReactNode
+  autoScroll?: boolean
+  controls?: boolean
 }
+
 // The main component
-const Carousel: React.FC<CarouselProps> = ({ slides }) => {
+const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(0)
+
+  const slides = React.Children.toArray(children)
 
   // Thresholds
   const swipeConfidenceThreshold = 10000
@@ -27,6 +31,7 @@ const Carousel: React.FC<CarouselProps> = ({ slides }) => {
   }
 
   useEffect(() => {
+    if (!autoScroll) return
     const timer = setInterval(() => {
       paginate(1) // go to the next slide
     }, 8000)
@@ -34,7 +39,7 @@ const Carousel: React.FC<CarouselProps> = ({ slides }) => {
     return () => {
       clearInterval(timer) // clear the interval when the component is unmounted
     }
-  }, [current, direction]) // re-run the effect when the `current` or `direction` state changes
+  }, [current, direction, autoScroll]) // re-run the effect when the `current` or `direction` state changes
 
   return (
     <AnimatePresence initial={false} custom={direction} mode="wait">
@@ -42,11 +47,11 @@ const Carousel: React.FC<CarouselProps> = ({ slides }) => {
         className="relative h-full w-full"
         key={current}
         custom={direction}
-        initial={{ opacity: 0, x: -12 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 12 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         transition={{
-          x: { type: 'spring', stiffness: 300, damping: 30 },
+          ease: 'easeInOut',
           duration: 0.5,
         }}
         drag="x"
@@ -62,14 +67,8 @@ const Carousel: React.FC<CarouselProps> = ({ slides }) => {
           }
         }}
       >
-        <Image
-          src={slides[current]}
-          fill
-          alt=""
-          className="object-cover object-center"
-          quality={100}
-          placeholder="blur"
-        />
+        {React.Children.toArray(children)[current]}
+        <div className="absolute bottom-0"></div>
       </motion.div>
     </AnimatePresence>
   )

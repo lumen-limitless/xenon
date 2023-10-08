@@ -37,9 +37,9 @@ const Nav: React.FC<NavProps> = ({ session }) => {
   }, [])
 
   return (
-    <div className="flex w-full items-center px-5 py-3 md:px-10">
+    <div className="container flex h-16 w-full items-center">
       <Link href="/">
-        <LogoSVG className="h-6 md:h-8" />
+        <LogoSVG className="h-6" />
       </Link>
       <NavigationMenu className="ml-auto">
         <NavigationMenuList>
@@ -70,10 +70,10 @@ const Nav: React.FC<NavProps> = ({ session }) => {
                       <DropdownMenuLabel>Administration</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/add-product">Add Product</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/order-fulfillment">
                             Order Fulfillment
                           </Link>
@@ -94,7 +94,7 @@ const Nav: React.FC<NavProps> = ({ session }) => {
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <a
                   target="_blank"
                   rel="noreferrer"

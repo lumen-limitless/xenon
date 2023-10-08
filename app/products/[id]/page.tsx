@@ -1,4 +1,5 @@
 import ProductDetails from '@/components/ProductDetails'
+import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { Product } from '@prisma/client'
 import { Metadata, ResolvingMetadata } from 'next'
@@ -38,5 +39,11 @@ export default async function Page({ params }: PageProps) {
 
   if (product === null) notFound()
 
-  return <ProductDetails product={product} />
+  return (
+    <Section className="py-20">
+      <div className="container">
+        <ProductDetails product={product} />
+      </div>
+    </Section>
+  )
 }

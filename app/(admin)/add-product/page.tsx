@@ -1,4 +1,3 @@
-import { Container } from '@/components/ui/container'
 import { Section } from '@/components/ui/section'
 import { AddProductForm } from './AddProductForm'
 
@@ -11,15 +10,15 @@ export const metadata = {
   title: 'Add Product',
 }
 
-export default async function Page({}: PageProps) {
+export default function Page({}: PageProps) {
   return (
     <>
       <Section className="py-20">
-        <Container>
+        <div className="container">
           <h1 className="text-3xl font-bold">Add New Product</h1>
 
           <AddProductForm />
-        </Container>
+        </div>
       </Section>
     </>
   )

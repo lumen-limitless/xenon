@@ -6,7 +6,7 @@ describe('ProductCard', () => {
   const product: Product = {
     id: '1',
     title: 'Product 1',
-    price: 10.99,
+    price: 1099,
     image: 'https://example.com/product1.jpg',
     description: 'Product 1 description',
     createdAt: new Date(),
