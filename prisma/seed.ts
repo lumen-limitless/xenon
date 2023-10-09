@@ -25,6 +25,16 @@ export default async function main() {
 
   const products: MockProduct[] = await res.json()
 
+  await prisma.category.deleteMany()
+
+  const category = await prisma.category.create({
+    data: {
+      title: 'All',
+      description: 'All products',
+      image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+    },
+  })
+
   await prisma.product.deleteMany()
 
   for (const product of products) {
@@ -32,7 +42,11 @@ export default async function main() {
       data: {
         title: product.title,
         description: product.description,
-        category: product.category,
+        categories: {
+          connect: {
+            id: category.id,
+          },
+        },
         image: product.image,
         price: parseInt((product.price * 100).toFixed(0)),
       },

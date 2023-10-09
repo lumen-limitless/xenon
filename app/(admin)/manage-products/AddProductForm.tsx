@@ -1,20 +1,26 @@
 'use client'
 
 import { SubmitButton } from '@/components/SubmitButton'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { addProductAction } from '@/lib/actions'
+import { Category } from '@prisma/client'
 import { useEffect } from 'react'
 import { experimental_useFormState as useFormState } from 'react-dom'
 
-type AddProductFormProps = {}
+type AddProductFormProps = {
+  categories: Category[]
+}
 
 const initialState = {
   message: null,
 }
 
-export const AddProductForm: React.FC<AddProductFormProps> = ({}) => {
+export const AddProductForm: React.FC<AddProductFormProps> = ({
+  categories,
+}) => {
   const [state, formAction] = useFormState<
     { message: string | null },
     FormData
@@ -66,6 +72,24 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({}) => {
               required
             />
           </Label>
+        </fieldset>
+
+        <fieldset className="my-5">
+          <p className="mb-3">Select Categories</p>
+          {categories.map((category) => (
+            <Label
+              htmlFor="category"
+              key={category.id}
+              className="flex items-center gap-3"
+            >
+              <Checkbox
+                name="category"
+                value={category.id}
+                defaultChecked={category.title === 'All'}
+              />
+              {category.title}
+            </Label>
+          ))}
         </fieldset>
 
         <SubmitButton type="submit" className="w-72">

@@ -11,13 +11,7 @@ type PageProps = {
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        category: {
-          contains: category,
-        },
-      },
-    })
+    const products = await prisma.product.findMany()
     return products ?? []
   } catch (error) {
     console.error(error)

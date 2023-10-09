@@ -2,11 +2,12 @@
 
 import { useCartStore } from '@/lib/store'
 import { type CustomSession } from '@/types'
-import { ShoppingBag, User2 } from 'lucide-react'
+import { User2 } from 'lucide-react'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import LogoSVG from 'public/logo.svg'
 import { useEffect, useState } from 'react'
+import Cart from './Cart'
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -71,7 +72,7 @@ const Nav: React.FC<NavProps> = ({ session }) => {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
-                          <Link href="/add-product">Add Product</Link>
+                          <Link href="/manage-products">Manage Products</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link href="/order-fulfillment">
@@ -85,7 +86,7 @@ const Nav: React.FC<NavProps> = ({ session }) => {
               ) : (
                 <>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => signIn()}>
+                    <DropdownMenuItem onClick={() => signIn('google')}>
                       Log in
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -109,13 +110,9 @@ const Nav: React.FC<NavProps> = ({ session }) => {
 
           <NavigationMenuItem>
             <div className="relative">
-              <Link href="/cart">
-                <Button variant={'ghost'}>
-                  <ShoppingBag />
-                </Button>
-              </Link>
+              <Cart />
               {isClient && items.length > 0 && (
-                <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
+                <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
                   {items.length}
                 </div>
               )}

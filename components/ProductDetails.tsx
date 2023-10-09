@@ -42,16 +42,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               toast({
                 title: 'Added to bag',
                 description: `${product.title} was added to your shopping bag`,
-                action: (
-                  <Button
-                    className="w-32 whitespace-nowrap"
-                    onClick={() => {
-                      router.push('/cart')
-                    }}
-                  >
-                    View Bag
-                  </Button>
-                ),
               })
             }}
           >

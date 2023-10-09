@@ -43,22 +43,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           onClick={() => {
             addItem(product)
             toast({
-              title: 'Added to cart',
-              description: `${product.title} was added to your cart.`,
-              action: (
-                <Button
-                  className="w-32 whitespace-nowrap"
-                  onClick={() => {
-                    router.push('/cart')
-                  }}
-                >
-                  View Cart
-                </Button>
-              ),
+              title: 'Added to bag',
+              description: `${product.title} added to shopping bag.`,
             })
           }}
         >
-          Add to cart
+          Add to bag
         </Button>
         <Button
           variant={'secondary'}

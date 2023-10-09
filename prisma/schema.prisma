@@ -11,11 +11,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -43,15 +38,21 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
   id            String    @id @default(cuid())
+  role          Role      @default(USER)
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  role          Role      @default(USER)
+  Cart          Cart?
   Order         Order[]
 }
 
@@ -64,16 +65,47 @@ model VerificationToken {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String
-  category    String
   price       Int
   image       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Order       Order?   @relation(fields: [orderId], references: [id])
-  orderId     String?
+  categories  Category[] @relation("ProductCategory")
+  items       Item[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  title       String    @unique
+  description String
+  image       String
+  products    Product[] @relation("ProductCategory")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Cart {
+  id        String   @id @default(cuid())
+  items     Item[]
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  quantity  Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  cart      Cart?    @relation(fields: [cartId], references: [id])
+  cartId    String?
+  order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum OrderStatus {
@@ -85,11 +117,10 @@ enum OrderStatus {
 model Order {
   id        String      @id @default(cuid())
   userId    String
-  productId String
-  quantity  Int
+  status    OrderStatus @default(PENDING)
+  total     Int
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     Item[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products  Product[]
-  status    OrderStatus @default(PENDING)
 }
