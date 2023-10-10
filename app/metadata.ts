@@ -18,6 +18,7 @@ export const defaultMetadata: Metadata = {
     siteName: APP_NAME,
     title: APP_NAME,
     description: APP_DESCRIPTION,
+    url: new URL(APP_URL),
     locale: 'en_US',
   },
 
