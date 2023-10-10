@@ -52,8 +52,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Cart          Cart?
-  Order         Order[]
+  cart          Cart?
 }
 
 model VerificationToken {
@@ -71,7 +70,7 @@ model Product {
   price       Int
   image       String
   categories  Category[] @relation("ProductCategory")
-  items       Item[]
+  items       CartItem[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -87,40 +86,40 @@ model Category {
 }
 
 model Cart {
-  id        String   @id @default(cuid())
-  items     Item[]
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String     @id @default(cuid())
+  items     CartItem[]
+  user      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?    @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
-model Item {
+model CartItem {
   id        String   @id @default(cuid())
   quantity  Int
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
-  cart      Cart?    @relation(fields: [cartId], references: [id])
-  cartId    String?
-  order     Order?   @relation(fields: [orderId], references: [id])
-  orderId   String?
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([productId, cartId])
 }
 
-enum OrderStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
-}
+// enum OrderStatus {
+//   PENDING
+//   COMPLETED
+//   CANCELLED
+// }
 
-model Order {
-  id        String      @id @default(cuid())
-  userId    String
-  status    OrderStatus @default(PENDING)
-  total     Int
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items     Item[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-}
+// model Order {
+//   id        String      @id @default(cuid())
+//   userId    String
+//   status    OrderStatus @default(PENDING)
+//   total     Int
+//   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   items     Item[]
+//   createdAt DateTime    @default(now())
+//   updatedAt DateTime    @updatedAt
+// }

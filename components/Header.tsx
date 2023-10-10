@@ -1,17 +1,19 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { type CustomSession } from '@/types'
+import { type CartInfo } from '@types'
+import { type Session } from 'next-auth'
 import { useEffect, useState } from 'react'
-import Nav from './Nav'
+import { Nav } from './Nav'
 
 const scrollThreshold = 100
 
 type HeaderProps = {
-  session: CustomSession | null
+  session: Session | null
+  cart: CartInfo | null
 }
 
-const Header: React.FC<HeaderProps> = ({ session }) => {
+const Header: React.FC<HeaderProps> = ({ session, cart }) => {
   const [prevScrollPos, setPrevScrollPos] = useState<number>(0)
   const [visible, setVisible] = useState<boolean>(true)
   useEffect(() => {
@@ -39,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
         visible ? 'translate-y-0' : '-translate-y-full',
       )}
     >
-      <Nav session={session} />
+      <Nav session={session} cart={cart} />
     </header>
   )
 }

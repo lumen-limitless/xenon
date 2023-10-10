@@ -17,6 +17,8 @@ services:
     volumes:
       - ./:/app
       - ./prisma:/app/prisma
+      - ./.pnpm-store:/app/.pnpm-store
+      - ./.swc:/app/.swc
     working_dir: /app
     command: bash -c "npm install -g pnpm concurrently && pnpm install && concurrently \"pnpm dev\" \"pnpm prisma studio --port 5555\""
     ports:

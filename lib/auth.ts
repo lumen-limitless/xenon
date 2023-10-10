@@ -1,8 +1,8 @@
-import { type CustomSession } from '@/types'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { type User } from '@prisma/client'
 import { type AuthOptions } from 'next-auth'
+import { Adapter } from 'next-auth/adapters'
 import GoogleProvider from 'next-auth/providers/google'
+import { mergeAnonymousCartWithUserCart } from './cart'
 import { prisma } from './prisma'
 
 export const authOptions: AuthOptions = {
@@ -13,12 +13,17 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    session(params) {
-      const session = params.session as CustomSession
-      session.user = params.user as User
+    session({ session, user }) {
+      session.user.id = user.id
+      session.user.role = user.role
 
       return session
     },
   },
-  adapter: PrismaAdapter(prisma),
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      await mergeAnonymousCartWithUserCart(user.id)
+    },
+  },
+  adapter: PrismaAdapter(prisma) as Adapter,
 }

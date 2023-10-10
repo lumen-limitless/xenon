@@ -4,8 +4,8 @@ import Header from '@/components/Header'
 import Main from '@/components/Main'
 import { Toaster } from '@/components/ui/toaster'
 import { authOptions } from '@/lib/auth'
+import { getCart } from '@/lib/cart'
 import { cn } from '@/lib/utils'
-import { type CustomSession } from '@/types'
 import { getServerSession } from 'next-auth'
 import { Inter } from 'next/font/google'
 import Analytics from './analytics'
@@ -25,7 +25,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session: CustomSession | null = await getServerSession(authOptions)
+  const [session, cart] = await Promise.all([
+    getServerSession(authOptions),
+    getCart(),
+  ])
 
   return (
     <html lang="en" className="scroll-smooth">
@@ -49,7 +52,7 @@ export default async function RootLayout({
           </a>
           <Toaster />
           <Banner />
-          <Header session={session} />
+          <Header session={session} cart={cart} />
 
           <Main>{children}</Main>
 

@@ -11,13 +11,17 @@ type PageProps = {
 }
 
 async function getProduct(id: string): Promise<Product | null> {
-  const product = await prisma.product.findUnique({
-    where: {
-      id: id,
-    },
-  })
-
-  return product
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: id,
+      },
+    })
+    return product
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }
 
 export async function generateMetadata(
@@ -27,7 +31,7 @@ export async function generateMetadata(
   const product = await getProduct(params.id)
 
   return {
-    title: product?.title,
+    title: product?.title || '',
     openGraph: {
       images: [product?.image || ''],
     },

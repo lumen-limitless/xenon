@@ -1,19 +1,18 @@
 'use client'
-import { useCartStore } from '@/lib/store'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@prisma/client'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { AddToCartButton } from './AddToCartButton'
 import { Badge } from './ui/badge'
-import { Button } from './ui/button'
-import { toast } from './ui/use-toast'
 
 type ProductDetailsProps = {
   product: Product
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  const { addItem } = useCartStore()
+  const { data: session } = useSession()
   const router = useRouter()
 
   return (
@@ -35,18 +34,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <p className="prose break-words text-xl">{product.description}</p>
 
         <div className="w-full">
-          <Button
-            className="w-full"
-            onClick={() => {
-              addItem(product)
-              toast({
-                title: 'Added to bag',
-                description: `${product.title} was added to your shopping bag`,
-              })
-            }}
-          >
-            Add to bag
-          </Button>
+          <AddToCartButton className="w-full" product={product} />
         </div>
       </div>
     </div>

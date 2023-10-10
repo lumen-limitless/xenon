@@ -1,22 +1,19 @@
 'use client'
 
-import { useCartStore } from '@/lib/store'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { AddToCartButton } from './AddToCartButton'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Card, CardContent, CardFooter } from './ui/card'
-import { useToast } from './ui/use-toast'
 
 type ProductCardProps = {
   product?: Product
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addItem } = useCartStore()
-  const { toast } = useToast()
   const router = useRouter()
 
   if (!product) return null
@@ -38,18 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h2 className="text-left">{product.title}</h2>
         <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
 
-        <Button
-          className="w-full"
-          onClick={() => {
-            addItem(product)
-            toast({
-              title: 'Added to bag',
-              description: `${product.title} added to shopping bag.`,
-            })
-          }}
-        >
-          Add to bag
-        </Button>
+        <AddToCartButton className="w-full" product={product} />
         <Button
           variant={'secondary'}
           className="w-full"

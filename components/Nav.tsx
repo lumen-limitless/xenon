@@ -1,13 +1,12 @@
 'use client'
 
-import { useCartStore } from '@/lib/store'
-import { type CustomSession } from '@/types'
 import { User2 } from 'lucide-react'
+import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import LogoSVG from 'public/logo.svg'
 import { useEffect, useState } from 'react'
-import Cart from './Cart'
+import { CartComponent } from './CartComponent'
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -25,12 +24,11 @@ import {
 } from './ui/navigation-menu'
 
 type NavProps = {
-  session: CustomSession | null
+  session: Session | null
+  cart: any
 }
 
-const Nav: React.FC<NavProps> = ({ session }) => {
-  const { items } = useCartStore()
-
+export const Nav: React.FC<NavProps> = ({ session, cart }) => {
   // This is a hack to prevent the cart icon from showing a badge on the server
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
@@ -110,10 +108,10 @@ const Nav: React.FC<NavProps> = ({ session }) => {
 
           <NavigationMenuItem>
             <div className="relative">
-              <Cart />
-              {isClient && items.length > 0 && (
+              <CartComponent cart={cart} />
+              {isClient && cart?.items.length > 0 && (
                 <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
-                  {items.length}
+                  {cart?.items.length}
                 </div>
               )}
             </div>
@@ -123,5 +121,3 @@ const Nav: React.FC<NavProps> = ({ session }) => {
     </div>
   )
 }
-
-export default Nav
