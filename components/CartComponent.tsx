@@ -2,15 +2,15 @@
 
 import { updateCartAction } from '@/lib/actions'
 import { formatPrice } from '@/lib/utils'
+import { type CartItem } from '@prisma/client'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { type CartInfo } from '@types'
-import { ShoppingBag, Trash2 } from 'lucide-react'
+import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 import { Button } from './ui/button'
-import { Input } from './ui/input'
 import {
   Sheet,
   SheetClose,
@@ -28,11 +28,51 @@ import {
   TableRow,
 } from './ui/table'
 
-type CartProps = {
-  cart: CartInfo | null
+const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+
+  const update = (value: number) => {
+    startTransition(async () => {
+      await updateCartAction({
+        productId: item.productId,
+        value: value,
+      })
+
+      router.refresh()
+    })
+  }
+  return (
+    <div className="mr-auto flex w-24 items-center gap-1 text-secondary-foreground">
+      <Button
+        aria-disabled={isPending}
+        disabled={isPending}
+        aria-label="Remove one item from cart"
+        variant={'ghost'}
+        size={'icon'}
+        onClick={() => update(-1)}
+      >
+        <MinusCircle />
+      </Button>
+      <span>{item.quantity}</span>
+      <Button
+        aria-disabled={isPending}
+        disabled={isPending}
+        aria-label="Add one item to cart"
+        onClick={() => update(+1)}
+        variant={'ghost'}
+        size={'icon'}
+      >
+        <PlusCircle />
+      </Button>
+    </div>
+  )
 }
 
-export const CartComponent: React.FC<CartProps> = ({ cart }) => {
+type CartComponentProps = {
+  cart: CartInfo | null
+}
+export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -105,27 +145,7 @@ export const CartComponent: React.FC<CartProps> = ({ cart }) => {
                     </SheetClose>
 
                     <div className="flex w-full items-center">
-                      <Input
-                        className="mr-auto w-16"
-                        aria-disabled={isPending}
-                        disabled={isPending}
-                        type="number"
-                        min={0}
-                        value={item.quantity}
-                        onInput={(e) => {
-                          e.preventDefault()
-                          const value = parseInt(e.currentTarget.value)
-                          if (isNaN(value)) return
-                          startTransition(async () => {
-                            await updateCartAction({
-                              productId: item.productId,
-                              value: value - item.quantity,
-                            })
-
-                            router.refresh()
-                          })
-                        }}
-                      />
+                      <CartQuantitySelector item={item} />
                       <span>
                         {formatPrice(item.product.price * item.quantity)}
                       </span>

@@ -42,6 +42,11 @@ const Header: React.FC<HeaderProps> = ({ session, cart }) => {
       )}
     >
       <Nav session={session} cart={cart} />
+      {/* <div className="bg-background">
+        <div className="container flex h-10 justify-between">
+          All Categories
+        </div>
+      </div> */}
     </header>
   )
 }

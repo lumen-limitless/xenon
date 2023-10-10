@@ -9,8 +9,9 @@ export default async function Layout({
 }) {
   const session = await getServerSession(authOptions)
 
-  if (session === null) notFound()
-  if (session.user.role !== 'ADMIN') notFound()
+  if (session === null || session.user.role !== 'ADMIN') {
+    return notFound()
+  }
 
   return <>{children}</>
 }

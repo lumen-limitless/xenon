@@ -70,6 +70,9 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
+                          <Link href="/dashboard">Admin Dashboard</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/manage-products">Manage Products</Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
