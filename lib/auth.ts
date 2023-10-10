@@ -1,6 +1,6 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { type AuthOptions } from 'next-auth'
-import { Adapter } from 'next-auth/adapters'
+import { type Adapter } from 'next-auth/adapters'
 import GoogleProvider from 'next-auth/providers/google'
 import { mergeAnonymousCartWithUserCart } from './cart'
 import { prisma } from './prisma'

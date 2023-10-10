@@ -82,7 +82,7 @@ export async function updateCartAction({
         },
       })
 
-      if (existingItem) {
+      if (existingItem !== null) {
         const isZero = existingItem.quantity + value === 0
         isZero
           ? await tx.cartItem.delete({ where: { id: existingItem.id } })
@@ -97,14 +97,26 @@ export async function updateCartAction({
               },
             })
       } else {
-        await tx.cartItem.create({
-          data: {
-            cartId: cart.id,
-            productId,
-            quantity: value,
-          },
-        })
+        if (value > 0) {
+          await tx.cartItem.create({
+            data: {
+              cartId: cart.id,
+              productId,
+              quantity: value,
+            },
+          })
+        }
       }
+
+      // manually update cart updatedAt
+      await tx.cart.update({
+        where: {
+          id: cart.id,
+        },
+        data: {
+          updatedAt: new Date(),
+        },
+      })
     })
 
     return { success: true }

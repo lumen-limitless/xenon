@@ -35,6 +35,7 @@ type CartProps = {
 export const CartComponent: React.FC<CartProps> = ({ cart }) => {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -66,7 +67,7 @@ export const CartComponent: React.FC<CartProps> = ({ cart }) => {
                     variant={'ghost'}
                     size={'icon'}
                     className="absolute right-0 top-0"
-                    onClick={() => {
+                    onClick={() =>
                       startTransition(async () => {
                         await updateCartAction({
                           productId: item.productId,
@@ -75,7 +76,7 @@ export const CartComponent: React.FC<CartProps> = ({ cart }) => {
 
                         router.refresh()
                       })
-                    }}
+                    }
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
