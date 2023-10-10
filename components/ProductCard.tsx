@@ -23,7 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardContent className="flex-grow">
         <div className="relative h-48">
           <Image
-            className="object-contain object-center"
+            className="h-auto w-auto object-contain object-center"
             src={product.image}
             alt={product.title}
             fill

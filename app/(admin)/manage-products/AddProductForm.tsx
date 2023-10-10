@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { addProductAction } from '@/lib/actions'
 import { Category } from '@prisma/client'
 import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { experimental_useFormState as useFormState } from 'react-dom'
 
 type AddProductFormProps = {
   categories: Category[]

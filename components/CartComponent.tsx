@@ -83,6 +83,7 @@ export const CartComponent: React.FC<CartProps> = ({ cart }) => {
                   <SheetClose asChild>
                     <Link href={`/products/${item.productId}`}>
                       <Image
+                        className="h-auto w-auto"
                         src={
                           item.product.image
                             ? item.product.image
