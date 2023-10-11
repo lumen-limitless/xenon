@@ -126,12 +126,15 @@ export async function updateCartAction({
   }
 }
 
-export async function createOrderAction(): Promise<void> {
+export async function createOrderAction(): Promise<{
+  success: boolean
+  orderId: string | null
+}> {
   try {
     const cart = (await getCart()) ?? (await createCart())
 
     if (cart.size === 0) {
-      return
+      return { success: false, orderId: null }
     }
 
     const order = await prisma.order.create({
@@ -159,7 +162,10 @@ export async function createOrderAction(): Promise<void> {
         id: cart.id,
       },
     })
+
+    return { success: true, orderId: order.id }
   } catch (error) {
     console.error(error)
+    return { success: false, orderId: null }
   }
 }
