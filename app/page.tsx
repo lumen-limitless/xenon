@@ -1,4 +1,4 @@
-import Carousel from '@/components/Carousel'
+import { Carousel } from '@/components/Carousel'
 import { ProductGrid } from '@/components/ProductGrid'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
@@ -10,13 +10,7 @@ import Image from 'next/image'
 
 async function getProducts(): Promise<Array<Product>> {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        stock: {
-          gt: 0,
-        },
-      },
-    })
+    const products = await prisma.product.findMany()
     return products
   } catch (err) {
     console.error(err)
@@ -68,6 +62,7 @@ export default async function Page({}: PageProps) {
         </div>
       </Section>
       <Section className="py-10">
+        <h2>Shop Categories</h2>
         <div className="grid-cols-12-gap-5 container grid place-content-center"></div>
       </Section>
 

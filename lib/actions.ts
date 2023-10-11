@@ -144,7 +144,7 @@ export async function createOrderAction(): Promise<{
         data: {
           userId: cart.userId,
           total: cart.items.reduce(
-            (total, item) => total + item.quantity * item.product.price,
+            (acc, item) => acc + item.quantity * item.product.price,
             0,
           ),
           items: {

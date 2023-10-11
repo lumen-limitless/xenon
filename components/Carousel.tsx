@@ -10,7 +10,7 @@ type CarouselProps = {
 }
 
 // The main component
-const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
+export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(0)
 
@@ -73,5 +73,3 @@ const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
     </AnimatePresence>
   )
 }
-
-export default Carousel
