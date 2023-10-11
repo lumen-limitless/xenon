@@ -1,9 +1,7 @@
-'use client'
-
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { AddToCartButton } from './AddToCartButton'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
@@ -14,8 +12,6 @@ type ProductCardProps = {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const router = useRouter()
-
   if (!product) return null
 
   return (
@@ -36,14 +32,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
 
         <AddToCartButton className="w-full" product={product} />
-        <Button
-          variant={'secondary'}
-          className="w-full"
-          onClick={() => {
-            router.push(`/products/${product.id}`)
-          }}
-        >
-          View Details
+        <Button variant={'secondary'} className="w-full" asChild>
+          <Link href={`/products/${product.id}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

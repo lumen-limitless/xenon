@@ -1,9 +1,6 @@
-'use client'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@prisma/client'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { AddToCartButton } from './AddToCartButton'
 import { Badge } from './ui/badge'
 
@@ -12,9 +9,6 @@ type ProductDetailsProps = {
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  const { data: session } = useSession()
-  const router = useRouter()
-
   return (
     <div className="flex flex-col items-center justify-center gap-20 lg:flex-row">
       <div className="flex h-full flex-1 items-center justify-center">

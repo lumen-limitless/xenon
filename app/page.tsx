@@ -35,7 +35,6 @@ export default async function Page({}: PageProps) {
               src={carousel1IMG}
               alt="carousel-1"
               fill
-              quality={100}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
               placeholder="blur"
@@ -45,7 +44,6 @@ export default async function Page({}: PageProps) {
               src={carousel2IMG}
               alt="carousel-1"
               fill
-              quality={100}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
               placeholder="blur"
@@ -55,7 +53,6 @@ export default async function Page({}: PageProps) {
               src={carousel3IMG}
               alt="carousel-1"
               fill
-              quality={100}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
               placeholder="blur"
