@@ -1,5 +1,7 @@
 'use client'
 
+import { APP_NAME } from '@/lib/constants'
+import { type CartInfo } from '@types'
 import { Search, User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
@@ -26,7 +28,7 @@ import {
 
 type NavProps = {
   session: Session | null
-  cart: any
+  cart: CartInfo
 }
 
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
@@ -130,7 +132,7 @@ const SearchComponent = () => {
   return (
     <div className="mr-2 hidden items-center gap-1 md:flex">
       <Search className="h-6" />
-      <Input placeholder="Search" className="hidden md:block" />
+      <Input placeholder={`Search ${APP_NAME}`} className="hidden md:block" />
     </div>
   )
 }
