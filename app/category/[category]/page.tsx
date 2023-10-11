@@ -1,6 +1,7 @@
 import { ProductGrid } from '@/components/ProductGrid'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
+import { capitalize } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import { Metadata, ResolvingMetadata } from 'next'
 
@@ -11,7 +12,15 @@ type PageProps = {
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
   try {
-    const products = await prisma.product.findMany()
+    const products = await prisma.product.findMany({
+      where: {
+        categories: {
+          some: {
+            title: category,
+          },
+        },
+      },
+    })
     return products ?? []
   } catch (error) {
     console.error(error)
@@ -24,18 +33,19 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   return {
-    title: params?.category || '',
+    title: capitalize(params?.category) || '',
   }
 }
 
 export default async function Page({ params }: PageProps) {
   const products = await getCategoryProducts(params.category)
-  console.log(products)
   return (
     <>
       <Section className="py-20">
         <div className="container">
-          <h1 className="mb-5 text-center text-3xl">{params.category}</h1>
+          <h1 className="mb-10 text-center text-3xl">
+            {capitalize(params.category)} Products
+          </h1>
 
           <ProductGrid products={products} />
         </div>

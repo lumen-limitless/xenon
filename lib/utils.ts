@@ -5,11 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function truncateText(text: string, length: number) {
+export function truncateText(text: string, length: number): string {
   return text.length > length ? text.substring(0, length) + '...' : text
 }
 
-export function formatPrice(price: number) {
+export function capitalize(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+export function formatPrice(price: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
