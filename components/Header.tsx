@@ -5,6 +5,7 @@ import { type CartInfo } from '@types'
 import { type Session } from 'next-auth'
 import { useEffect, useState } from 'react'
 import { Nav } from './Nav'
+import { SearchBar } from './SearchBar'
 
 const scrollThreshold = 100
 
@@ -42,11 +43,11 @@ const Header: React.FC<HeaderProps> = ({ session, cart }) => {
       )}
     >
       <Nav session={session} cart={cart} />
-      {/* <div className="bg-background">
-        <div className="container flex h-10 justify-between">
-          All Categories
+      <div className="bg-background">
+        <div className="container flex justify-between p-1 md:hidden">
+          <SearchBar />
         </div>
-      </div> */}
+      </div>
     </header>
   )
 }

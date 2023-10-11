@@ -11,7 +11,7 @@ export const metadata = {
 }
 export default async function Page({}: PageProps) {
   return (
-    <Section>
+    <Section className="flex-grow flex-col items-center justify-center">
       <CreateOrderButton />
     </Section>
   )

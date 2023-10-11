@@ -1,14 +1,14 @@
 'use client'
 
-import { APP_NAME } from '@/lib/constants'
 import { type CartInfo } from '@types'
-import { Search, User2 } from 'lucide-react'
+import { User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import LogoSVG from 'public/logo.svg'
 import { useEffect, useState } from 'react'
 import { CartComponent } from './CartComponent'
+import { SearchBar } from './SearchBar'
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -19,7 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { Input } from './ui/input'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -28,7 +27,7 @@ import {
 
 type NavProps = {
   session: Session | null
-  cart: CartInfo
+  cart: CartInfo | null
 }
 
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
@@ -44,7 +43,9 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
         <LogoSVG className="h-6" />
       </Link>
       <NavigationMenu className="ml-auto">
-        <SearchComponent />
+        <div className="hidden md:block">
+          <SearchBar />
+        </div>
         <NavigationMenuList>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -116,7 +117,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           <NavigationMenuItem>
             <div className="relative">
               <CartComponent cart={cart} />
-              {isClient && cart?.items.length > 0 && (
+              {isClient && cart && cart.items.length > 0 && (
                 <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
                   {cart?.items.length}
                 </div>
@@ -125,14 +126,6 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-    </div>
-  )
-}
-const SearchComponent = () => {
-  return (
-    <div className="mr-2 hidden items-center gap-1 md:flex">
-      <Search className="h-6" />
-      <Input placeholder={`Search ${APP_NAME}`} className="hidden md:block" />
     </div>
   )
 }
