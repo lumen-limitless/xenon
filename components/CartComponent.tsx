@@ -167,17 +167,14 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
         </Table>
         <div className="mx-auto my-5 flex w-full max-w-xl px-5">
           {cart && cart.size > 0 && (
-            <a
-              href="https://checkout.stripe.dev/preview"
-              target="_blank"
-              rel="noreferrer"
-              className="w-full"
-            >
-              <Button className="w-full">
-                Proceed to checkout
-                <ArrowRightIcon />
+            <SheetClose asChild>
+              <Button className="w-full" asChild>
+                <Link href="/checkout">
+                  Proceed to checkout
+                  <ArrowRightIcon />
+                </Link>
               </Button>
-            </a>
+            </SheetClose>
           )}
         </div>
       </SheetContent>

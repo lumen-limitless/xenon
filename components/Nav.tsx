@@ -1,6 +1,6 @@
 'use client'
 
-import { User2 } from 'lucide-react'
+import { Search, User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { Input } from './ui/input'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -41,6 +42,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
         <LogoSVG className="h-6" />
       </Link>
       <NavigationMenu className="ml-auto">
+        <SearchComponent />
         <NavigationMenuList>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -121,6 +123,14 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+    </div>
+  )
+}
+const SearchComponent = () => {
+  return (
+    <div className="mr-2 hidden items-center gap-1 md:flex">
+      <Search className="h-6" />
+      <Input placeholder="Search" className="hidden md:block" />
     </div>
   )
 }

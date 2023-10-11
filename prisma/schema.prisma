@@ -53,6 +53,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   cart          Cart?
+  orders        Order[]
 }
 
 model VerificationToken {
@@ -64,15 +65,16 @@ model VerificationToken {
 }
 
 model Product {
-  id          String     @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
   description String
   price       Int
   image       String
-  categories  Category[] @relation("ProductCategory")
+  categories  Category[]  @relation("ProductCategory")
   items       CartItem[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItem   OrderItem[]
 }
 
 model Category {
@@ -107,19 +109,34 @@ model CartItem {
   @@unique([productId, cartId])
 }
 
-// enum OrderStatus {
-//   PENDING
-//   COMPLETED
-//   CANCELLED
-// }
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
 
-// model Order {
-//   id        String      @id @default(cuid())
-//   userId    String
-//   status    OrderStatus @default(PENDING)
-//   total     Int
-//   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   items     Item[]
-//   createdAt DateTime    @default(now())
-//   updatedAt DateTime    @updatedAt
-// }
+model Order {
+  id        String      @id @default(cuid())
+  status    OrderStatus @default(PENDING)
+  total     Int
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  User      User?       @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  quantity  Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, orderId])
+}

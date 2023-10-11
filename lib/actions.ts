@@ -125,3 +125,41 @@ export async function updateCartAction({
     return { success: false }
   }
 }
+
+export async function createOrderAction(): Promise<void> {
+  try {
+    const cart = (await getCart()) ?? (await createCart())
+
+    if (cart.size === 0) {
+      return
+    }
+
+    const order = await prisma.order.create({
+      data: {
+        userId: cart.userId,
+        total: cart.items.reduce(
+          (total, item) => total + item.quantity * item.product.price,
+          0,
+        ),
+        items: {
+          create: cart.items.map((item) => ({
+            quantity: item.quantity,
+            product: {
+              connect: {
+                id: item.product.id,
+              },
+            },
+          })),
+        },
+      },
+    })
+
+    await prisma.cart.delete({
+      where: {
+        id: cart.id,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}

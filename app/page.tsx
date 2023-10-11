@@ -2,9 +2,9 @@ import Carousel from '@/components/Carousel'
 import ProductGrid from '@/components/ProductGrid'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
-import carousel1IMG from '@/public/carousel-1.png'
-import carousel2IMG from '@/public/carousel-2.jpeg'
-import carousel3IMG from '@/public/carousel-3.jpeg'
+import carousel1IMG from '@/public/carousel-1.webp'
+import carousel2IMG from '@/public/carousel-2.webp'
+import carousel3IMG from '@/public/carousel-3.webp'
 import { Product } from '@prisma/client'
 import Image from 'next/image'
 
@@ -36,8 +36,9 @@ export default async function Page({}: PageProps) {
               alt="carousel-1"
               fill
               quality={100}
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
+              placeholder="blur"
               className="object-cover object-center"
             />
             <Image
@@ -45,8 +46,9 @@ export default async function Page({}: PageProps) {
               alt="carousel-1"
               fill
               quality={100}
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
+              placeholder="blur"
               className="object-cover object-center"
             />
             <Image
@@ -54,8 +56,9 @@ export default async function Page({}: PageProps) {
               alt="carousel-1"
               fill
               quality={100}
-              sizes="100vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
               priority
+              placeholder="blur"
               className="object-cover object-center"
             />
           </Carousel>
