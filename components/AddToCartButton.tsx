@@ -11,7 +11,10 @@ import { toast } from './ui/use-toast'
 
 type AddToCartButtonProps = {
   product: Product
-} & Omit<ButtonProps, 'children' | 'onClick' | 'asChild'>
+} & Omit<
+  ButtonProps,
+  'children' | 'onClick' | 'asChild' | 'disabled' | 'aria-disabled'
+>
 
 export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   product,
@@ -22,9 +25,9 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
   return (
     <Button
+      {...props}
       aria-disabled={isPending}
       disabled={isPending}
-      {...props}
       onClick={() =>
         startTransition(async () => {
           const { success } = await updateCartAction({

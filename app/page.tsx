@@ -10,7 +10,13 @@ import Image from 'next/image'
 
 async function getProducts(): Promise<Array<Product>> {
   try {
-    const products = await prisma.product.findMany()
+    const products = await prisma.product.findMany({
+      where: {
+        stock: {
+          gt: 0,
+        },
+      },
+    })
     return products
   } catch (err) {
     console.error(err)
@@ -61,21 +67,9 @@ export default async function Page({}: PageProps) {
           </Carousel>
         </div>
       </Section>
-      {/* <Section className="py-10">
-        <div className="mx-24 -mt-24 grid h-72 w-full grid-cols-12 bg-muted">
-          <div className="col-span-3 bg-white p-6">
-            <h2 className="text-2xl font-bold">Lorem ipsum dolor sit amet</h2>
-            <p className="mt-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptatibus, dolorum, voluptatem, quos voluptate voluptatum
-              voluptas quas quia quibusdam quod fugit. Quisquam voluptatibus,
-              dolorum, voluptatem, quos voluptate voluptatum voluptas quas quia
-              quibusdam quod fugit.
-            </p>
-          </div>
-          <div className="col-span-9 bg-gray-200"></div>
-        </div>
-      </Section> */}
+      <Section className="py-10">
+        <div className="grid-cols-12-gap-5 container grid place-content-center"></div>
+      </Section>
 
       <Section className="py-20">
         <div className="container">

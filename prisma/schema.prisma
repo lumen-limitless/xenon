@@ -69,6 +69,7 @@ model Product {
   title       String
   description String
   price       Int
+  stock       Int         @default(0)
   image       String
   categories  Category[]  @relation("ProductCategory")
   items       CartItem[]

@@ -47,6 +47,7 @@ export default async function main() {
             id: category.id,
           },
         },
+        stock: Math.floor(Math.random() * 100),
         image: product.image,
         price: parseInt((product.price * 100).toFixed(0)),
       },

@@ -62,6 +62,13 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         </fieldset>
 
         <fieldset className="my-5">
+          <Label htmlFor="stock">
+            Stock
+            <Input placeholder="Stock" id="stock" name="stock" required />
+          </Label>
+        </fieldset>
+
+        <fieldset className="my-5">
           <Label htmlFor="image">
             Image
             <Input

@@ -15,15 +15,17 @@ export async function addProductAction(
     const categories =
       formData.getAll('category').map((c) => c.toString()) || []
     const price = Math.round(Number(formData.get('price')?.toString()) * 100)
+    const stock = Math.round(Number(formData.get('stock')?.toString()))
 
-    if (isNaN(price)) {
-      return { message: 'Price is not a number' }
+    if (isNaN(price) || isNaN(stock) || price < 0 || stock < 0) {
+      return { message: 'Invalid input' }
     }
 
     await prisma.product.create({
       data: {
         title,
         price,
+        stock,
         description,
         image,
         categories: {
@@ -137,30 +139,47 @@ export async function createOrderAction(): Promise<{
       return { success: false, orderId: null }
     }
 
-    const order = await prisma.order.create({
-      data: {
-        userId: cart.userId,
-        total: cart.items.reduce(
-          (total, item) => total + item.quantity * item.product.price,
-          0,
-        ),
-        items: {
-          create: cart.items.map((item) => ({
-            quantity: item.quantity,
-            product: {
-              connect: {
-                id: item.product.id,
+    const order = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.create({
+        data: {
+          userId: cart.userId,
+          total: cart.items.reduce(
+            (total, item) => total + item.quantity * item.product.price,
+            0,
+          ),
+          items: {
+            create: cart.items.map((item) => ({
+              quantity: item.quantity,
+              product: {
+                connect: {
+                  id: item.product.id,
+                },
               },
-            },
-          })),
+            })),
+          },
         },
-      },
-    })
+      })
 
-    await prisma.cart.delete({
-      where: {
-        id: cart.id,
-      },
+      for (const item of cart.items) {
+        await tx.product.update({
+          where: {
+            id: item.product.id,
+          },
+          data: {
+            stock: {
+              decrement: item.quantity,
+            },
+          },
+        })
+      }
+
+      await tx.cart.delete({
+        where: {
+          id: cart.id,
+        },
+      })
+
+      return order
     })
 
     return { success: true, orderId: order.id }

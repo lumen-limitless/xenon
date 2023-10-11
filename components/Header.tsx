@@ -44,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ session, cart }) => {
     >
       <Nav session={session} cart={cart} />
       <div className="bg-background">
-        <div className="container flex justify-between p-1 md:hidden">
+        <div className="flex items-center justify-center gap-1 p-1 md:hidden">
           <SearchBar />
         </div>
       </div>
