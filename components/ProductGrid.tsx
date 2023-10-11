@@ -5,7 +5,7 @@ type ProductGridProps = {
   products?: Product[]
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="grid w-full grid-cols-12 place-content-center gap-5">
       {products ? (
@@ -25,5 +25,3 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     </div>
   )
 }
-
-export default ProductGrid

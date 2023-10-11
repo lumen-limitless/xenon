@@ -30,8 +30,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardFooter className="flex-col gap-2">
         <h2 className="text-left">{product.title}</h2>
         <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
-
-        <AddToCartButton className="w-full" product={product} />
+        {product.stock > 0 ? (
+          <AddToCartButton className="w-full" product={product} />
+        ) : (
+          <Button variant={'secondary'} className="w-full" disabled>
+            Out of Stock
+          </Button>
+        )}
         <Button variant={'secondary'} className="w-full" asChild>
           <Link href={`/products/${product.id}`}>View Details</Link>
         </Button>

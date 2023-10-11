@@ -1,4 +1,4 @@
-import ProductGrid from '@/components/ProductGrid'
+import { ProductGrid } from '@/components/ProductGrid'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { Product } from '@prisma/client'

@@ -1,5 +1,5 @@
 import Carousel from '@/components/Carousel'
-import ProductGrid from '@/components/ProductGrid'
+import { ProductGrid } from '@/components/ProductGrid'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import carousel1IMG from '@/public/carousel-1.webp'
