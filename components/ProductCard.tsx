@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Button>
         )}
         <Button variant={'secondary'} className="w-full" asChild>
-          <Link href={`/products/${product.id}`}>View Details</Link>
+          <Link href={`/products/${product.slug}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

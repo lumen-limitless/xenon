@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createCart, getCart } from './cart'
 import { prisma } from './prisma'
+import { generateSlug } from './utils'
 
 export async function addProductAction(
   prevState: any,
@@ -24,6 +25,7 @@ export async function addProductAction(
     await prisma.product.create({
       data: {
         title,
+        slug: generateSlug(title),
         price,
         stock,
         description,

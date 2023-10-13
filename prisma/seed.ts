@@ -1,3 +1,4 @@
+import { generateSlug } from '@/lib/utils'
 import { PrismaClient } from '@prisma/client'
 
 type MockProduct = {
@@ -41,6 +42,7 @@ export default async function main() {
     await prisma.product.create({
       data: {
         title: product.title,
+        slug: generateSlug(product.title),
         description: product.description,
         categories: {
           connect: {

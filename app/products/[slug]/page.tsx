@@ -9,15 +9,15 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 type PageProps = {
-  params: { id: string }
+  params: { slug: string }
   searchParams: Record<string, string | Array<string> | undefined>
 }
 
-async function getProduct(id: string): Promise<Product | null> {
+async function getProduct(slug: string): Promise<Product | null> {
   try {
     const product = await prisma.product.findUnique({
       where: {
-        id: id,
+        slug,
       },
     })
     return product
@@ -31,7 +31,7 @@ export async function generateMetadata(
   { params, searchParams }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const product = await getProduct(params.id)
+  const product = await getProduct(params.slug)
 
   return {
     title: product?.title || '',
@@ -42,7 +42,7 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params }: PageProps) {
-  const product = await getProduct(params.id)
+  const product = await getProduct(params.slug)
 
   if (product === null) notFound()
 
@@ -61,7 +61,7 @@ export default async function Page({ params }: PageProps) {
           />
         </div>
         <div className="flex-1 space-y-5">
-          <h1 className="text-3xl font-bold">Product {product.title}</h1>
+          <h1 className="text-3xl font-bold">{product.title}</h1>
 
           <div className="flex items-center gap-1">
             <Badge className="text-lg">{formatPrice(product.price)}</Badge>

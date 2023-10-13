@@ -19,3 +19,11 @@ export function formatPrice(price: number): string {
     currency: 'USD',
   }).format(price / 100)
 }
+
+export function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
+    .join('-')
+}
