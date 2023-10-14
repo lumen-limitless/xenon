@@ -122,7 +122,7 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
                   </Button>
 
                   <SheetClose asChild>
-                    <Link href={`/products/${item.productId}`}>
+                    <Link href={`/products/${item.product.slug}`}>
                       <Image
                         className="h-auto w-auto"
                         src={
@@ -139,7 +139,7 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
 
                   <div className="flex-1 space-y-2">
                     <SheetClose asChild>
-                      <Link href={`/products/${item.productId}`}>
+                      <Link href={`/products/${item.product.slug}`}>
                         {item.product.title}
                       </Link>
                     </SheetClose>

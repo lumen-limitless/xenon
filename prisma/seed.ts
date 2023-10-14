@@ -1,4 +1,3 @@
-import { generateSlug } from '@/lib/utils'
 import { PrismaClient } from '@prisma/client'
 
 type MockProduct = {
@@ -30,7 +29,7 @@ export default async function main() {
 
   const category = await prisma.category.create({
     data: {
-      title: 'All',
+      title: 'all',
       description: 'All products',
       image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
     },
@@ -42,7 +41,11 @@ export default async function main() {
     await prisma.product.create({
       data: {
         title: product.title,
-        slug: generateSlug(product.title),
+        slug: product.title
+          .toLowerCase()
+          .split(' ')
+          .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
+          .join('-'),
         description: product.description,
         categories: {
           connect: {
