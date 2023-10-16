@@ -5,6 +5,45 @@ import { cookies } from 'next/headers'
 import { authOptions } from './auth'
 import { prisma } from './prisma'
 
+const COOKIE_SECRET = process.env.COOKIE_SECRET
+
+function encryptCookieValue(value: string): string {
+  const cipher = require('crypto').createCipher('aes-256-cbc', COOKIE_SECRET)
+  let encrypted = cipher.update(value, 'utf8', 'hex')
+  encrypted += cipher.final('hex')
+  return encrypted
+}
+
+function decryptCookieValue(value: string): string | undefined {
+  try {
+    const decipher = require('crypto').createDecipher(
+      'aes-256-cbc',
+      COOKIE_SECRET,
+    )
+    let decrypted = decipher.update(value, 'hex', 'utf8')
+    decrypted += decipher.final('utf8')
+    return decrypted
+  } catch (err) {
+    console.error('Error decrypting cookie value:', err)
+  }
+}
+
+export function getLocalCartId(): string | undefined {
+  const encryptedLocalCartId = cookies().get('localCartId')?.value
+  if (encryptedLocalCartId !== undefined) {
+    return decryptCookieValue(encryptedLocalCartId)
+  }
+}
+
+export function setLocalCartId(cartId: string): void {
+  const encryptedLocalCartId = encryptCookieValue(cartId)
+  cookies().set('localCartId', encryptedLocalCartId, {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  })
+}
+
 export async function createCart(): Promise<CartInfo> {
   let newCart: Cart
 
@@ -21,7 +60,7 @@ export async function createCart(): Promise<CartInfo> {
       data: {},
     })
 
-    cookies().set('localCartId', newCart.id)
+    setLocalCartId(newCart.id)
   }
 
   return {
@@ -54,7 +93,7 @@ export async function getCart(): Promise<CartInfo | null> {
       },
     })
   } else {
-    const localCartId = cookies().get('localCartId')?.value
+    const localCartId = getLocalCartId()
 
     cart = localCartId
       ? await prisma.cart.findUnique({
@@ -93,7 +132,7 @@ export async function getCart(): Promise<CartInfo | null> {
 export async function mergeAnonymousCartWithUserCart(
   userId: string,
 ): Promise<void> {
-  const localCartId = cookies().get('localCartId')?.value
+  const localCartId = getLocalCartId()
 
   const localCart = await prisma.cart.findUnique({
     where: {
