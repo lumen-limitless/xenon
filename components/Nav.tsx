@@ -9,7 +9,7 @@ import Link from 'next/link'
 import GoogleSVG from 'public/google.svg'
 import LogoSVG from 'public/logo.svg'
 import { useEffect, useState } from 'react'
-import { CartComponent } from './CartComponent'
+import { CartSheet } from './CartSheet'
 import { SearchBar } from './SearchBar'
 import { Button } from './ui/button'
 import {
@@ -141,7 +141,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
 
           <NavigationMenuItem>
             <div className="relative">
-              <CartComponent cart={cart} />
+              <CartSheet cart={cart} />
               {isClient && cart && cart.items.length > 0 && (
                 <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
                   {cart?.items.length}

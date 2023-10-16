@@ -1,7 +1,7 @@
 'use client'
 
 import { updateCartAction } from '@/lib/actions'
-import { formatPrice } from '@/lib/utils'
+import { formatPrice, truncateText } from '@/lib/utils'
 import { type CartItem } from '@prisma/client'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { type CartInfo } from '@types'
@@ -15,6 +15,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -69,10 +70,10 @@ const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
   )
 }
 
-type CartComponentProps = {
+type CartSheetProps = {
   cart: CartInfo | null
 }
-export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
+export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
@@ -86,7 +87,7 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
 
       <SheetContent
         side="right"
-        className="w-screen overflow-y-scroll md:w-full"
+        className="w-screen overflow-y-scroll md:w-auto"
       >
         <SheetHeader>
           <SheetTitle>Your Shopping Bag</SheetTitle>
@@ -137,10 +138,10 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
                     </Link>
                   </SheetClose>
 
-                  <div className="flex-1 space-y-2">
+                  <div className="mt-5 flex-1 space-y-2">
                     <SheetClose asChild>
                       <Link href={`/products/${item.product.slug}`}>
-                        {item.product.title}
+                        {truncateText(item.product.title, 25)}
                       </Link>
                     </SheetClose>
 
@@ -165,18 +166,21 @@ export const CartComponent: React.FC<CartComponentProps> = ({ cart }) => {
             </TableFooter>
           )}
         </Table>
-        <div className="mx-auto my-5 flex w-full max-w-xl px-5">
-          {cart && cart.size > 0 && (
-            <SheetClose asChild>
-              <Button className="w-full" asChild>
-                <Link href="/checkout">
-                  Proceed to checkout
-                  <ArrowRightIcon />
-                </Link>
-              </Button>
-            </SheetClose>
-          )}
-        </div>
+
+        <SheetFooter>
+          <div className="mx-auto my-5 flex w-full max-w-xl px-5">
+            {cart && cart.size > 0 && (
+              <SheetClose asChild>
+                <Button className="w-full" asChild>
+                  <Link href="/checkout">
+                    Proceed to checkout
+                    <ArrowRightIcon />
+                  </Link>
+                </Button>
+              </SheetClose>
+            )}
+          </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   )
