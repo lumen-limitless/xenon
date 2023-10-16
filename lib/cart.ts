@@ -37,12 +37,7 @@ export function getLocalCartId(): string | undefined {
 
 export function setLocalCartId(cartId: string): void {
   const encryptedLocalCartId = encryptCookieValue(cartId)
-  cookies().set('localCartId', encryptedLocalCartId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-  })
+  cookies().set('localCartId', encryptedLocalCartId, {})
 }
 
 export async function createCart(): Promise<CartInfo> {
