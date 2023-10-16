@@ -95,7 +95,7 @@ export default async function Page({}: PageProps) {
               >
                 <Link href={`/category/${category.title}`}>
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={category.image} fetchPriority="high" />
+                    <AvatarImage src={category.image} />
                   </Avatar>
                   <h3 className="text-lg">{capitalize(category.title)}</h3>
                 </Link>
