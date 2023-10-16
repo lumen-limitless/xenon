@@ -85,10 +85,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent
-        side="right"
-        className="w-screen overflow-y-scroll md:w-auto"
-      >
+      <SheetContent side="right" className="w-screen overflow-y-auto md:w-auto">
         <SheetHeader>
           <SheetTitle>Your Shopping Bag</SheetTitle>
         </SheetHeader>
