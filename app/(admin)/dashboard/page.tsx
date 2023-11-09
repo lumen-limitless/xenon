@@ -55,6 +55,19 @@ export default async function Page({}: PageProps) {
               <ExternalLink />
             </Link>
           </Button>
+          <Button
+            className="col-span-12 md:col-span-4"
+            asChild
+            variant={'outline'}
+          >
+            <Link
+              href="https://dashboard.stripe.com/test/dashboard"
+              target="_blank"
+            >
+              Stripe Dashboard
+              <ExternalLink />
+            </Link>
+          </Button>
 
           <div className="col-span-12">
             <h2 className="text-2xl font-semibold">Stats</h2>

@@ -11,7 +11,6 @@ type CarouselProps = {
 
 const swipeConfidenceThreshold = 10000
 
-// The main component
 export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   const [current, setCurrent] = useState(0)
   const [direction, setDirection] = useState(0)

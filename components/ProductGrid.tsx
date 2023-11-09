@@ -14,7 +14,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
             className="col-span-6 md:col-span-4 lg:col-span-3"
             key={product.id}
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} className="h-full" />
           </div>
         ))
       ) : (
