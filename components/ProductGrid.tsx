@@ -1,5 +1,5 @@
 import { Product } from '@prisma/client'
-import ProductCard from './ProductCard'
+import { ProductCard } from './ProductCard'
 
 type ProductGridProps = {
   products?: Product[]

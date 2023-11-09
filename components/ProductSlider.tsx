@@ -2,7 +2,7 @@
 import { Product } from '@prisma/client'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef } from 'react'
-import ProductCard from './ProductCard'
+import { ProductCard } from './ProductCard'
 import { Button } from './ui/button'
 
 type ProductSliderProps = {
@@ -15,7 +15,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
   return (
     <div className="relative w-full">
       <div
-        className="scrollbar-hide flex h-full w-full gap-5 overflow-y-hidden overflow-x-scroll scroll-smooth py-5"
+        className="flex h-full w-full gap-5 overflow-y-hidden overflow-x-scroll scroll-smooth py-5 scrollbar-hide"
         ref={sliderRef}
       >
         {products?.map((product) => (
