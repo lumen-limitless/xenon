@@ -97,10 +97,10 @@ export default async function Page({}: PageProps) {
       </Section>
       <Section className="py-10" id="shop-categories">
         <div className="container">
-          <h2 className="mb-10 text-center text-3xl font-semibold">
+          <h2 className="mb-5 text-center text-3xl font-semibold">
             Shop Categories
           </h2>
-          <div className="grid w-full grid-cols-2 place-content-center gap-5">
+          <div className="grid w-full grid-cols-2 place-content-center gap-2">
             {categories.map((category) => (
               <Button
                 asChild
@@ -124,24 +124,25 @@ export default async function Page({}: PageProps) {
 
       <Section className="py-10" id="shop-featured">
         <div className="container">
-          <h2 className="mb-10 text-center text-3xl font-semibold">
+          <h2 className="mb-5 text-center text-3xl font-semibold">
             Featured Products
           </h2>
-          <div className="grid grid-cols-2 place-content-stretch gap-5">
+          <div className="grid grid-cols-2 place-content-center gap-2">
             {shuffle(products)
               .slice(0, 4)
               .map((product) => (
                 <Link
                   href={`/products/${product.slug}`}
                   key={product.id}
-                  className="flex h-72 flex-col items-center justify-center gap-5 bg-muted p-1"
+                  className="group flex h-72 flex-col items-center justify-center gap-5 bg-muted p-1"
                 >
                   <Image
-                    className="h-auto w-auto"
+                    className="h-auto w-auto transition-all duration-300 ease-in-out group-hover:scale-105"
                     src={product.image}
                     width={100}
                     height={100}
                     alt={product.title}
+                    key={product.id}
                   />
                   <h3 className="text-lg">
                     {capitalize(truncateText(product.title, 50))}
@@ -152,18 +153,18 @@ export default async function Page({}: PageProps) {
         </div>
       </Section>
 
-      <Section className="py-20" id="shop-trending">
+      <Section className="py-10" id="shop-trending">
         <div className="container">
-          <h2 className="mb-10 text-center text-3xl font-semibold">
+          <h2 className="mb-5 text-center text-3xl font-semibold">
             Trending Now
           </h2>
           <ProductSlider products={shuffle(products)} />
         </div>
       </Section>
 
-      <Section className="py-20" id="shop-recommended">
+      <Section className="py-10" id="shop-recommended">
         <div className="container">
-          <h2 className="mb-10 text-center text-3xl font-semibold">
+          <h2 className="mb-5 text-center text-3xl font-semibold">
             Recommended For You
           </h2>
           <ProductSlider products={shuffle(products)} />

@@ -25,9 +25,9 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
         ))}
       </div>
       <Button
-        className="absolute left-0 top-1/2 -translate-y-1/2"
+        className="absolute left-2 top-1/2 -translate-y-1/2"
         size={'icon'}
-        variant={'ghost'}
+        variant={'secondary'}
         onClick={() => {
           if (!sliderRef.current) return
           sliderRef.current.scrollLeft -= 500
@@ -36,9 +36,9 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
         <ChevronLeft />
       </Button>
       <Button
-        className="absolute right-0 top-1/2 -translate-y-1/2"
+        className="absolute right-2 top-1/2 -translate-y-1/2"
         size={'icon'}
-        variant={'ghost'}
+        variant={'secondary'}
         onClick={() => {
           if (!sliderRef.current) return
           sliderRef.current.scrollLeft += 500
