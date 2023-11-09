@@ -7,6 +7,13 @@ import { prisma } from './prisma'
 import { stripe } from './stripe'
 import { generateSlug } from './utils'
 
+/**
+ *
+ * @description Server action to add a new product to the store
+ * @param prevState The previous state of the form
+ * @param formData The form data from the request
+ * @returns object with message key
+ */
 export async function addProductAction(
   prevState: any,
   formData: FormData,
@@ -46,6 +53,13 @@ export async function addProductAction(
   }
 }
 
+/**
+ *
+ * @description Server action to delete a product from the store
+ * @param prevState The previous state of the form
+ * @param formData The form data from the request
+ * @returns object with message key
+ */
 export async function deleteProductAction(
   prevState: any,
   id: string,
@@ -66,6 +80,13 @@ export async function deleteProductAction(
   }
 }
 
+/**
+ *
+ * @description Server action to update an item in the cart
+ * @param productId The id of the product to update
+ * @param value The value to update the quantity by
+ * @returns object with success key
+ */
 export async function updateCartAction({
   productId,
   value,
@@ -193,7 +214,7 @@ export async function checkoutAction(): Promise<{
   }
 }
 
-export async function stripeCheckoutAction() {
+export async function stripeCheckoutAction(): Promise<string | null> {
   try {
     const cart = await getCart()
 
@@ -223,18 +244,15 @@ export async function stripeCheckoutAction() {
         allowed_countries: ['US'],
       },
 
-      success_url: `${APP_URL}/checkout/?success=true`,
-      cancel_url: `${APP_URL}/checkout/?canceled=true`,
+      success_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
 
       automatic_tax: { enabled: true },
     })
 
-    if (session.url === null) {
-      throw new Error('Error creating checkout session')
-    }
-
     return session.url
   } catch (error) {
     console.error(error)
+    return null
   }
 }

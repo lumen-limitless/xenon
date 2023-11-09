@@ -3,9 +3,10 @@ import { CartWithProducts, type CartInfo } from '@types'
 import { getServerSession } from 'next-auth'
 import { cookies } from 'next/headers'
 import { authOptions } from './auth'
+import { env } from './env'
 import { prisma } from './prisma'
 
-const COOKIE_SECRET = process.env.COOKIE_SECRET
+const { COOKIE_SECRET } = env
 
 function encryptCookieValue(value: string): string {
   const cipher = require('crypto').createCipher('aes-256-cbc', COOKIE_SECRET)

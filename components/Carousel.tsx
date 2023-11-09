@@ -9,6 +9,8 @@ type CarouselProps = {
   controls?: boolean
 }
 
+const swipeConfidenceThreshold = 10000
+
 // The main component
 export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   const [current, setCurrent] = useState(0)
@@ -17,7 +19,6 @@ export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   const slides = React.Children.toArray(children)
 
   // Thresholds
-  const swipeConfidenceThreshold = 10000
   const swipePower = (offset: number, velocity: number) => {
     return Math.abs(offset) * velocity
   }
@@ -68,7 +69,6 @@ export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
         }}
       >
         {React.Children.toArray(children)[current]}
-        <div className="absolute bottom-0"></div>
       </motion.div>
     </AnimatePresence>
   )

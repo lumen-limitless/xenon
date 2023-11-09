@@ -3,7 +3,12 @@
 import { checkoutAction, stripeCheckoutAction } from '@/lib/actions'
 import { formatPrice } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
-import { redirect, useSearchParams } from 'next/navigation'
+import {
+  RedirectType,
+  redirect,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation'
 import { useEffect, useTransition } from 'react'
 import { Button } from './ui/button'
 import { toast } from './ui/use-toast'
@@ -15,6 +20,7 @@ type CheckoutButtonProps = {
 export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
   const [isPending, startTransition] = useTransition()
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
     if (searchParams.has('success')) {
@@ -33,10 +39,9 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
       aria-disabled={isPending}
       onClick={() =>
         startTransition(async () => {
-          const url = await stripeCheckoutAction()
-          if (url) {
-            redirect(url)
-          }
+          const sessionUrl = await stripeCheckoutAction()
+          if (!sessionUrl) return
+          redirect(sessionUrl, RedirectType.push)
         })
       }
     >

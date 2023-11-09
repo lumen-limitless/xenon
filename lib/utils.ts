@@ -27,3 +27,14 @@ export function generateSlug(text: string): string {
     .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
     .join('-')
 }
+
+export function shuffle(array: Array<any>): Array<any> {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i)
+    const temp = shuffled[i]
+    shuffled[i] = shuffled[j]
+    shuffled[j] = temp
+  }
+  return shuffled
+}

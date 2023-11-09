@@ -4,13 +4,16 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { deleteProductAction } from '@/lib/actions'
 import { formatPrice } from '@/lib/utils'
 import { Product } from '@prisma/client'
+import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
+import { useTransition } from 'react'
 
 type ProductTableProps = {
   products: Product[]
 }
 
 export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
+  const [isPending, startTransition] = useTransition()
   return (
     <>
       <Table>
@@ -21,16 +24,22 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                 {product.id}
                 <Button
                   variant={'destructive'}
-                  onClick={() => deleteProductAction(null, product.id)}
+                  onClick={() =>
+                    startTransition(async () => {
+                      await deleteProductAction(null, product.id)
+                    })
+                  }
                 >
-                  Delete
+                  {isPending ? (
+                    <Loader2 className="h-5 animate-spin" />
+                  ) : (
+                    'Delete'
+                  )}
                 </Button>
               </TableCell>
               <TableCell>
                 <Image
-                  src={
-                    product.image ? product.image : '/images/placeholder.png'
-                  }
+                  src={product.image}
                   alt={product.title}
                   width={50}
                   height={50}

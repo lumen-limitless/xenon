@@ -9,25 +9,24 @@ import { Card, CardContent, CardFooter } from './ui/card'
 
 type ProductCardProps = {
   product?: Product
+  className?: string
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   if (!product) return null
 
   return (
-    <Card className="h-full">
+    <Card className={className}>
       <CardContent>
-        {' '}
         <Link href={`/products/${product.slug}`}>
-          <div className="relative h-32 md:h-64">
-            <Image
-              className="h-auto w-auto object-contain object-center"
-              src={product.image}
-              alt={product.title}
-              fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
-            />
-          </div>
+          <Image
+            className="h-32 w-full object-contain object-center"
+            src={product.image}
+            alt={product.title}
+            width={100}
+            height={100}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
+          />
         </Link>
       </CardContent>
 
