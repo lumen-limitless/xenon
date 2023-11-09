@@ -3,32 +3,34 @@
 exports[`ProductCard should match snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="rounded-lg border bg-card text-card-foreground shadow-sm flex w-full flex-col"
+    class="flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm"
   >
     <div
-      class="p-6 pt-0 flex-grow"
+      class="p1 flex flex-grow flex-col pt-0 md:p-2"
     >
-      <div
-        class="relative h-48"
+      <a
+        href="/products/product-1"
       >
         <img
           alt="Product 1"
-          class="object-contain object-center"
-          data-nimg="fill"
+          class="h-32 w-full object-contain object-center"
+          data-nimg="1"
           decoding="async"
+          height="100"
           loading="lazy"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
           src="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75"
           srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75 3840w"
-          style="position: absolute; height: 100%; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px; color: transparent;"
+          style="color: transparent;"
+          width="100"
         />
-      </div>
+      </a>
     </div>
     <div
-      class="flex items-center p-6 pt-0 flex-col gap-2"
+      class="flex items-center p-1 pt-0 md:p-2 flex-col gap-1"
     >
       <h2
-        class="text-left"
+        class="text-left text-sm md:text-base"
       >
         Product 1
       </h2>
@@ -38,14 +40,10 @@ exports[`ProductCard should match snapshot 1`] = `
         $10.99
       </div>
       <button
+        aria-disabled="false"
         class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
       >
         Add to bag
-      </button>
-      <button
-        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 w-full"
-      >
-        View Details
       </button>
     </div>
   </div>

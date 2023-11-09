@@ -3,13 +3,13 @@ import { CartWithProducts, type CartInfo } from '@types'
 import { getServerSession } from 'next-auth'
 import { cookies } from 'next/headers'
 import { authOptions } from './auth'
-import { env } from './env'
 import { prisma } from './prisma'
 
-const { COOKIE_SECRET } = env
-
 function encryptCookieValue(value: string): string {
-  const cipher = require('crypto').createCipher('aes-256-cbc', COOKIE_SECRET)
+  const cipher = require('crypto').createCipher(
+    'aes-256-cbc',
+    process.env.COOKIE_SECRET!,
+  )
   let encrypted = cipher.update(value, 'utf8', 'hex')
   encrypted += cipher.final('hex')
   return encrypted
@@ -19,7 +19,7 @@ function decryptCookieValue(value: string): string | undefined {
   try {
     const decipher = require('crypto').createDecipher(
       'aes-256-cbc',
-      COOKIE_SECRET,
+      process.env.COOKIE_SECRET!,
     )
     let decrypted = decipher.update(value, 'hex', 'utf8')
     decrypted += decipher.final('utf8')

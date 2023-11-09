@@ -12,7 +12,10 @@ type ProductCardProps = {
   className?: string
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  className,
+}) => {
   if (!product) return null
 
   return (
@@ -46,5 +49,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     </Card>
   )
 }
-
-export default ProductCard
