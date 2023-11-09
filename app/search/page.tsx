@@ -1,19 +1,23 @@
 import { ProductGrid } from '@/components/ProductGrid'
+import { SearchParamPagination } from '@/components/SearchParamPagination'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { Product } from '@prisma/client'
 
 type PageProps = {
   params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
+  searchParams: Record<string, string | undefined>
 }
 
 export const metadata = {
   title: 'Search Results',
 }
 
-async function getProductsFromQuery(query: string): Promise<Array<Product>> {
+async function getProductsFromQuery(
+  query: string | undefined,
+): Promise<Array<Product>> {
   try {
+    if (query === undefined) return []
     const products = await prisma.product.findMany({
       where: {
         title: {
@@ -29,8 +33,20 @@ async function getProductsFromQuery(query: string): Promise<Array<Product>> {
     return []
   }
 }
+
+const ITEMS_PER_PAGE = 12
+
 export default async function Page({ searchParams }: PageProps) {
-  const products = await getProductsFromQuery(searchParams['query'] as string)
+  const products = await getProductsFromQuery(searchParams['query'])
+
+  const currentPage = parseInt(searchParams['page'] || '1')
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
+
+  const currentProducts = products.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  )
+
   return (
     <>
       <Section id="search-results" className="py-10">
@@ -40,7 +56,13 @@ export default async function Page({ searchParams }: PageProps) {
           ) : (
             <p className="">{products.length} results found</p>
           )}
-          <ProductGrid products={products} />
+          <ProductGrid products={currentProducts} />
+          {products.length > ITEMS_PER_PAGE && (
+            <SearchParamPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       </Section>
     </>

@@ -1,4 +1,5 @@
 import { ProductGrid } from '@/components/ProductGrid'
+import { SearchParamPagination } from '@/components/SearchParamPagination'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { capitalize } from '@/lib/utils'
@@ -7,7 +8,7 @@ import { Metadata, ResolvingMetadata } from 'next'
 
 type PageProps = {
   params: { category: string }
-  searchParams: Record<string, string | Array<string> | undefined>
+  searchParams: Record<string, string | undefined>
 }
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
@@ -37,8 +38,19 @@ export async function generateMetadata(
   }
 }
 
-export default async function Page({ params }: PageProps) {
+const ITEMS_PER_PAGE = 12
+
+export default async function Page({ params, searchParams }: PageProps) {
   const products = await getCategoryProducts(params.category)
+
+  const currentPage = parseInt(searchParams['page'] || '1')
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
+
+  const currentProducts = products.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  )
+
   return (
     <>
       <Section className="py-20">
@@ -47,7 +59,11 @@ export default async function Page({ params }: PageProps) {
             {capitalize(params.category)} Products
           </h1>
 
-          <ProductGrid products={products} />
+          <ProductGrid products={currentProducts} />
+          <SearchParamPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
         </div>
       </Section>
     </>

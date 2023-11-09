@@ -3,9 +3,9 @@ import React from 'react'
 import { Button } from './ui/button'
 
 type PaginationProps = {
-  currentPage: string
+  currentPage: number
   totalPages: number
-  setPage: (value: string) => void
+  setPage: (value: number) => void
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -13,7 +13,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   setPage,
 }) => {
-  const currentPageNumber = parseInt(currentPage)
+  const currentPageNumber = currentPage
   const pageNumbers: number[] = []
 
   for (let i = 1; i <= totalPages; i++) {
@@ -33,7 +33,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           id="prev"
           size="icon"
           onClick={() => {
-            setPage((currentPageNumber - 1).toString())
+            setPage(currentPageNumber - 1)
           }}
           disabled={currentPageNumber === 1}
         >
@@ -51,7 +51,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 id={pageNumber.toString()}
                 size="icon"
                 onClick={() => {
-                  setPage(pageNumber.toString())
+                  setPage(pageNumber)
                 }}
                 disabled={currentPageNumber === pageNumber}
               >
@@ -65,7 +65,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           id="next"
           size="icon"
           onClick={() => {
-            setPage((currentPageNumber + 1).toString())
+            setPage(currentPageNumber + 1)
           }}
           disabled={currentPageNumber === totalPages}
         >
