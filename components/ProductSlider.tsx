@@ -9,13 +9,9 @@ import { Button } from './ui/button'
 
 type ProductSliderProps = {
   products?: Array<Product>
-  scrollDistance?: number
 }
 
-export const ProductSlider: React.FC<ProductSliderProps> = ({
-  products,
-  scrollDistance = 500,
-}) => {
+export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
   const sliderRef = useRef<HTMLDivElement>(null)
   const { x, y } = useScroll(sliderRef)
 
@@ -41,7 +37,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
         variant={'secondary'}
         onClick={() => {
           if (!sliderRef.current) return
-          sliderRef.current.scrollLeft -= scrollDistance
+          sliderRef.current.scrollLeft -= sliderRef.current.offsetWidth
         }}
       >
         <ChevronLeft />
@@ -58,7 +54,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
         variant={'secondary'}
         onClick={() => {
           if (!sliderRef.current) return
-          sliderRef.current.scrollLeft += scrollDistance
+          sliderRef.current.scrollLeft += sliderRef.current.offsetWidth
         }}
       >
         <ChevronRight />
