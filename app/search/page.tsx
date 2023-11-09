@@ -57,12 +57,10 @@ export default async function Page({ searchParams }: PageProps) {
             <p className="">{products.length} results found</p>
           )}
           <ProductGrid products={currentProducts} />
-          {products.length > ITEMS_PER_PAGE && (
-            <SearchParamPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
-          )}
+          <SearchParamPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
         </div>
       </Section>
     </>

@@ -11,6 +11,15 @@ type PageProps = {
   searchParams: Record<string, string | undefined>
 }
 
+export async function generateMetadata(
+  { params, searchParams }: PageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  return {
+    title: capitalize(params?.category) || '',
+  }
+}
+
 async function getCategoryProducts(category: string): Promise<Product[]> {
   try {
     const products = await prisma.product.findMany({
@@ -26,15 +35,6 @@ async function getCategoryProducts(category: string): Promise<Product[]> {
   } catch (error) {
     console.error(error)
     return []
-  }
-}
-
-export async function generateMetadata(
-  { params, searchParams }: PageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  return {
-    title: capitalize(params?.category) || '',
   }
 }
 

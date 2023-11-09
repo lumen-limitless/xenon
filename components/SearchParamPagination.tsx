@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Pagination } from './Pagination'
 
 type SearchParamPaginationProps = {
@@ -13,12 +13,27 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
   totalPages,
 }) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const otherSearchParams = Array.from(searchParams.entries()).filter(
+    ([key]) => key !== 'page',
+  )
+
+  console.log(otherSearchParams)
   return (
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}
       setPage={(value) => {
-        router.push(`?page=${value}`)
+        router.push(
+          `${pathname}?${otherSearchParams.map((searchParam, i) => {
+            const [key, value] = searchParam
+            return (
+              `${key}=${value}` +
+              (i === otherSearchParams.length - 1 ? '' : '&')
+            )
+          })}&page=${value}`,
+        )
       }}
     />
   )
