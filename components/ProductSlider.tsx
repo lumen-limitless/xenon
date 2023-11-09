@@ -13,7 +13,7 @@ type ProductSliderProps = {
 
 export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
   const sliderRef = useRef<HTMLDivElement>(null)
-  const { x, y } = useScroll(sliderRef)
+  const { x } = useScroll(sliderRef)
 
   return (
     <div className="relative w-full">
@@ -30,8 +30,8 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
       <Button
         id="scroll-left"
         className={cn(
-          'absolute left-2 top-1/2 -translate-y-1/2',
-          x > 0 ? '' : 'hidden',
+          'absolute left-2 top-1/2 hidden -translate-y-1/2 md:inline-flex',
+          x > 0 ? '' : 'pointer-events-none opacity-0',
         )}
         size={'icon'}
         variant={'secondary'}
@@ -45,9 +45,9 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
       <Button
         id="scroll-right"
         className={cn(
-          'absolute right-2 top-1/2 -translate-y-1/2',
+          'absolute right-2 top-1/2 hidden -translate-y-1/2 md:inline-flex',
           x + sliderRef.current?.offsetWidth! >= sliderRef.current?.scrollWidth!
-            ? 'hidden'
+            ? 'pointer-events-none opacity-0'
             : '',
         )}
         size={'icon'}

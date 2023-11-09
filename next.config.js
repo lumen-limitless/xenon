@@ -11,7 +11,10 @@ const nextConfig = {
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: undefined,
-    domains: ['fakestoreapi.com', 'res.cloudinary.com'],
+    remotePatterns: [
+      { hostname: 'fakestoreapi.com' },
+      { hostname: 'res.cloudinary.com' },
+    ],
   },
 
   webpack(config) {
