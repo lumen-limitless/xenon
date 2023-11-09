@@ -15,20 +15,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   if (!product) return null
 
   return (
-    <Card className="flex w-full flex-col">
-      <CardContent className="flex-grow">
-        <div className="relative h-48">
-          <Image
-            className="h-auto w-auto object-contain object-center"
-            src={product.image}
-            alt={product.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
+    <Card className="h-full">
+      <CardContent>
+        {' '}
+        <Link href={`/products/${product.slug}`}>
+          <div className="relative h-32 md:h-64">
+            <Image
+              className="h-auto w-auto object-contain object-center"
+              src={product.image}
+              alt={product.title}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
+            />
+          </div>
+        </Link>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <h2 className="text-left">{truncateText(product.title, 50)}</h2>
+
+      <CardFooter className="flex-col gap-1">
+        <h2 className="text-left text-sm md:text-base">
+          {truncateText(product.title, 50)}
+        </h2>
         <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
         {product.stock > 0 ? (
           <AddToCartButton className="w-full" product={product} />
@@ -37,9 +43,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Out of Stock
           </Button>
         )}
-        <Button variant={'secondary'} className="w-full" asChild>
-          <Link href={`/products/${product.slug}`}>View Details</Link>
-        </Button>
       </CardFooter>
     </Card>
   )

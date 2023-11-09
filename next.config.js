@@ -13,12 +13,6 @@ const nextConfig = {
     deviceSizes: undefined,
     domains: ['fakestoreapi.com', 'res.cloudinary.com'],
   },
-  experimental: {
-    serverActions: true,
-    logging: {
-      level: 'verbose',
-    },
-  },
 
   webpack(config) {
     config.module.rules.push({

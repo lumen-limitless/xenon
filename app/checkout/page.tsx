@@ -1,4 +1,4 @@
-import { CreateOrderButton } from '@/components/CreateOrderButton'
+import { Progress } from '@/components/ui/progress'
 import { Section } from '@/components/ui/section'
 
 type PageProps = {
@@ -11,8 +11,11 @@ export const metadata = {
 }
 export default async function Page({}: PageProps) {
   return (
-    <Section className="flex-grow flex-col items-center justify-center">
-      <CreateOrderButton />
+    <Section className="flex-grow pb-48 pt-10">
+      <div className="container">
+        <h1 className="mb-4 text-3xl font-bold">Checkout</h1>
+        <Progress value={33} />
+      </div>
     </Section>
   )
 }

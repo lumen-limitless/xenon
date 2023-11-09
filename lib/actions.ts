@@ -2,7 +2,9 @@
 
 import { revalidatePath } from 'next/cache'
 import { createCart, getCart } from './cart'
+import { APP_URL } from './constants'
 import { prisma } from './prisma'
+import { stripe } from './stripe'
 import { generateSlug } from './utils'
 
 export async function addProductAction(
@@ -130,7 +132,7 @@ export async function updateCartAction({
   }
 }
 
-export async function createOrderAction(): Promise<{
+export async function checkoutAction(): Promise<{
   success: boolean
   orderId: string | null
 }> {
@@ -188,5 +190,51 @@ export async function createOrderAction(): Promise<{
   } catch (error) {
     console.error(error)
     return { success: false, orderId: null }
+  }
+}
+
+export async function stripeCheckoutAction() {
+  try {
+    const cart = await getCart()
+
+    if (cart === null || cart.size === 0) {
+      throw new Error('Cart is empty')
+    }
+
+    // https://stripe.com/docs/api/checkout/sessions
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        ...cart.items.map((item) => ({
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: item.product.title,
+              images: [item.product.image],
+            },
+            unit_amount: item.product.price,
+          },
+          quantity: item.quantity,
+        })),
+      ],
+
+      mode: 'payment',
+
+      shipping_address_collection: {
+        allowed_countries: ['US'],
+      },
+
+      success_url: `${APP_URL}/checkout/?success=true`,
+      cancel_url: `${APP_URL}/checkout/?canceled=true`,
+
+      automatic_tax: { enabled: true },
+    })
+
+    if (session.url === null) {
+      throw new Error('Error creating checkout session')
+    }
+
+    return session.url
+  } catch (error) {
+    console.error(error)
   }
 }

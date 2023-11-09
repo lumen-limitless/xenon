@@ -3,13 +3,13 @@
 import { updateCartAction } from '@/lib/actions'
 import { formatPrice, truncateText } from '@/lib/utils'
 import { type CartItem } from '@prisma/client'
-import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { type CartInfo } from '@types'
 import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
+import { CheckoutButton } from './CheckoutButton'
 import { Button } from './ui/button'
 import {
   Sheet,
@@ -80,12 +80,12 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={'ghost'}>
+        <Button variant={'ghost'} id="cart-button">
           <ShoppingBag />
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-screen overflow-y-auto md:w-auto">
+      <SheetContent side="right" className="overflow-y-auto pb-32">
         <SheetHeader>
           <SheetTitle>Your Shopping Bag</SheetTitle>
         </SheetHeader>
@@ -164,19 +164,12 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
           )}
         </Table>
 
-        <SheetFooter>
-          <div className="mx-auto my-5 flex w-full max-w-xl px-5">
-            {cart && cart.size > 0 && (
-              <SheetClose asChild>
-                <Button className="w-full" asChild>
-                  <Link href="/checkout">
-                    Proceed to checkout
-                    <ArrowRightIcon />
-                  </Link>
-                </Button>
-              </SheetClose>
-            )}
-          </div>
+        <SheetFooter className="py-5">
+          {cart && cart.size > 0 && (
+            <SheetClose asChild>
+              <CheckoutButton amount={cart.subtotal} />
+            </SheetClose>
+          )}
         </SheetFooter>
       </SheetContent>
     </Sheet>

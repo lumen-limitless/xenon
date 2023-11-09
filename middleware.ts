@@ -22,7 +22,4 @@ export async function middleware(request: NextRequest) {
       )
     }
   }
-
-  // rate limit middleware
-  // TODO: implement rate limit middleware
 }

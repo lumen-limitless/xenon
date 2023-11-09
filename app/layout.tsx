@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster'
 import { authOptions } from '@/lib/auth'
 import { getCart } from '@/lib/cart'
 import { cn } from '@/lib/utils'
+import { Viewport } from 'next'
 import { getServerSession } from 'next-auth'
 import { Inter } from 'next/font/google'
 import Analytics from './analytics'
@@ -19,6 +20,10 @@ const inter = Inter({
 })
 
 export const metadata = defaultMetadata
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+}
 
 export default async function RootLayout({
   children,

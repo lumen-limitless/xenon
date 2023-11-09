@@ -2,6 +2,7 @@
 
 import { type ButtonProps } from '@/components/ui/button'
 import { updateCartAction } from '@/lib/actions'
+import { truncateText } from '@/lib/utils'
 import { type Product } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -44,7 +45,10 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
           toast({
             title: 'Added to bag',
-            description: `${product.title} was added to your bag.`,
+            description: `${truncateText(
+              product.title,
+              25,
+            )} was added to your bag.`,
           })
           router.refresh()
         })

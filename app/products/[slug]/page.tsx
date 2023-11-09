@@ -48,19 +48,23 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <Section className="py-20">
-      <div className="container flex flex-col items-center justify-center gap-20 lg:flex-row">
-        <div className="flex h-full flex-1 items-center justify-center">
+      <div className="container flex flex-col gap-20 lg:flex-row">
+        <div
+          className="flex h-full flex-1 flex-col items-center justify-center"
+          id="product-images"
+        >
           <Image
             className="h-auto w-auto"
             src={product.image}
             alt={product.title}
-            width={500}
-            height={500}
+            width={200}
+            height={200}
             priority
             quality={100}
           />
         </div>
-        <div className="flex-1 space-y-5">
+
+        <div className="flex-1 space-y-5" id="product-details">
           <h1 className="text-3xl font-bold">{product.title}</h1>
 
           <div className="flex items-center gap-1">

@@ -35,13 +35,21 @@ export default async function Page({}: PageProps) {
           <div className="col-span-12">
             <h2 className="text-2xl font-semibold">Quick Actions</h2>
           </div>
-          <Button className="col-span-4" asChild variant={'outline'}>
+          <Button
+            className="col-span-12 md:col-span-4"
+            asChild
+            variant={'outline'}
+          >
             <Link href="/manage-products">
               Manage Products
               <ExternalLink />
             </Link>
           </Button>
-          <Button className="col-span-4" asChild variant={'outline'}>
+          <Button
+            className="col-span-12 md:col-span-4"
+            asChild
+            variant={'outline'}
+          >
             <Link href="/manage-orders">
               Manage Orders
               <ExternalLink />
@@ -51,7 +59,7 @@ export default async function Page({}: PageProps) {
           <div className="col-span-12">
             <h2 className="text-2xl font-semibold">Stats</h2>
           </div>
-          <Card className="col-span-4">
+          <Card className="col-span-12 md:col-span-4">
             <CardHeader>
               <h3>Total Sales</h3>
             </CardHeader>
@@ -63,7 +71,7 @@ export default async function Page({}: PageProps) {
               </p>
             </CardContent>
           </Card>
-          <Card className="col-span-4">
+          <Card className="col-span-12 md:col-span-4">
             <CardHeader>
               <h3>Total Orders</h3>
             </CardHeader>
@@ -71,7 +79,7 @@ export default async function Page({}: PageProps) {
               <p>{orders.length}</p>
             </CardContent>
           </Card>
-          <Card className="col-span-4">
+          <Card className="col-span-12 md:col-span-4">
             <CardHeader>
               <h3>Pending Orders</h3>
             </CardHeader>

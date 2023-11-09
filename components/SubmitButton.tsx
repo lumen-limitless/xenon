@@ -1,7 +1,7 @@
 'use client'
 
 import { Loader2 } from 'lucide-react'
-import { experimental_useFormStatus as useFormStatus } from 'react-dom'
+import { useFormStatus } from 'react-dom'
 import { Button, type ButtonProps } from './ui/button'
 
 type SubmitButtonProps = {} & ButtonProps
