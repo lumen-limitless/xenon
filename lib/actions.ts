@@ -153,14 +153,14 @@ export async function updateCartAction({
   }
 }
 
-export async function checkoutAction(): Promise<{
+export async function createOrderAction(): Promise<{
   success: boolean
   orderId: string | null
 }> {
   try {
-    const cart = (await getCart()) ?? (await createCart())
+    const cart = await getCart()
 
-    if (cart.size === 0) {
+    if (cart === null || cart.size === 0) {
       return { success: false, orderId: null }
     }
 
@@ -237,6 +237,8 @@ export async function stripeCheckoutAction(): Promise<string | null> {
           quantity: item.quantity,
         })),
       ],
+
+      client_reference_id: cart.id,
 
       mode: 'payment',
 

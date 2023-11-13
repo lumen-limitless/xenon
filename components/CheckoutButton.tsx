@@ -1,17 +1,11 @@
 'use client'
 
-import { checkoutAction, stripeCheckoutAction } from '@/lib/actions'
+import { stripeCheckoutAction } from '@/lib/actions'
 import { formatPrice } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
-import {
-  RedirectType,
-  redirect,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation'
-import { useEffect, useTransition } from 'react'
+import { RedirectType, redirect } from 'next/navigation'
+import { useTransition } from 'react'
 import { Button } from './ui/button'
-import { toast } from './ui/use-toast'
 
 type CheckoutButtonProps = {
   amount?: number
@@ -19,18 +13,6 @@ type CheckoutButtonProps = {
 
 export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
   const [isPending, startTransition] = useTransition()
-  const searchParams = useSearchParams()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (searchParams.has('success')) {
-      checkoutAction()
-      toast({ title: 'Order placed!' })
-    }
-    if (searchParams.has('canceled')) {
-      toast({ title: 'Order canceled' })
-    }
-  })
 
   return (
     <Button
@@ -40,8 +22,9 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
       onClick={() =>
         startTransition(async () => {
           const sessionUrl = await stripeCheckoutAction()
-          if (!sessionUrl) return
-          redirect(sessionUrl, RedirectType.push)
+          if (sessionUrl) {
+            redirect(sessionUrl, RedirectType.push)
+          }
         })
       }
     >

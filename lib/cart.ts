@@ -29,14 +29,14 @@ function decryptCookieValue(value: string): string | undefined {
   }
 }
 
-export function getLocalCartId(): string | undefined {
+function getLocalCartId(): string | undefined {
   const encryptedLocalCartId = cookies().get('localCartId')?.value
   if (encryptedLocalCartId !== undefined) {
     return decryptCookieValue(encryptedLocalCartId)
   }
 }
 
-export function setLocalCartId(cartId: string): void {
+function setLocalCartId(cartId: string): void {
   const encryptedLocalCartId = encryptCookieValue(cartId)
   cookies().set('localCartId', encryptedLocalCartId, {
     httpOnly: true,

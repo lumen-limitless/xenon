@@ -71,7 +71,7 @@ model Product {
   description String
   price       Int
   stock       Int         @default(0)
-  image       String
+  images      String[]
   categories  Category[]  @relation("ProductCategory")
   items       CartItem[]
   createdAt   DateTime    @default(now())
