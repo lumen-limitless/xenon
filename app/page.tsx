@@ -138,7 +138,7 @@ export default async function Page({}: PageProps) {
                 >
                   <Image
                     className="h-auto w-auto transition-all duration-300 ease-in-out group-hover:scale-105"
-                    src={product.image}
+                    src={product.images[0]}
                     width={100}
                     height={100}
                     alt={product.title}

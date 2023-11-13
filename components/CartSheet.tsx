@@ -124,8 +124,8 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
                       <Image
                         className="h-auto w-auto"
                         src={
-                          item.product.image
-                            ? item.product.image
+                          item.product.images[0]
+                            ? item.product.images[0]
                             : '/images/placeholder.png'
                         }
                         alt={item.product.title}

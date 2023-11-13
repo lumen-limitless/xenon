@@ -28,7 +28,7 @@ export function generateSlug(text: string): string {
     .join('-')
 }
 
-export function shuffle(array: Array<any>): Array<any> {
+export function shuffle<T>(array: Array<T>): Array<T> {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * i)
