@@ -36,7 +36,7 @@ export async function generateMetadata(
   return {
     title: product?.title || '',
     openGraph: {
-      images: [product?.image || ''],
+      images: [product?.images[0] || ''],
     },
   }
 }
@@ -55,7 +55,7 @@ export default async function Page({ params }: PageProps) {
         >
           <Image
             className="h-auto w-auto"
-            src={product.image}
+            src={product.images[0]}
             alt={product.title}
             width={200}
             height={200}

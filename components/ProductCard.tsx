@@ -24,7 +24,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <Link href={`/products/${product.slug}`}>
           <Image
             className="h-32 w-full object-contain object-center"
-            src={product.image}
+            src={product.images[0]}
             alt={product.title}
             width={100}
             height={100}

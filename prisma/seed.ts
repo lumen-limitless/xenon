@@ -53,7 +53,7 @@ export default async function main() {
           },
         },
         stock: Math.floor(Math.random() * 100),
-        image: product.image,
+        images: [product.image],
         price: parseInt((product.price * 100).toFixed(0)),
       },
     })
