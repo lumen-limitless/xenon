@@ -39,7 +39,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
               </TableCell>
               <TableCell>
                 <Image
-                  src={product.image}
+                  src={product.images[0]}
                   alt={product.title}
                   width={50}
                   height={50}

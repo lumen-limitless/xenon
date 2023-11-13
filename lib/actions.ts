@@ -38,7 +38,7 @@ export async function addProductAction(
         price,
         stock,
         description,
-        image,
+        images: [image],
         categories: {
           connect: categories.map((c) => ({ id: c })),
         },
@@ -230,7 +230,7 @@ export async function stripeCheckoutAction(): Promise<string | null> {
             currency: 'usd',
             product_data: {
               name: item.product.title,
-              images: [item.product.image],
+              images: item.product.images,
             },
             unit_amount: item.product.price,
           },
