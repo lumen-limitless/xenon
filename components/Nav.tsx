@@ -93,6 +93,9 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
                           <DropdownMenuItem asChild>
                             <Link href="/manage-orders">Manage Orders</Link>
                           </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/manage-users">Manage Users</Link>
+                          </DropdownMenuItem>
                         </DropdownMenuGroup>
                       </>
                     )}

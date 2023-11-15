@@ -153,67 +153,6 @@ export async function updateCartAction({
   }
 }
 
-export async function createOrderAction(): Promise<{
-  success: boolean
-  orderId: string | null
-}> {
-  try {
-    const cart = await getCart()
-
-    if (cart === null || cart.size === 0) {
-      return { success: false, orderId: null }
-    }
-
-    const order = await prisma.$transaction(async (tx) => {
-      const order = await tx.order.create({
-        data: {
-          userId: cart.userId,
-          total: cart.items.reduce(
-            (acc, item) => acc + item.quantity * item.product.price,
-            0,
-          ),
-          items: {
-            create: cart.items.map((item) => ({
-              quantity: item.quantity,
-              product: {
-                connect: {
-                  id: item.product.id,
-                },
-              },
-            })),
-          },
-        },
-      })
-
-      for (const item of cart.items) {
-        await tx.product.update({
-          where: {
-            id: item.product.id,
-          },
-          data: {
-            stock: {
-              decrement: item.quantity,
-            },
-          },
-        })
-      }
-
-      await tx.cart.delete({
-        where: {
-          id: cart.id,
-        },
-      })
-
-      return order
-    })
-
-    return { success: true, orderId: order.id }
-  } catch (error) {
-    console.error(error)
-    return { success: false, orderId: null }
-  }
-}
-
 export async function stripeCheckoutAction(): Promise<string | null> {
   try {
     const cart = await getCart()
@@ -224,19 +163,21 @@ export async function stripeCheckoutAction(): Promise<string | null> {
 
     // https://stripe.com/docs/api/checkout/sessions
     const session = await stripe.checkout.sessions.create({
-      line_items: [
-        ...cart.items.map((item) => ({
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: item.product.title,
-              images: item.product.images,
+      line_items: cart.items.map((item) => ({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.product.title,
+            images: [item.product.images[0]],
+            metadata: {
+              ['productId']: item.product.id,
             },
-            unit_amount: item.product.price,
           },
-          quantity: item.quantity,
-        })),
-      ],
+
+          unit_amount: item.product.price,
+        },
+        quantity: item.quantity,
+      })),
 
       client_reference_id: cart.id,
 
@@ -258,3 +199,64 @@ export async function stripeCheckoutAction(): Promise<string | null> {
     return null
   }
 }
+
+// export async function createOrderAction(): Promise<{
+//   success: boolean
+//   orderId: string | null
+// }> {
+//   try {
+//     const cart = await getCart()
+
+//     if (cart === null || cart.size === 0) {
+//       return { success: false, orderId: null }
+//     }
+
+//     const order = await prisma.$transaction(async (tx) => {
+//       const order = await tx.order.create({
+//         data: {
+//           userId: cart.userId,
+//           total: cart.items.reduce(
+//             (acc, item) => acc + item.quantity * item.product.price,
+//             0,
+//           ),
+//           items: {
+//             create: cart.items.map((item) => ({
+//               quantity: item.quantity,
+//               product: {
+//                 connect: {
+//                   id: item.product.id,
+//                 },
+//               },
+//             })),
+//           },
+//         },
+//       })
+
+//       for (const item of cart.items) {
+//         await tx.product.update({
+//           where: {
+//             id: item.product.id,
+//           },
+//           data: {
+//             stock: {
+//               decrement: item.quantity,
+//             },
+//           },
+//         })
+//       }
+
+//       await tx.cart.delete({
+//         where: {
+//           id: cart.id,
+//         },
+//       })
+
+//       return order
+//     })
+
+//     return { success: true, orderId: order.id }
+//   } catch (error) {
+//     console.error(error)
+//     return { success: false, orderId: null }
+//   }
+// }

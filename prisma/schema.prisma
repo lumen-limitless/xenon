@@ -66,7 +66,7 @@ model VerificationToken {
 
 model Product {
   id          String      @id @default(cuid())
-  title       String
+  title       String      @unique
   slug        String      @unique
   description String
   price       Int
@@ -113,21 +113,29 @@ model CartItem {
 
 enum OrderStatus {
   PENDING
-  ACCEPTED
   SHIPPED
   COMPLETED
   CANCELLED
 }
 
 model Order {
-  id        String      @id @default(cuid())
-  status    OrderStatus @default(PENDING)
-  total     Int
-  items     OrderItem[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  User      User?       @relation(fields: [userId], references: [id])
-  userId    String?
+  id                String      @id @default(cuid())
+  status            OrderStatus @default(PENDING)
+  total             Int
+  items             OrderItem[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  User              User?       @relation(fields: [userId], references: [id])
+  userId            String?
+  checkoutSessionId String?
+  name              String?
+  email             String?
+  address1          String?
+  address2          String?
+  city              String?
+  state             String?
+  zip               String?
+  country           String?
 }
 
 model OrderItem {
