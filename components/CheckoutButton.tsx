@@ -1,7 +1,7 @@
 'use client'
 
 import { stripeCheckoutAction } from '@/lib/actions'
-import { formatPrice } from '@/lib/utils'
+import { formatDollars } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import { RedirectType, redirect } from 'next/navigation'
 import { useTransition } from 'react'
@@ -31,7 +31,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
       {isPending ? (
         <Loader2 className="h-5 animate-spin" />
       ) : (
-        `Checkout ${amount && formatPrice(amount)}`
+        `Checkout ${amount && formatDollars(amount)}`
       )}
     </Button>
   )
