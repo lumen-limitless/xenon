@@ -13,11 +13,11 @@ export function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-export function formatPrice(price: number): string {
+export function formatDollars(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(price / 100)
+  }).format(amount / 100)
 }
 
 export function generateSlug(text: string): string {

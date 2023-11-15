@@ -9,6 +9,7 @@ import { Section } from '@/components/ui/section'
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHeader,
   TableRow,
@@ -142,6 +143,11 @@ export default async function Page({}: PageProps) {
                 </TableRow>
               ))}
             </TableBody>
+            {orders.length === 0 && (
+              <TableCaption>
+                No orders found. Try adjusting your search filters.
+              </TableCaption>
+            )}
           </Table>
         </div>
       </Section>

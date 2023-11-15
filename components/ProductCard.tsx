@@ -1,4 +1,4 @@
-import { formatPrice, truncateText } from '@/lib/utils'
+import { cn, formatDollars, truncateText } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -19,8 +19,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (!product) return null
 
   return (
-    <Card className={className}>
-      <CardContent>
+    <Card className={cn('flex h-full flex-col', className)}>
+      <CardContent className="flex flex-grow flex-col">
         <Link href={`/products/${product.slug}`}>
           <Image
             className="h-32 w-full object-contain object-center"
@@ -37,7 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <h2 className="text-left text-sm md:text-base">
           {truncateText(product.title, 50)}
         </h2>
-        <Badge className="mr-auto">{formatPrice(product.price)}</Badge>
+        <Badge className="mr-auto">{formatDollars(product.price)}</Badge>
         {product.stock > 0 ? (
           <AddToCartButton className="w-full" product={product} />
         ) : (

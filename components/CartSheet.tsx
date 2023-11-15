@@ -1,7 +1,7 @@
 'use client'
 
 import { updateCartAction } from '@/lib/actions'
-import { formatPrice, truncateText } from '@/lib/utils'
+import { formatDollars, truncateText } from '@/lib/utils'
 import { type CartItem } from '@prisma/client'
 import { type CartInfo } from '@types'
 import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react'
@@ -145,7 +145,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
                     <div className="flex w-full items-center">
                       <CartQuantitySelector item={item} />
                       <span>
-                        {formatPrice(item.product.price * item.quantity)}
+                        {formatDollars(item.product.price * item.quantity)}
                       </span>
                     </div>
                   </div>
@@ -157,7 +157,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
             <TableFooter>
               <TableRow>
                 <TableCell className="text-right">
-                  Subtotal: {formatPrice(cart.subtotal)}
+                  Subtotal: {formatDollars(cart.subtotal)}
                 </TableCell>
               </TableRow>
             </TableFooter>

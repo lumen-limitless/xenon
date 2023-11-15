@@ -2,7 +2,7 @@ import { AddToCartButton } from '@/components/AddToCartButton'
 import { Badge } from '@/components/ui/badge'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
-import { formatPrice } from '@/lib/utils'
+import { formatDollars } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import { type Metadata, type ResolvingMetadata } from 'next'
 import Image from 'next/image'
@@ -68,7 +68,7 @@ export default async function Page({ params }: PageProps) {
           <h1 className="text-3xl font-bold">{product.title}</h1>
 
           <div className="flex items-center gap-1">
-            <Badge className="text-lg">{formatPrice(product.price)}</Badge>
+            <Badge className="text-lg">{formatDollars(product.price)}</Badge>
             <Badge
               variant={product.stock > 0 ? 'outline' : 'destructive'}
               className={'text-lg'}
@@ -79,9 +79,9 @@ export default async function Page({ params }: PageProps) {
 
           <p className="prose break-words text-xl">{product.description}</p>
 
-          <div className="w-full">
+          <div className="sticky bottom-0 w-full bg-background px-5 py-3 md:relative">
             {product.stock > 0 && (
-              <AddToCartButton className="w-full" product={product} />
+              <AddToCartButton className="mx-auto w-full" product={product} />
             )}
           </div>
         </div>
