@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { deleteProductAction } from '@/lib/actions'
-import { formatPrice } from '@/lib/utils'
+import { formatDollars } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
@@ -47,7 +47,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                 {product.title}
               </TableCell>
               <TableCell>{product.description}</TableCell>
-              <TableCell>{formatPrice(product.price)}</TableCell>
+              <TableCell>{formatDollars(product.price)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
