@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { prisma } from '@/lib/prisma'
-import { formatPrice } from '@/lib/utils'
+import { formatDollars } from '@/lib/utils'
 import { Filter } from 'lucide-react'
 import Image from 'next/image'
 
@@ -132,7 +132,7 @@ export default async function Page({}: PageProps) {
                     </ul>
                   </TableCell>
 
-                  <TableCell>{formatPrice(order.total)}</TableCell>
+                  <TableCell>{formatDollars(order.total)}</TableCell>
 
                   <TableCell>
                     <Button className="">Mark as Shipped</Button>
