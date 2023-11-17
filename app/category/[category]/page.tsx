@@ -53,13 +53,16 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   return (
     <>
-      <Section className="py-20">
+      <Section className="flex-grow flex-col py-20">
         <div className="container">
           <h1 className="mb-10 text-center text-3xl">
             {capitalize(params.category)} Products
           </h1>
 
           <ProductGrid products={currentProducts} />
+        </div>
+
+        <div className="mt-auto">
           <SearchParamPagination
             currentPage={currentPage}
             totalPages={totalPages}
