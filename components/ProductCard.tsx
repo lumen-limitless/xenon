@@ -19,7 +19,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (!product) return null
 
   return (
-    <Card className={cn('flex h-full flex-col', className)}>
+    <Card
+      className={cn('flex h-full flex-col', className)}
+      data-testid="product-card"
+    >
       <CardContent className="flex flex-grow flex-col">
         <Link href={`/products/${product.slug}`}>
           <Image

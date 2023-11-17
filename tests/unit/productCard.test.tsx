@@ -17,7 +17,7 @@ describe('ProductCard', () => {
     slug: 'product-1',
     price: 1099,
     stock: 10,
-    image: 'https://example.com/product1.jpg',
+    images: ['https://example.com/product1.jpg'],
     description: 'Product 1 description',
     createdAt: new Date(),
     updatedAt: new Date(),

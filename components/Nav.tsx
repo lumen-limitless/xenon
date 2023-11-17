@@ -6,9 +6,10 @@ import { User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import GoogleSVG from 'public/google.svg'
 import LogoSVG from 'public/logo.svg'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { CartSheet } from './CartSheet'
 import { SearchBar } from './SearchBar'
 import { Button } from './ui/button'
@@ -40,11 +41,29 @@ type NavProps = {
 }
 
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
-  // This is a hack to prevent the cart icon from showing a badge on the server
-  const [isClient, setIsClient] = useState(false)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const router = useRouter()
+
+  // If the user is signed in and the signin query param is present, remove it
+  // may be better to add a callback url to the signIn function instead
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    if (session !== null && searchParams.has('signin')) {
+      const otherSearchParams = Array.from(searchParams.entries()).filter(
+        ([key]) => key !== 'signin',
+      )
+      router.replace(
+        `${pathname}${
+          otherSearchParams.length > 0 ? '?' : ''
+        }${otherSearchParams.map((searchParam, i) => {
+          const [key, value] = searchParam
+          return (
+            `${key}=${value}` + (i === otherSearchParams.length - 1 ? '' : '&')
+          )
+        })}`,
+      )
+    }
+  }, [session, searchParams, router, pathname])
 
   return (
     <div className="container flex h-16 w-full items-center" id="navigation">
@@ -56,7 +75,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           <SearchBar />
         </div>
         <NavigationMenuList>
-          <Sheet>
+          <Sheet defaultOpen={searchParams.has('signin') && session === null}>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant={'ghost'}>
@@ -66,13 +85,13 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {session ? (
+                {session !== null ? (
                   <>
                     {' '}
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Orders</DropdownMenuItem>
-                      <DropdownMenuItem>Settings</DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/account"> View Account</Link>
+                      </DropdownMenuItem>
 
                       <DropdownMenuItem onClick={() => signOut()}>
                         Sign out
@@ -145,7 +164,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           <NavigationMenuItem>
             <div className="relative">
               <CartSheet cart={cart} />
-              {isClient && cart && cart.items.length > 0 && (
+              {cart && cart.items.length > 0 && (
                 <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs text-muted-foreground">
                   {cart?.items.length}
                 </div>

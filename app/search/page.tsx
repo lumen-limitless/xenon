@@ -37,7 +37,7 @@ async function getProductsFromQuery(
 const ITEMS_PER_PAGE = 12
 
 export default async function Page({ searchParams }: PageProps) {
-  const products = await getProductsFromQuery(searchParams['query'])
+  const products = await getProductsFromQuery(searchParams['q'])
 
   const currentPage = parseInt(searchParams['page'] || '1')
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
@@ -49,14 +49,16 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <>
-      <Section id="search-results" className="py-10">
-        <div className="container">
+      <Section id="search-results" className="flex-grow flex-col py-10">
+        <div className="container flex h-full flex-grow flex-col">
           {products.length === 0 ? (
             <p className="">No results found</p>
           ) : (
             <p className="">{products.length} results found</p>
           )}
           <ProductGrid products={currentProducts} />
+        </div>
+        <div className="mt-auto">
           <SearchParamPagination
             currentPage={currentPage}
             totalPages={totalPages}

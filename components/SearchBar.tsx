@@ -9,7 +9,7 @@ export const SearchBar: React.FC = () => {
     console.log(formData)
     const query = formData.get('query')?.toString()
     if (query === undefined) return
-    router.push(`/search?query=${formData.get('query')}`)
+    router.push(`/search?q=${formData.get('query')}`)
   }
   return (
     <form className="relative w-full" action={handleSubmit}>

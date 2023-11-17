@@ -1,10 +1,10 @@
 import { Carousel } from '@/components/Carousel'
-import { ProductSlider } from '@/components/ProductSlider'
+import { ProductScroller } from '@/components/ProductScroller'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
-import { capitalize, shuffle, truncateText } from '@/lib/utils'
+import { capitalize, shuffle } from '@/lib/utils'
 import carousel1IMG from '@/public/carousel-1.webp'
 import carousel2IMG from '@/public/carousel-2.webp'
 import carousel3IMG from '@/public/carousel-3.webp'
@@ -122,7 +122,7 @@ export default async function Page({}: PageProps) {
         </div>
       </Section>
 
-      <Section className="py-10" id="shop-featured">
+      <Section className="bg-muted py-10" id="shop-featured">
         <div className="container">
           <h2 className="mb-5 text-center text-3xl font-semibold">
             Featured Products
@@ -134,7 +134,7 @@ export default async function Page({}: PageProps) {
                 <Link
                   href={`/products/${product.slug}`}
                   key={product.id}
-                  className="group flex h-72 flex-col items-center justify-center gap-5 bg-muted p-1"
+                  className="group flex h-72 flex-col items-center justify-center gap-5 bg-background p-1"
                 >
                   <Image
                     className="h-auto w-auto transition-all duration-300 ease-in-out group-hover:scale-105"
@@ -144,9 +144,6 @@ export default async function Page({}: PageProps) {
                     alt={product.title}
                     key={product.id}
                   />
-                  <h3 className="text-lg">
-                    {capitalize(truncateText(product.title, 50))}
-                  </h3>
                 </Link>
               ))}
           </div>
@@ -155,19 +152,16 @@ export default async function Page({}: PageProps) {
 
       <Section className="py-10" id="shop-trending">
         <div className="container">
-          <h2 className="mb-5 text-center text-3xl font-semibold">
-            Trending Now
-          </h2>
-          <ProductSlider products={shuffle(products)} />
+          <ProductScroller products={shuffle(products)} title="Trending Now" />
         </div>
       </Section>
 
       <Section className="py-10" id="shop-recommended">
         <div className="container">
-          <h2 className="mb-5 text-center text-3xl font-semibold">
-            Recommended For You
-          </h2>
-          <ProductSlider products={shuffle(products)} />
+          <ProductScroller
+            products={shuffle(products)}
+            title="Recommended for You"
+          />
         </div>
       </Section>
     </>
