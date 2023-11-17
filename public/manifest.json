@@ -1,0 +1,10 @@
+{
+  "name": "Xenon",
+  "short_name": "Xenon",
+  "icons": [],
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

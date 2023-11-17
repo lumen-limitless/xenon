@@ -64,5 +64,5 @@ export const defaultMetadata: Metadata = {
     address: false,
     telephone: false,
   },
-  manifest: null,
+  manifest: '/manifest.json',
 }
