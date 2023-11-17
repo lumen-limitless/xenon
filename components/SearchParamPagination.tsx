@@ -26,9 +26,7 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
       totalPages={totalPages}
       setPage={(value) => {
         router.push(
-          `${pathname}${
-            otherSearchParams.length > 0 ? '?' : ''
-          }${otherSearchParams.map((searchParam, i) => {
+          `${pathname}?${otherSearchParams.map((searchParam, i) => {
             const [key, value] = searchParam
             return (
               `${key}=${value}` +
