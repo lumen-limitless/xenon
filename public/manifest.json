@@ -1,7 +1,22 @@
 {
   "name": "Xenon",
   "short_name": "Xenon",
-  "icons": [],
+  "icons": [
+    { "src": "/icons/icon-144x144.png", "purpose": "any", "sizes": "144x144" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-wide.png",
+      "sizes": "1043x748",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "419x797",
+      "type": "image/png"
+    }
+  ],
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "start_url": "/",
