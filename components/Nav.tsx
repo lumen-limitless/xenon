@@ -9,7 +9,6 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import GoogleSVG from 'public/google.svg'
 import LogoSVG from 'public/logo.svg'
-import { useEffect } from 'react'
 import { CartSheet } from './CartSheet'
 import { SearchBar } from './SearchBar'
 import { Button } from './ui/button'
@@ -47,23 +46,23 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
 
   // If the user is signed in and the signin query param is present, remove it
   // may be better to add a callback url to the signIn function instead
-  useEffect(() => {
-    if (session !== null && searchParams.has('signin')) {
-      const otherSearchParams = Array.from(searchParams.entries()).filter(
-        ([key]) => key !== 'signin',
-      )
-      router.replace(
-        `${pathname}${
-          otherSearchParams.length > 0 ? '?' : ''
-        }${otherSearchParams.map((searchParam, i) => {
-          const [key, value] = searchParam
-          return (
-            `${key}=${value}` + (i === otherSearchParams.length - 1 ? '' : '&')
-          )
-        })}`,
-      )
-    }
-  }, [session, searchParams, router, pathname])
+  // useEffect(() => {
+  //   if (session !== null && searchParams.has('signin')) {
+  //     const otherSearchParams = Array.from(searchParams.entries()).filter(
+  //       ([key]) => key !== 'signin',
+  //     )
+  //     router.replace(
+  //       `${pathname}${
+  //         otherSearchParams.length > 0 ? '?' : ''
+  //       }${otherSearchParams.map((searchParam, i) => {
+  //         const [key, value] = searchParam
+  //         return (
+  //           `${key}=${value}` + (i === otherSearchParams.length - 1 ? '' : '&')
+  //         )
+  //       })}`,
+  //     )
+  //   }
+  // }, [session, searchParams, router, pathname])
 
   return (
     <div className="container flex h-16 w-full items-center" id="navigation">
@@ -150,7 +149,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               </SheetHeader>
               <div className="flex flex-col items-center justify-center gap-5 py-10">
                 <Button
-                  onClick={() => signIn('google')}
+                  onClick={() => signIn('google', { callbackUrl: pathname })}
                   variant={'outline'}
                   size="lg"
                 >
