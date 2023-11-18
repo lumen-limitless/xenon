@@ -42,25 +42,6 @@ type NavProps = {
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
-  // const router = useRouter()
-
-  // useEffect(() => {
-  //   if (session !== null && searchParams.has('signin')) {
-  //     const otherSearchParams = Array.from(searchParams.entries()).filter(
-  //       ([key]) => key !== 'signin',
-  //     )
-  //     router.replace(
-  //       `${pathname}${
-  //         otherSearchParams.length > 0 ? '?' : ''
-  //       }${otherSearchParams.map((searchParam, i) => {
-  //         const [key, value] = searchParam
-  //         return (
-  //           `${key}=${value}` + (i === otherSearchParams.length - 1 ? '' : '&')
-  //         )
-  //       })}`,
-  //     )
-  //   }
-  // }, [session, searchParams, router, pathname])
 
   return (
     <div className="container flex h-16 w-full items-center" id="navigation">

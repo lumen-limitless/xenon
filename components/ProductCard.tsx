@@ -3,9 +3,7 @@ import { Product } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AddToCartButton } from './AddToCartButton'
-import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { Card, CardContent, CardFooter } from './ui/card'
 
 type ProductCardProps = {
   product?: Product
@@ -19,28 +17,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   if (!product) return null
 
   return (
-    <Card
+    <div
       className={cn('flex h-full flex-col', className)}
-      data-testid="product-card"
+      id={product.id}
+      data-testid={'product-card'}
     >
-      <CardContent className="flex flex-grow flex-col">
-        <Link href={`/products/${product.slug}`}>
-          <Image
-            className="h-32 w-full object-contain object-center"
-            src={product.images[0]}
-            alt={product.title}
-            width={100}
-            height={100}
-            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
-          />
-        </Link>
-      </CardContent>
+      <Link href={`/products/${product.slug}`} className="rounded-md bg-muted">
+        <Image
+          className="h-32 w-full object-contain object-center"
+          src={product.images[0]}
+          alt={product.title}
+          width={100}
+          height={100}
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
+        />
+      </Link>
+      <h2 className="text-left text-sm md:text-base">
+        {truncateText(product.title, 50)}
+      </h2>
+      <p className="mr-auto">{formatDollars(product.price)}</p>
 
-      <CardFooter className="flex-col gap-1">
-        <h2 className="text-left text-sm md:text-base">
-          {truncateText(product.title, 50)}
-        </h2>
-        <Badge className="mr-auto">{formatDollars(product.price)}</Badge>
+      <div className="mt-auto">
         {product.stock > 0 ? (
           <AddToCartButton className="w-full" product={product} />
         ) : (
@@ -48,7 +45,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             Out of Stock
           </Button>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Category, PrismaClient } from '@prisma/client'
 
 type MockProduct = {
   id: number
@@ -13,6 +13,28 @@ type MockProduct = {
   price: number
 }
 
+const categories: Array<Partial<Category>> = [
+  {
+    title: 'all',
+    description: 'All products',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+  },
+  {
+    title: 'electronics',
+    description: 'Electronic products',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+  },
+  {
+    title: 'jewelery',
+    description: 'Jewelery products',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+  },
+  {
+    title: 'clothing',
+    description: 'Clothing products',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+  },
+]
 const prisma = new PrismaClient()
 
 // seed the database with products from the fakestoreapi
@@ -27,12 +49,8 @@ export default async function main() {
 
   await prisma.category.deleteMany()
 
-  const category = await prisma.category.create({
-    data: {
-      title: 'all',
-      description: 'All products',
-      image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-    },
+  const category = await prisma.category.createMany({
+    data: categories as Array<Category>,
   })
 
   await prisma.product.deleteMany()
@@ -49,7 +67,7 @@ export default async function main() {
         description: product.description,
         categories: {
           connect: {
-            id: category.id,
+            title: 'all',
           },
         },
         stock: Math.floor(Math.random() * 100),

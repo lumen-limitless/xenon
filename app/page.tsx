@@ -1,7 +1,5 @@
 import { Carousel } from '@/components/Carousel'
 import { ProductScroller } from '@/components/ProductScroller'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { capitalize, shuffle } from '@/lib/utils'
@@ -95,28 +93,28 @@ export default async function Page({}: PageProps) {
           </Carousel>
         </div>
       </Section>
+
       <Section className="py-10" id="shop-categories">
         <div className="container">
           <h2 className="mb-5 text-center text-3xl font-semibold">
             Shop Categories
           </h2>
-          <div className="grid w-full grid-cols-2 place-content-center gap-2">
+          <div className="grid w-full grid-cols-2 place-content-center gap-2 md:grid-cols-4">
             {categories.map((category) => (
-              <Button
-                asChild
-                key={category.id}
-                variant={'outline'}
-                id={category.title}
-                title={category.title}
-                className="h-full w-full flex-col items-center justify-center"
-              >
-                <Link href={`/category/${category.title}`}>
-                  <Avatar className="h-20 w-20">
-                    <AvatarImage src={category.image} />
-                  </Avatar>
-                  <h3 className="text-lg">{capitalize(category.title)}</h3>
-                </Link>
-              </Button>
+              <Link href={`/category/${category.title}`} key={category.id}>
+                <div className="relative h-36 w-full bg-muted transition-all duration-300 hover:brightness-90 md:h-48">
+                  <Image
+                    className="h-auto w-auto rounded-md"
+                    fill
+                    src={carousel1IMG}
+                    alt={category.title}
+                  />
+                </div>
+
+                <h3 className="mt-2 text-xl font-semibold">
+                  {capitalize(category.description)}
+                </h3>
+              </Link>
             ))}
           </div>
         </div>

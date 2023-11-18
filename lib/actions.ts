@@ -1,5 +1,6 @@
 'use server'
 
+import { OrderStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { createCart, getCart } from './cart'
 import { APP_URL } from './constants'
@@ -82,6 +83,34 @@ export async function deleteProductAction(
 
 /**
  *
+ * @description Server action to update a product in the store
+ * @param prevState The previous state of the form
+ * @param formData The form data from the request
+ * @returns object with message key
+ */
+export async function updateOrderStatusAction(
+  orderId: string,
+  status: OrderStatus,
+): Promise<{ success: boolean }> {
+  try {
+    await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status,
+      },
+    })
+
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { success: false }
+  }
+}
+
+/**
+ *
  * @description Server action to update an item in the cart
  * @param productId The id of the product to update
  * @param value The value to update the quantity by
@@ -153,6 +182,11 @@ export async function updateCartAction({
   }
 }
 
+/**
+ *
+ * @description Server action to create an order
+ * @returns object with success key
+ */
 export async function stripeCheckoutAction(): Promise<string | null> {
   try {
     const cart = await getCart()
@@ -186,6 +220,10 @@ export async function stripeCheckoutAction(): Promise<string | null> {
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
+
+      allow_promotion_codes: true,
+
+      payment_method_types: ['card'],
 
       success_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,

@@ -58,7 +58,7 @@ export default async function Page({ searchParams }: PageProps) {
       </Section>
       <Section id="view-selector">
         <div className="container">
-          <div className="flex items-center justify-evenly gap-5 py-5">
+          <div className="flex items-center justify-evenly gap-2 py-5">
             <Button variant={'default'} className="flex-1">
               Orders
             </Button>
@@ -78,7 +78,7 @@ export default async function Page({ searchParams }: PageProps) {
               <div className="flex w-full flex-wrap items-center justify-between gap-y-5 bg-muted p-5">
                 <div>
                   <p>Order #:</p>
-                  <strong>
+                  <strong className="text-blue-500 underline hover:text-blue-600">
                     <Link href={`/orders/${o.id}`}>{o.id}</Link>
                   </strong>
                 </div>
@@ -93,9 +93,6 @@ export default async function Page({ searchParams }: PageProps) {
                 <div>
                   <p>Status:</p>
                   <strong>{o.status}</strong>
-                </div>
-                <div>
-                  <Button>View</Button>
                 </div>
               </div>
 

@@ -3,43 +3,41 @@
 exports[`ProductCard should match snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="rounded-lg border bg-card text-card-foreground shadow-sm flex h-full flex-col"
+    class="flex h-full flex-col"
     data-testid="product-card"
+    id="1"
   >
-    <div
-      class="p-6 pt-0 flex flex-grow flex-col"
+    <a
+      class="rounded-md bg-muted"
+      href="/products/product-1"
     >
-      <a
-        href="/products/product-1"
-      >
-        <img
-          alt="Product 1"
-          class="h-32 w-full object-contain object-center"
-          data-nimg="1"
-          decoding="async"
-          height="100"
-          loading="lazy"
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
-          src="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75"
-          srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75 3840w"
-          style="color: transparent;"
-          width="100"
-        />
-      </a>
-    </div>
-    <div
-      class="flex items-center p-6 pt-0 flex-col gap-1"
+      <img
+        alt="Product 1"
+        class="h-32 w-full object-contain object-center"
+        data-nimg="1"
+        decoding="async"
+        height="100"
+        loading="lazy"
+        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
+        src="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75"
+        srcset="/_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=256&q=75 256w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=384&q=75 384w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fexample.com%2Fproduct1.jpg&w=3840&q=75 3840w"
+        style="color: transparent;"
+        width="100"
+      />
+    </a>
+    <h2
+      class="text-left text-sm md:text-base"
     >
-      <h2
-        class="text-left text-sm md:text-base"
-      >
-        Product 1
-      </h2>
-      <div
-        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80 mr-auto"
-      >
-        $10.99
-      </div>
+      Product 1
+    </h2>
+    <p
+      class="mr-auto"
+    >
+      $10.99
+    </p>
+    <div
+      class="mt-auto"
+    >
       <button
         aria-disabled="false"
         class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
