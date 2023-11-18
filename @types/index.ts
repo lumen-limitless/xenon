@@ -10,6 +10,11 @@ export type CartWithProducts = Prisma.CartGetPayload<{
   }
 }>
 
+export interface CartInfo extends CartWithProducts {
+  size: number
+  subtotal: number
+}
+
 export type OrderWithItemsAndProducts = Prisma.OrderGetPayload<{
   include: {
     items: {
@@ -19,8 +24,3 @@ export type OrderWithItemsAndProducts = Prisma.OrderGetPayload<{
     }
   }
 }>
-
-export interface CartInfo extends CartWithProducts {
-  size: number
-  subtotal: number
-}

@@ -6,7 +6,7 @@ import { User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import GoogleSVG from 'public/google.svg'
 import LogoSVG from 'public/logo.svg'
 import { CartSheet } from './CartSheet'
@@ -42,10 +42,8 @@ type NavProps = {
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
-  const router = useRouter()
+  // const router = useRouter()
 
-  // If the user is signed in and the signin query param is present, remove it
-  // may be better to add a callback url to the signIn function instead
   // useEffect(() => {
   //   if (session !== null && searchParams.has('signin')) {
   //     const otherSearchParams = Array.from(searchParams.entries()).filter(
