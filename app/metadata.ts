@@ -48,7 +48,7 @@ export const defaultMetadata: Metadata = {
   },
 
   appleWebApp: {
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: APP_NAME,
     capable: true,
   },
