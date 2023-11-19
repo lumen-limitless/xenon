@@ -1,5 +1,9 @@
-import { APP_DESCRIPTION, APP_NAME, APP_URL } from '@/lib/constants'
+import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants'
 import { Metadata } from 'next'
+
+const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+  : 'http://localhost:3000'
 
 export const defaultMetadata: Metadata = {
   title: {
@@ -8,7 +12,7 @@ export const defaultMetadata: Metadata = {
   },
   applicationName: APP_NAME,
   description: APP_DESCRIPTION,
-  metadataBase: new URL(APP_URL),
+  metadataBase: new URL(baseUrl),
   generator: 'Next.js',
   keywords: [
     'ecommerce',
@@ -36,7 +40,7 @@ export const defaultMetadata: Metadata = {
     siteName: APP_NAME,
     title: APP_NAME,
     description: APP_DESCRIPTION,
-    url: new URL(APP_URL),
+    url: new URL(baseUrl),
     locale: 'en_US',
   },
 
@@ -64,5 +68,6 @@ export const defaultMetadata: Metadata = {
     address: false,
     telephone: false,
   },
+
   manifest: '/manifest.json',
 }

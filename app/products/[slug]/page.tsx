@@ -51,11 +51,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const product = await getProduct(params.slug)
 
+  if (product === null) return notFound()
+
   return {
-    title: product?.title || '',
+    title: product.title,
     openGraph: {
-      images: [product?.images[0] || ''],
+      images: product.images,
     },
+    description: product.description,
   }
 }
 

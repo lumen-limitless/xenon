@@ -3,7 +3,6 @@
 import { OrderStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { createCart, getCart } from './cart'
-import { APP_URL } from './constants'
 import { prisma } from './prisma'
 import { stripe } from './stripe'
 import { generateSlug } from './utils'
@@ -189,6 +188,10 @@ export async function updateCartAction({
  */
 export async function stripeCheckoutAction(): Promise<string | null> {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:3000'
+
     const cart = await getCart()
 
     if (cart === null || cart.size === 0) {
@@ -225,8 +228,8 @@ export async function stripeCheckoutAction(): Promise<string | null> {
 
       payment_method_types: ['card'],
 
-      success_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${APP_URL}/checkout?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/checkout?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/checkout?session_id={CHECKOUT_SESSION_ID}`,
 
       automatic_tax: { enabled: true },
     })
