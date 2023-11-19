@@ -4,6 +4,7 @@ import { Section } from '@/components/ui/section'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { formatDollars } from '@/lib/utils'
+import { ArrowLeft } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -50,7 +51,7 @@ export default async function Page({ searchParams }: PageProps) {
       <Section id="user-greeting">
         <div className="flex h-36 w-full items-center justify-center bg-gradient-to-r from-purple-800 to-blue-800 text-white">
           <div className="container">
-            <h1 className="text-center text-3xl font-bold">
+            <h1 className="text-3xl font-bold md:text-4xl lg:text-5xl">
               Welcome, {session?.user.name}
             </h1>
           </div>
@@ -71,8 +72,23 @@ export default async function Page({ searchParams }: PageProps) {
           </div>
         </div>
       </Section>
+
       <Section id="orders" className="py-5">
         <div className="container">
+          {orders.length === 0 && (
+            <>
+              <div className="flex w-full flex-wrap items-center justify-center gap-y-5 bg-muted p-5">
+                <div>
+                  <p>You have no orders yet.</p>
+                </div>
+              </div>
+              <Button variant={'link'} asChild>
+                <Link href={'/'}>
+                  <ArrowLeft /> Continue Shopping
+                </Link>
+              </Button>
+            </>
+          )}
           {orders.map((o) => (
             <div key={o.id}>
               <div className="flex w-full flex-wrap items-center justify-between gap-y-5 bg-muted p-5">

@@ -54,7 +54,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="object-cover object-center"
+                className="rounded-md object-cover object-center"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white">
                 Shop All Categories
@@ -69,7 +69,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="object-cover object-center"
+                className="rounded-md object-cover object-center"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
                 Shop Electronics
@@ -84,7 +84,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="object-cover object-center"
+                className="rounded-md object-cover object-center"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
                 Shop Clothing
@@ -96,15 +96,12 @@ export default async function Page({}: PageProps) {
 
       <Section className="py-10" id="shop-categories">
         <div className="container">
-          <h2 className="mb-5 text-center text-3xl font-semibold">
-            Shop Categories
-          </h2>
           <div className="grid w-full grid-cols-2 place-content-center gap-2 md:grid-cols-4">
             {categories.map((category) => (
               <Link href={`/category/${category.title}`} key={category.id}>
                 <div className="relative h-36 w-full bg-muted transition-all duration-300 hover:brightness-90 md:h-48">
                   <Image
-                    className="h-auto w-auto rounded-md"
+                    className="h-auto w-auto rounded-md object-cover object-center"
                     fill
                     src={carousel1IMG}
                     alt={category.title}
@@ -122,9 +119,7 @@ export default async function Page({}: PageProps) {
 
       <Section className="bg-muted py-10" id="shop-featured">
         <div className="container">
-          <h2 className="mb-5 text-center text-3xl font-semibold">
-            Featured Products
-          </h2>
+          <h2 className="mb-5 text-3xl font-semibold">Featured Products</h2>
           <div className="grid grid-cols-2 place-content-center gap-2">
             {shuffle(products)
               .slice(0, 4)
@@ -132,7 +127,7 @@ export default async function Page({}: PageProps) {
                 <Link
                   href={`/products/${product.slug}`}
                   key={product.id}
-                  className="group flex h-72 flex-col items-center justify-center gap-5 bg-background p-1"
+                  className="group flex h-72 flex-col items-center justify-center gap-5 rounded-md bg-background p-1"
                 >
                   <Image
                     className="h-auto w-auto transition-all duration-300 ease-in-out group-hover:scale-105"

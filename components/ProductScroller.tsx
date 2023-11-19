@@ -23,9 +23,7 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
 
   return (
     <>
-      {title ? (
-        <h2 className="mb-5 text-center text-3xl font-semibold">{title}</h2>
-      ) : null}
+      {title ? <h2 className="mb-5 text-3xl font-semibold">{title}</h2> : null}
 
       <div className="relative w-full" data-testid="product-scroller">
         <div
