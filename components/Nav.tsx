@@ -47,6 +47,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
     <div className="container flex h-16 w-full items-center" id="navigation">
       <Link href="/">
         <LogoSVG className="h-6" />
+        <span className="sr-only">{APP_NAME}</span>
       </Link>
       <NavigationMenu className="ml-auto">
         <div className="hidden px-1 md:block">

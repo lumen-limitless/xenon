@@ -19,7 +19,7 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
   const scrollerRef = useRef<HTMLDivElement>(null)
   const { x } = useScroll(scrollerRef)
 
-  if (products?.length === 0) return null
+  if (products === undefined || products?.length === 0) return null
 
   return (
     <>
@@ -30,7 +30,7 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
           className="flex h-full w-full gap-2 overflow-y-hidden overflow-x-scroll scroll-smooth py-5 scrollbar-hide"
           ref={scrollerRef}
         >
-          {products?.map((product) => (
+          {products.map((product) => (
             <div key={product.id}>
               <ProductCard product={product} className="h-full w-48 md:w-64" />
             </div>

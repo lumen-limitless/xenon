@@ -34,8 +34,10 @@ async function getOrder(id: string): Promise<OrderWithItemsAndProducts | null> {
 export async function generateMetadata({ params }: PageProps) {
   const order = await getOrder(params.id)
 
+  if (order === null) notFound()
+
   return {
-    title: 'Order ' + order?.id ?? '',
+    title: `Order ${order.id}`,
   }
 }
 

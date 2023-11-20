@@ -54,6 +54,7 @@ model User {
   sessions      Session[]
   cart          Cart?
   orders        Order[]
+  Review        Review[]
 }
 
 model VerificationToken {
@@ -77,6 +78,7 @@ model Product {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   orderItem   OrderItem[]
+  reviews     Review[]
 }
 
 model Category {
@@ -149,4 +151,17 @@ model OrderItem {
   updatedAt DateTime @updatedAt
 
   @@unique([productId, orderId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  title     String
+  body      String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

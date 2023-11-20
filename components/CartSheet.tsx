@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 import { CheckoutButton } from './CheckoutButton'
 import { Button } from './ui/button'
+import { ScrollArea } from './ui/scroll-area'
 import {
   Sheet,
   SheetClose,
@@ -20,14 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from './ui/sheet'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableRow,
-} from './ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableRow } from './ui/table'
 
 const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
   const [isPending, startTransition] = useTransition()
@@ -85,84 +79,77 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="overflow-y-auto pb-32">
+      <SheetContent side="right" className="pb-32">
         <SheetHeader>
           <SheetTitle>Your Shopping Bag</SheetTitle>
         </SheetHeader>
-        <Table>
-          {(!cart || cart.size === 0) && (
-            <TableCaption>Your shopping bag is empty.</TableCaption>
-          )}
+        <ScrollArea className="h-full pr-3">
+          <Table>
+            {(!cart || cart.size === 0) && (
+              <TableCaption>Your shopping bag is empty.</TableCaption>
+            )}
 
-          <TableBody>
-            {cart?.items.map((item) => (
-              <TableRow key={item.productId}>
-                <TableCell className="relative flex w-full items-center gap-5">
-                  <Button
-                    aria-disabled={isPending}
-                    disabled={isPending}
-                    aria-label="Remove item from cart"
-                    variant={'ghost'}
-                    size={'icon'}
-                    className="absolute right-0 top-0"
-                    onClick={() =>
-                      startTransition(async () => {
-                        await updateCartAction({
-                          productId: item.productId,
-                          value: 0 - item.quantity,
+            <TableBody>
+              {cart?.items.map((item) => (
+                <TableRow key={item.productId}>
+                  <TableCell className="relative flex w-full items-center gap-5">
+                    <Button
+                      aria-disabled={isPending}
+                      disabled={isPending}
+                      aria-label="Remove item from cart"
+                      variant={'ghost'}
+                      size={'icon'}
+                      className="absolute right-0 top-0"
+                      onClick={() =>
+                        startTransition(async () => {
+                          await updateCartAction({
+                            productId: item.productId,
+                            value: 0 - item.quantity,
+                          })
+
+                          router.refresh()
                         })
+                      }
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
 
-                        router.refresh()
-                      })
-                    }
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-
-                  <SheetClose asChild>
-                    <Link href={`/products/${item.product.slug}`}>
-                      <Image
-                        className="h-auto w-auto"
-                        src={
-                          item.product.images[0]
-                            ? item.product.images[0]
-                            : '/images/placeholder.png'
-                        }
-                        alt={item.product.title}
-                        height={50}
-                        width={50}
-                      />
-                    </Link>
-                  </SheetClose>
-
-                  <div className="mt-5 flex-1 space-y-2">
                     <SheetClose asChild>
                       <Link href={`/products/${item.product.slug}`}>
-                        {truncateText(item.product.title, 25)}
+                        <Image
+                          className="h-auto w-auto"
+                          src={
+                            item.product.images[0]
+                              ? item.product.images[0]
+                              : '/images/placeholder.png'
+                          }
+                          alt={item.product.title}
+                          height={50}
+                          width={50}
+                        />
                       </Link>
                     </SheetClose>
 
-                    <div className="flex w-full items-center">
-                      <CartQuantitySelector item={item} />
-                      <span>
-                        {formatDollars(item.product.price * item.quantity)}
-                      </span>
+                    <div className="mt-5 flex-1 space-y-2">
+                      <SheetClose asChild>
+                        <Link href={`/products/${item.product.slug}`}>
+                          {truncateText(item.product.title, 25)}
+                        </Link>
+                      </SheetClose>
+
+                      <div className="flex w-full items-center">
+                        <CartQuantitySelector item={item} />
+                        <span>
+                          {formatDollars(item.product.price * item.quantity)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          {cart && cart.size > 0 && (
-            <TableFooter>
-              <TableRow>
-                <TableCell className="text-right">
-                  Subtotal: {formatDollars(cart.subtotal)}
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
-        </Table>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ScrollArea>
 
         <SheetFooter className="py-5">
           {cart && cart.size > 0 && (

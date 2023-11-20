@@ -1,4 +1,6 @@
+import { ProductWithReviews } from '@/@types'
 import { AddToCartButton } from '@/components/AddToCartButton'
+import { ProductDisplay } from '@/components/ProductDisplay'
 import { ProductScroller } from '@/components/ProductScroller'
 import { Badge } from '@/components/ui/badge'
 import { Section } from '@/components/ui/section'
@@ -6,7 +8,6 @@ import { prisma } from '@/lib/prisma'
 import { formatDollars } from '@/lib/utils'
 import { Product } from '@prisma/client'
 import { type Metadata, type ResolvingMetadata } from 'next'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 type PageProps = {
@@ -14,11 +15,14 @@ type PageProps = {
   searchParams: Record<string, string | Array<string> | undefined>
 }
 
-async function getProduct(slug: string): Promise<Product | null> {
+async function getProduct(slug: string): Promise<ProductWithReviews | null> {
   try {
     const product = await prisma.product.findUnique({
       where: {
         slug,
+      },
+      include: {
+        reviews: true,
       },
     })
     return product
@@ -57,6 +61,7 @@ export async function generateMetadata(
     title: product.title,
     openGraph: {
       images: product.images,
+      type: 'website',
     },
     description: product.description,
   }
@@ -74,24 +79,10 @@ export default async function Page({ params }: PageProps) {
     <>
       <Section className="py-20">
         <div className="container flex flex-col gap-20 lg:flex-row">
-          <div
-            className="flex h-full flex-1 flex-col items-center justify-center"
-            id="product-images"
-          >
-            <Image
-              className="h-auto w-auto"
-              src={product.images[0]}
-              alt={product.title}
-              width={200}
-              height={200}
-              priority
-              quality={100}
-            />
-          </div>
+          <ProductDisplay product={product} />
 
           <div className="flex-1 space-y-5" id="product-details">
             <h1 className="text-3xl font-bold">{product.title}</h1>
-
             <div className="flex items-center gap-1">
               <Badge className="text-lg">{formatDollars(product.price)}</Badge>
               <Badge
@@ -101,9 +92,7 @@ export default async function Page({ params }: PageProps) {
                 {product.stock > 0 ? 'In Stock' : 'Sold Out'}
               </Badge>
             </div>
-
             <p className="prose break-words text-xl">{product.description}</p>
-
             <div className="sticky bottom-0 w-full bg-background p-5 md:relative">
               {product.stock > 0 && (
                 <AddToCartButton className="mx-auto w-full" product={product} />
@@ -112,6 +101,9 @@ export default async function Page({ params }: PageProps) {
           </div>
         </div>
       </Section>
+      <Section className="py-20">
+        <div className="container">{product.reviews.length > 0 && <></>}</div>
+      </Section>
       <Section className="pb-48 pt-10">
         <div className="container">
           <ProductScroller
@@ -119,6 +111,7 @@ export default async function Page({ params }: PageProps) {
             products={similarProducts}
           />
         </div>
+        S
       </Section>
     </>
   )

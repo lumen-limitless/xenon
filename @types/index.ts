@@ -24,3 +24,9 @@ export type OrderWithItemsAndProducts = Prisma.OrderGetPayload<{
     }
   }
 }>
+
+export type ProductWithReviews = Prisma.ProductGetPayload<{
+  include: {
+    reviews: true
+  }
+}>

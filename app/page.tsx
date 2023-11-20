@@ -145,16 +145,13 @@ export default async function Page({}: PageProps) {
 
       <Section className="py-10" id="shop-trending">
         <div className="container">
-          <ProductScroller products={shuffle(products)} title="Trending Now" />
+          <ProductScroller products={products} title="Trending Now" />
         </div>
       </Section>
 
       <Section className="py-10" id="shop-recommended">
         <div className="container">
-          <ProductScroller
-            products={shuffle(products)}
-            title="Recommended for You"
-          />
+          <ProductScroller products={products} title="Recommended for You" />
         </div>
       </Section>
     </>

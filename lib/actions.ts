@@ -21,7 +21,7 @@ export async function addProductAction(
   try {
     const title = formData.get('title')?.toString() || '--'
     const description = formData.get('description')?.toString() || '--'
-    const image = formData.get('image')?.toString() || ''
+    const image = formData.get('images')?.toString() || ''
     const categories =
       formData.getAll('category').map((c) => c.toString()) || []
     const price = Math.round(Number(formData.get('price')?.toString()) * 100)
