@@ -21,19 +21,14 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
         id="product-display"
         data-testid="product-display"
       >
-        <div
-          className="flex h-96 w-full items-center justify-center overflow-clip"
-          id="main-image"
-        >
-          <Image
-            src={product.images[selectedImage]}
-            alt={product.title}
-            height={400}
-            width={400}
-            priority
-            quality={100}
-          />
-        </div>
+        <Image
+          src={product.images[selectedImage]}
+          alt={product.title}
+          height={400}
+          width={400}
+          priority
+          quality={100}
+        />
 
         <div
           className="flex w-full items-center justify-start gap-2"

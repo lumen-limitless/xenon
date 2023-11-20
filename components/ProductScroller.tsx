@@ -27,7 +27,7 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
 
       <div className="relative w-full" data-testid="product-scroller">
         <div
-          className="flex h-full w-full gap-2 overflow-y-hidden overflow-x-scroll scroll-smooth py-5 scrollbar-hide"
+          className="flex h-full w-full gap-2 overflow-y-hidden overflow-x-scroll scroll-smooth scrollbar-hide"
           ref={scrollerRef}
         >
           {products.map((product) => (
