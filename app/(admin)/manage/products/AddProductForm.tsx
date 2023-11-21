@@ -70,7 +70,6 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
         <fieldset className="my-5">
           <Label htmlFor="image">
-            Image
             <Input
               placeholder="Image"
               id="image"

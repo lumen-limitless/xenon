@@ -46,7 +46,7 @@ export default async function Page({}: PageProps) {
       <Section className={'h-[25rem] md:mx-0 md:pt-10'}>
         <div className="w-full md:container">
           <Carousel autoScroll>
-            <Link className="h-full w-full" href="">
+            <Link className="h-full w-full" href="/category/all">
               <Image
                 src={carousel1IMG}
                 alt="carousel-1"
@@ -54,7 +54,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="rounded-md object-cover object-center"
+                className="object-cover object-center md:rounded-md"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white">
                 Shop All Categories
@@ -69,7 +69,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="rounded-md object-cover object-center"
+                className="object-cover object-center md:rounded-md"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
                 Shop Electronics
@@ -84,7 +84,7 @@ export default async function Page({}: PageProps) {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
                 priority
                 placeholder="blur"
-                className="rounded-md object-cover object-center"
+                className="object-cover object-center md:rounded-md"
               />
               <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
                 Shop Clothing

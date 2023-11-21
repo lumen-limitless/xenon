@@ -17,7 +17,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
   return (
     <>
       <div
-        className="flex h-full flex-1 flex-col gap-10"
+        className="flex h-full flex-1 flex-col items-center gap-5"
         id="product-display"
         data-testid="product-display"
       >

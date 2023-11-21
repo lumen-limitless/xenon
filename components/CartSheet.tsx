@@ -79,7 +79,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="pb-32">
+      <SheetContent side="right" className="w-full pb-32">
         <SheetHeader>
           <SheetTitle>Your Shopping Bag</SheetTitle>
         </SheetHeader>

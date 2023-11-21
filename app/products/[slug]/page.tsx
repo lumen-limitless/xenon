@@ -111,7 +111,6 @@ export default async function Page({ params }: PageProps) {
             products={similarProducts}
           />
         </div>
-        S
       </Section>
     </>
   )
