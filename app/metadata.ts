@@ -1,5 +1,7 @@
-import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants'
+import { APP_DESCRIPTION } from '@/lib/constants'
 import { Metadata } from 'next'
+
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Xenon'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.NEXT_PUBLIC_APP_URL}`

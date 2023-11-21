@@ -1,6 +1,5 @@
 'use client'
 
-import { APP_NAME } from '@/lib/constants'
 import { type CartInfo } from '@types'
 import { User2 } from 'lucide-react'
 import { Session } from 'next-auth'
@@ -47,7 +46,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
     <div className="container flex h-16 w-full items-center" id="navigation">
       <Link href="/">
         <LogoSVG className="h-6" />
-        <span className="sr-only">{APP_NAME}</span>
+        <span className="sr-only">Xenon</span>
       </Link>
       <NavigationMenu className="ml-auto">
         <div className="hidden px-1 md:block">
@@ -125,7 +124,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
 
             <SheetContent className="w-screen">
               <SheetHeader>
-                <SheetTitle>Sign In to {APP_NAME}</SheetTitle>
+                <SheetTitle>Sign In to Xenon</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col items-center justify-center gap-5 py-10">
                 <Button
