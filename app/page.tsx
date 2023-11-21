@@ -3,9 +3,9 @@ import { ProductScroller } from '@/components/ProductScroller'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
 import { capitalize, shuffle } from '@/lib/utils'
-import carousel1IMG from '@/public/carousel-1.webp'
-import carousel2IMG from '@/public/carousel-2.webp'
-import carousel3IMG from '@/public/carousel-3.webp'
+import carousel1IMG from '@/public/img/carousel-1.webp'
+import carousel2IMG from '@/public/img/carousel-2.webp'
+import carousel3IMG from '@/public/img/carousel-3.webp'
 import { Category, Product } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -108,9 +108,9 @@ export default async function Page({}: PageProps) {
                   />
                 </div>
 
-                <h3 className="mt-2 text-xl font-semibold">
+                <h2 className="mt-2 text-lg">
                   {capitalize(category.description)}
-                </h3>
+                </h2>
               </Link>
             ))}
           </div>

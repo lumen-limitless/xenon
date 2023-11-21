@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 type CarouselProps = {
   children?: React.ReactNode
@@ -23,12 +23,15 @@ export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
   }
 
   // Swipe handlers
-  const paginate = (newDirection: number) => {
-    setCurrent(
-      (current) => (current + newDirection + slides.length) % slides.length,
-    )
-    setDirection(newDirection)
-  }
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setCurrent(
+        (current) => (current + newDirection + slides.length) % slides.length,
+      )
+      setDirection(newDirection)
+    },
+    [slides.length],
+  )
 
   useEffect(() => {
     if (!autoScroll) return
@@ -39,7 +42,7 @@ export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
     return () => {
       clearInterval(timer) // clear the interval when the component is unmounted
     }
-  }, [current, direction, autoScroll]) // re-run the effect when the `current` or `direction` state changes
+  }, [current, direction, autoScroll, paginate]) // re-run the effect when the `current` or `direction` state changes
 
   return (
     <AnimatePresence initial={false} custom={direction} mode="wait">

@@ -6,12 +6,24 @@ const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
   : 'http://localhost:3000'
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await prisma.product.findMany({
+  const productsPromise = prisma.product.findMany({
     select: {
       slug: true,
       updatedAt: true,
     },
   })
+
+  const categoriesPromise = prisma.category.findMany({
+    select: {
+      title: true,
+      updatedAt: true,
+    },
+  })
+
+  const [products, categories] = await Promise.all([
+    productsPromise,
+    categoriesPromise,
+  ])
 
   return [
     {
@@ -22,6 +34,11 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     ...products.map((product) => ({
       url: `${baseUrl}/products/${product.slug}`,
       lastModified: product.updatedAt,
+    })),
+
+    ...categories.map((category) => ({
+      url: `${baseUrl}/categories/${category.title}`,
+      lastModified: category.updatedAt,
     })),
   ]
 }

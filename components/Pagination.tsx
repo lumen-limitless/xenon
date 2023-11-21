@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import React from 'react'
 import { Button } from './ui/button'
@@ -25,6 +26,8 @@ export const Pagination: React.FC<PaginationProps> = ({
       pageNumbers.push(i)
     }
   }
+
+  if (totalPages <= 1) return null
 
   return (
     <>
@@ -54,6 +57,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                   setPage(pageNumber)
                 }}
                 disabled={currentPageNumber === pageNumber}
+                className={cn(currentPageNumber === pageNumber && 'active')}
               >
                 {pageNumber}
               </Button>

@@ -53,12 +53,14 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   return (
     <>
-      <Section className="flex-grow flex-col py-20">
+      <Section className="flex-grow flex-col pb-48 pt-10">
         <div className="container">
-          <h1 className="mb-10 text-center text-3xl">
+          <h1 className="mb-5 text-center text-3xl">
             {capitalize(params.category)} Products
           </h1>
-
+          {products.length === 0 && (
+            <p className="text-center">No products found.</p>
+          )}
           <ProductGrid products={currentProducts} />
         </div>
 

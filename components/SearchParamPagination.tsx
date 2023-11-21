@@ -19,7 +19,6 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
     ([key]) => key !== 'page',
   )
 
-  console.log(otherSearchParams)
   return (
     <Pagination
       currentPage={currentPage}

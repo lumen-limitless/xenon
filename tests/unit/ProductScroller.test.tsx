@@ -58,7 +58,9 @@ describe('ProductScroller', () => {
 
   it('should render title when provided', () => {
     const title = 'Test Title'
-    const { getByText } = render(<ProductScroller title={title} />)
+    const { getByText } = render(
+      <ProductScroller title={title} products={products} />,
+    )
     const titleElement = getByText(title)
 
     expect(titleElement).toBeInTheDocument()
