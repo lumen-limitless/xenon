@@ -7,7 +7,7 @@ const Footer = () => {
       className="relative flex flex-col bg-foreground text-background"
     >
       <div className="container h-72 py-10">
-        <object data="/Xe.svg" type="" className="h-24" />
+        <object data="/svg/Xe.svg" type="" className="h-24" />
         <p className="text-muted">{APP_DESCRIPTION}</p>
       </div>
       <div className="mt-auto border-t border-muted-foreground py-5">
