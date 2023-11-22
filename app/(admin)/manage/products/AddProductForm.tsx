@@ -1,13 +1,14 @@
 'use client'
 
 import { SubmitButton } from '@/components/SubmitButton'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { addProductAction } from '@/lib/actions'
 import { Category } from '@prisma/client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormState } from 'react-dom'
 
 type AddProductFormProps = {
@@ -21,6 +22,7 @@ const initialState = {
 export const AddProductForm: React.FC<AddProductFormProps> = ({
   categories,
 }) => {
+  const [numImages, setNumImages] = useState(1)
   const [state, formAction] = useFormState<
     { message: string | null },
     FormData
@@ -70,15 +72,23 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
         <fieldset className="my-5">
           <Label htmlFor="image">
-            <Input
-              placeholder="Image"
-              id="image"
-              name="image"
-              type="url"
-              required
-            />
+            {Array.from({ length: numImages }).map((_, i) => (
+              <Input
+                className="mb-3"
+                placeholder="Image"
+                id={`image-${i}`}
+                name={`image`}
+                type="url"
+                key={i}
+                required
+              />
+            ))}
           </Label>
         </fieldset>
+
+        <Button onClick={() => setNumImages(() => numImages + 1)}>
+          Add Another Image
+        </Button>
 
         <fieldset className="my-5">
           <p className="mb-3">Select Categories</p>
@@ -91,7 +101,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
               <Checkbox
                 name="category"
                 value={category.id}
-                defaultChecked={category.title === 'All'}
+                defaultChecked={category.title === 'all'}
               />
               {category.title}
             </Label>

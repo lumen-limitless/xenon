@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     follow: false,
   },
 }
+
 export default async function Layout({
   children,
 }: {

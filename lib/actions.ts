@@ -21,11 +21,11 @@ export async function addProductAction(
   try {
     const title = formData.get('title')?.toString() || '--'
     const description = formData.get('description')?.toString() || '--'
-    const image = formData.get('images')?.toString() || ''
     const categories =
       formData.getAll('category').map((c) => c.toString()) || []
     const price = Math.round(Number(formData.get('price')?.toString()) * 100)
     const stock = Math.round(Number(formData.get('stock')?.toString()))
+    const images = formData.getAll('image').map((entry) => entry.toString())
 
     if (isNaN(price) || isNaN(stock) || price < 0 || stock < 0) {
       return { message: 'Invalid input' }
@@ -38,7 +38,7 @@ export async function addProductAction(
         price,
         stock,
         description,
-        images: [image],
+        images,
         categories: {
           connect: categories.map((c) => ({ id: c })),
         },

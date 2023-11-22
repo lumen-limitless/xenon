@@ -1,3 +1,4 @@
+import { RouteSelector } from '@/components/RouteSelector'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import { RedirectType, redirect } from 'next/navigation'
@@ -13,5 +14,10 @@ export default async function Layout({
     redirect('/?signin=true', RedirectType.replace)
   }
 
-  return <>{children}</>
+  return (
+    <>
+      <RouteSelector />
+      {children}
+    </>
+  )
 }

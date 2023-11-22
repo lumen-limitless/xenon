@@ -55,7 +55,7 @@ export default async function Page({}: PageProps) {
                 <PlusCircle /> Add Product
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="overflow-y-scroll">
               <AddProductForm categories={categories} />
             </SheetContent>
           </Sheet>
