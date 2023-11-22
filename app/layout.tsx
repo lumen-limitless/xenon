@@ -40,11 +40,7 @@ export default async function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <link
-          rel="mask-icon"
-          href="/svg/safari-pinned-tab.svg"
-          color="#5bbad5"
-        />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#603cba" />
       </head>
 

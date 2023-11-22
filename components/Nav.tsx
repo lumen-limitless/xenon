@@ -58,6 +58,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant={'ghost'}>
                   <User2 />
+                  <span className="sr-only">User</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">

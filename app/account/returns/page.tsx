@@ -4,7 +4,7 @@ type PageProps = {
 }
 
 export const metadata = {
-  title: 'Account',
+  title: 'Returns',
 }
 export default async function Page({}: PageProps) {
   return <></>

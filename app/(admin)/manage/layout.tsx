@@ -10,7 +10,7 @@ const routes = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <RouteSelector routes={routes} />
+      <RouteSelector routes={routes} className="pt-10" />
       {children}
     </>
   )

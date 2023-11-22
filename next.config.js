@@ -18,6 +18,7 @@ const nextConfig = {
     remotePatterns: [
       { hostname: 'fakestoreapi.com' },
       { hostname: 'res.cloudinary.com' },
+      { hostname: 'cdn.sanity.io' },
     ],
   },
 

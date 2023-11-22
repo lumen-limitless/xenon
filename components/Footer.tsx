@@ -10,7 +10,7 @@ const Footer = () => {
         <object data="/svg/Xe.svg" type="" className="h-24" />
         <p className="text-muted">{APP_DESCRIPTION}</p>
       </div>
-      <div className="mt-auto border-t border-muted-foreground py-5">
+      <div className="mt-auto border-t border-gray-800 py-5">
         <p className="text-center text-sm">
           &copy; {new Date().getFullYear()} Lumen Limitless. All rights
           reserved.

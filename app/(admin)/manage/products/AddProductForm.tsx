@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { addProductAction } from '@/lib/actions'
 import { Category } from '@prisma/client'
+import { PlusCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useFormState } from 'react-dom'
 
@@ -72,6 +73,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
         <fieldset className="my-5">
           <Label htmlFor="image">
+            Images
             {Array.from({ length: numImages }).map((_, i) => (
               <Input
                 className="mb-3"
@@ -84,11 +86,11 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
               />
             ))}
           </Label>
+          <Button onClick={() => setNumImages(() => numImages + 1)}>
+            <PlusCircle className="mr-1 h-6" />
+            Add Another Image
+          </Button>
         </fieldset>
-
-        <Button onClick={() => setNumImages(() => numImages + 1)}>
-          Add Another Image
-        </Button>
 
         <fieldset className="my-5">
           <p className="mb-3">Select Categories</p>

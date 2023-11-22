@@ -4,7 +4,7 @@ import type Stripe from 'stripe'
 
 export default async function handleCheckoutSessionCompleted(
   data: Stripe.Checkout.Session,
-) {
+): Promise<void> {
   if (data.payment_intent == null) {
     throw new Error('No payment intent')
   }

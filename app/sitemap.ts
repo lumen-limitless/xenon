@@ -33,6 +33,11 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
 
+    {
+      url: `${baseUrl}/search`,
+      lastModified: new Date(),
+    },
+
     ...products.map((product) => ({
       url: `${baseUrl}/products/${product.slug}`,
       lastModified: product.updatedAt,

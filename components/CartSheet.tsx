@@ -76,6 +76,7 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
       <SheetTrigger asChild>
         <Button variant={'ghost'} id="cart-button">
           <ShoppingBag />
+          <span className="sr-only">Shopping Bag</span>
         </Button>
       </SheetTrigger>
 

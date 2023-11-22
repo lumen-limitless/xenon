@@ -1,12 +1,13 @@
-import { Carousel } from '@/components/Carousel'
+import { HeroCarousel } from '@/components/HeroCarousel'
 import { ProductScroller } from '@/components/ProductScroller'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
+import { sanity } from '@/lib/sanity'
 import { capitalize, shuffle } from '@/lib/utils'
 import carousel1IMG from '@/public/img/carousel-1.webp'
-import carousel2IMG from '@/public/img/carousel-2.webp'
-import carousel3IMG from '@/public/img/carousel-3.webp'
+import { urlForImage } from '@/sanity/lib/image'
 import { Category, Product } from '@prisma/client'
+import { groq } from 'next-sanity'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -30,67 +31,54 @@ async function getCategories(): Promise<Array<Category>> {
   }
 }
 
+async function getHeroContent(): Promise<
+  Array<{
+    title: string
+    subtitle: string
+    link: string
+    image: string
+  }>
+> {
+  try {
+    const content = (
+      await sanity.fetch(groq`*[_type == "hero"]{
+    title,
+    subtitle,
+    link,
+    image
+  }`)
+    ).map((item: any) => ({
+      title: item.title,
+      subtitle: item.subtitle,
+      link: item.link,
+      image: urlForImage(item.image).url(),
+    }))
+
+    console.log(content)
+    return content
+  } catch (err) {
+    console.error(err)
+    return []
+  }
+}
+
 type PageProps = {
   params: {}
   searchParams: Record<string, string | Array<string> | undefined>
 }
 
 export default async function Page({}: PageProps) {
-  const [products, categories] = await Promise.all([
+  const [products, categories, heroContent] = await Promise.all([
     getProducts(),
     getCategories(),
+    getHeroContent(),
   ])
 
   return (
     <>
       <Section className={'h-[25rem] md:mx-0 md:pt-10'}>
         <div className="w-full md:container">
-          <Carousel autoScroll>
-            <Link className="h-full w-full" href="/category/all">
-              <Image
-                src={carousel1IMG}
-                alt="carousel-1"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
-                priority
-                placeholder="blur"
-                className="object-cover object-center md:rounded-md"
-              />
-              <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white">
-                Shop All Categories
-              </h2>
-            </Link>
-
-            <Link className="h-full w-full" href="/category/electronics">
-              <Image
-                src={carousel2IMG}
-                alt="carousel-1"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
-                priority
-                placeholder="blur"
-                className="object-cover object-center md:rounded-md"
-              />
-              <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
-                Shop Electronics
-              </h2>
-            </Link>
-
-            <Link className="h-full w-full" href="/category/clothing">
-              <Image
-                src={carousel3IMG}
-                alt="carousel-1"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
-                priority
-                placeholder="blur"
-                className="object-cover object-center md:rounded-md"
-              />
-              <h2 className="absolute bottom-5 left-5 text-3xl font-bold text-white ">
-                Shop Clothing
-              </h2>
-            </Link>
-          </Carousel>
+          <HeroCarousel content={heroContent} />
         </div>
       </Section>
 
