@@ -12,7 +12,7 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL
 export const defaultMetadata: Metadata = {
   title: {
     default: APP_NAME,
-    template: `%s | ${APP_NAME}`,
+    template: `%s - ${APP_NAME}`,
   },
   applicationName: APP_NAME,
   description: APP_DESCRIPTION,

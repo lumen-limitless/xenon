@@ -25,6 +25,7 @@ export function generateSlug(text: string): string {
     .toLowerCase()
     .split(' ')
     .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
+    .filter((word) => word !== '')
     .join('-')
 }
 

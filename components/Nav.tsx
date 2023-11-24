@@ -58,7 +58,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant={'ghost'}>
                   <User2 />
-                  <span className="sr-only">User</span>
+                  <span className="sr-only">Account</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
@@ -86,7 +86,12 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
                             <Link href="/dashboard">Admin Dashboard</Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link href="/manage/products">Manage Store</Link>
+                            <Link href="/studio">Content Studio</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/manage/products">
+                              Store Management
+                            </Link>
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
                       </>

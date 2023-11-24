@@ -2,9 +2,9 @@ import { HeroCarousel } from '@/components/HeroCarousel'
 import { ProductScroller } from '@/components/ProductScroller'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
-import { sanity } from '@/lib/sanity'
 import { capitalize, shuffle } from '@/lib/utils'
 import carousel1IMG from '@/public/img/carousel-1.webp'
+import { client as sanity } from '@/sanity/lib/client'
 import { urlForImage } from '@/sanity/lib/image'
 import { Category, Product } from '@prisma/client'
 import { groq } from 'next-sanity'
@@ -34,7 +34,6 @@ async function getCategories(): Promise<Array<Category>> {
 async function getHeroContent(): Promise<
   Array<{
     title: string
-    subtitle: string
     link: string
     image: string
   }>
@@ -43,7 +42,6 @@ async function getHeroContent(): Promise<
     const content = (
       await sanity.fetch(groq`*[_type == "hero"]{
     title,
-    subtitle,
     link,
     image
   }`)

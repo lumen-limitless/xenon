@@ -6,15 +6,15 @@ import { RedirectType, redirect } from 'next/navigation'
 
 const routes = [
   {
-    name: 'My Orders',
+    name: 'Orders',
     path: '/account/orders',
   },
   {
-    name: 'My Returns',
+    name: 'Returns',
     path: '/account/returns',
   },
   {
-    name: 'Account Settings',
+    name: 'Settings',
     path: '/account/settings',
   },
 ]

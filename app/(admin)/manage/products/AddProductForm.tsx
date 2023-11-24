@@ -1,15 +1,13 @@
 'use client'
 
 import { SubmitButton } from '@/components/SubmitButton'
-import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { addProductAction } from '@/lib/actions'
 import { Category } from '@prisma/client'
-import { PlusCircle } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useFormState } from 'react-dom'
 
 type AddProductFormProps = {
@@ -23,7 +21,6 @@ const initialState = {
 export const AddProductForm: React.FC<AddProductFormProps> = ({
   categories,
 }) => {
-  const [numImages, setNumImages] = useState(1)
   const [state, formAction] = useFormState<
     { message: string | null },
     FormData
@@ -73,23 +70,18 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
         <fieldset className="my-5">
           <Label htmlFor="image">
-            Images
-            {Array.from({ length: numImages }).map((_, i) => (
-              <Input
-                className="mb-3"
-                placeholder="Image"
-                id={`image-${i}`}
-                name={`image`}
-                type="url"
-                key={i}
-                required
-              />
-            ))}
+            Image
+            <Input
+              className="mb-3"
+              placeholder="Upload Images"
+              id={`image`}
+              name={`image`}
+              type="file"
+              accept=".jpg,.jpeg,.png"
+              required
+              multiple
+            />
           </Label>
-          <Button onClick={() => setNumImages(() => numImages + 1)}>
-            <PlusCircle className="mr-1 h-6" />
-            Add Another Image
-          </Button>
         </fieldset>
 
         <fieldset className="my-5">
