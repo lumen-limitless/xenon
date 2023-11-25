@@ -74,6 +74,7 @@ model Product {
   price       Int
   stock       Int          @default(0)
   images      String[]
+  metadata    Json?
   categories  Category[]   @relation("ProductCategory")
   items       CartItem[]
   createdAt   DateTime     @default(now())

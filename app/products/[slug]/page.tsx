@@ -40,6 +40,7 @@ async function getSimilarProducts(slug: string): Promise<Array<Product>> {
           not: slug,
         },
       },
+
       take: 10,
     })
     return products
@@ -95,7 +96,11 @@ export default async function Page({ params }: PageProps) {
             <p className="prose break-words text-xl">{product.description}</p>
             <div className="sticky bottom-0 w-full bg-background p-5 md:relative">
               {product.stock > 0 && (
-                <AddToCartButton className="mx-auto w-full" product={product} />
+                <AddToCartButton
+                  className="mx-auto w-full"
+                  product={product}
+                  size={'lg'}
+                />
               )}
             </div>
           </div>

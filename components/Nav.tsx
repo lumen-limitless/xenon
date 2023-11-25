@@ -1,7 +1,7 @@
 'use client'
 
 import { type CartInfo } from '@types'
-import { User2 } from 'lucide-react'
+import { Menu, User2 } from 'lucide-react'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
@@ -44,6 +44,22 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
 
   return (
     <div className="container flex h-16 w-full items-center" id="navigation">
+      <Sheet>
+        <SheetTrigger className="mr-5 md:hidden">
+          <Menu className="h-6" />
+        </SheetTrigger>
+        <SheetContent className="w-screen" side={'left'}>
+          <SheetHeader>
+            <SheetTitle>Navigation</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col items-center justify-center gap-5 py-10">
+            <Link href="/">Home</Link>
+            <Link href="/products">Products</Link>
+            <Link href="/about">About</Link>
+          </div>
+        </SheetContent>
+      </Sheet>
+
       <Link href="/">
         <LogoSVG className="h-6" />
         <span className="sr-only">Xenon</span>

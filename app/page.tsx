@@ -1,4 +1,4 @@
-import { HeroCarousel } from '@/components/HeroCarousel'
+import { Carousel } from '@/components/Carousel'
 import { ProductScroller } from '@/components/ProductScroller'
 import { Section } from '@/components/ui/section'
 import { prisma } from '@/lib/prisma'
@@ -76,7 +76,22 @@ export default async function Page({}: PageProps) {
     <>
       <Section className={'h-[25rem] md:mx-0 md:pt-10'}>
         <div className="w-full md:container">
-          <HeroCarousel content={heroContent} />
+          <Carousel autoScroll>
+            {heroContent?.map((item) => (
+              <Link key={item.title} href={item.link}>
+                <div className="relative h-full w-full">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw"
+                    priority
+                    className="object-cover object-center md:rounded-md"
+                  />
+                </div>
+              </Link>
+            ))}
+          </Carousel>
         </div>
       </Section>
 
@@ -85,7 +100,7 @@ export default async function Page({}: PageProps) {
           <div className="grid w-full grid-cols-2 place-content-center gap-2 md:grid-cols-4">
             {categories.map((category) => (
               <Link href={`/category/${category.title}`} key={category.id}>
-                <div className="relative h-36 w-full bg-muted transition-all duration-300 hover:brightness-90 md:h-48">
+                <div className="relative h-32 w-full bg-muted transition-all duration-300 hover:brightness-90 md:h-36">
                   <Image
                     className="h-auto w-auto rounded-md object-cover object-center"
                     fill

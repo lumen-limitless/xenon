@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
+import { client } from '@/sanity/lib/client'
 import { type MetadataRoute } from 'next'
+import { groq } from 'next-sanity'
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
@@ -22,9 +24,17 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   })
 
-  const [products, categories] = await Promise.all([
+  const articlesPromise: Promise<
+    Array<{
+      slug: string
+      updatedAt: Date
+    }>
+  > = client.fetch(groq`*[_type == "article"]{slug, updatedAt}`)
+
+  const [products, categories, articles] = await Promise.all([
     productsPromise,
     categoriesPromise,
+    articlesPromise,
   ])
 
   return [
@@ -38,6 +48,26 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
     },
 
+    {
+      url: `${baseUrl}/account`,
+      lastModified: new Date(),
+    },
+
+    {
+      url: `${baseUrl}/account/orders`,
+      lastModified: new Date(),
+    },
+
+    {
+      url: `${baseUrl}/account/returns`,
+      lastModified: new Date(),
+    },
+
+    {
+      url: `${baseUrl}/account/settings`,
+      lastModified: new Date(),
+    },
+
     ...products.map((product) => ({
       url: `${baseUrl}/products/${product.slug}`,
       lastModified: product.updatedAt,
@@ -46,6 +76,11 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categories.map((category) => ({
       url: `${baseUrl}/categories/${category.title}`,
       lastModified: category.updatedAt,
+    })),
+
+    ...articles.map((article) => ({
+      url: `${baseUrl}/articles/${article.slug}`,
+      lastModified: article.updatedAt,
     })),
   ]
 }
