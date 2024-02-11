@@ -19,6 +19,7 @@ describe('ProductCard', () => {
     stock: 10,
     images: ['https://example.com/product1.jpg'],
     description: 'Product 1 description',
+    metadata: {},
     createdAt: new Date(),
     updatedAt: new Date(),
   };

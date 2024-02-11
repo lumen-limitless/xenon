@@ -4,13 +4,12 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from '@/components/ui/carousel';
 import { prisma } from '@/lib/prisma';
 import { capitalize, shuffle } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
+import { Product } from '@prisma/client';
 import { groq } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -130,9 +129,7 @@ export default async function Page({}: PageProps) {
                   />
                 </div>
 
-                <h2 className="mt-1 text-lg">
-                  {capitalize(category.description)}
-                </h2>
+                <h2 className="mt-1 text-lg">{capitalize(category.title)}</h2>
               </Link>
             ))}
           </div>
@@ -175,12 +172,10 @@ export default async function Page({}: PageProps) {
                   key={product.id}
                   className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                 >
-                  <ProductCard product={product as any} />
+                  <ProductCard product={product as Product} />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
           </Carousel>
         </div>
       </section>
@@ -195,12 +190,10 @@ export default async function Page({}: PageProps) {
                   key={product.id}
                   className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                 >
-                  <ProductCard product={product as any} />
+                  <ProductCard product={product as Product} />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
           </Carousel>
         </div>
       </section>

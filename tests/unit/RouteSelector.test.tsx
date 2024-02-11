@@ -1,5 +1,4 @@
 import { RouteSelector } from '@/components/RouteSelector';
-import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
@@ -34,7 +33,7 @@ describe('RouteSelector', () => {
     expect(routeSelector).toBeInTheDocument();
   });
 
-  it('should render the correct number of route buttons', () => {
+  it('should render the correct number of route links', () => {
     const routes = [
       { name: 'Home', path: '/home' },
       { name: 'About', path: '/about' },
@@ -43,7 +42,7 @@ describe('RouteSelector', () => {
 
     render(<RouteSelector routes={routes} />);
 
-    const routeButtons = screen.getAllByRole('button');
+    const routeButtons = screen.getAllByRole('link');
 
     expect(routeButtons).toHaveLength(routes.length);
   });
