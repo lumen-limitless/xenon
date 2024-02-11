@@ -1,22 +1,20 @@
-import { OrderWithItemsAndProducts } from '@/@types'
-import { Button } from '@/components/ui/button'
-import { Section } from '@/components/ui/section'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { formatDollars } from '@/lib/utils'
-import { ArrowLeft } from 'lucide-react'
-import { getServerSession } from 'next-auth'
-import Image from 'next/image'
-import Link from 'next/link'
+import { auth } from '@/auth';
+import { Button } from '@/components/ui/button';
+import { prisma } from '@/lib/prisma';
+import { formatDollars } from '@/lib/utils';
+import { OrderWithItemsAndProducts } from '@/types';
+import { ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 type PageProps = {
-  params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: {};
+  searchParams: Record<string, string | string[] | undefined>;
+};
 
 export const metadata = {
   title: 'My Account',
-}
+};
 
 async function getOrdersForUser(
   userId?: string,
@@ -33,22 +31,22 @@ async function getOrdersForUser(
           },
         },
       },
-    })
+    });
 
-    return orders
+    return orders;
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
 }
 
 export default async function Page({}: PageProps) {
-  const session = await getServerSession(authOptions)
-  const orders = await getOrdersForUser(session?.user.id)
+  const session = await auth();
+  const orders = await getOrdersForUser(session?.user.id);
 
   return (
     <>
-      <Section id="orders" className="py-5">
+      <section id="orders" className="py-5">
         <div className="container">
           {orders.length === 0 && (
             <>
@@ -119,7 +117,7 @@ export default async function Page({}: PageProps) {
             </div>
           ))}
         </div>
-      </Section>
+      </section>
     </>
-  )
+  );
 }

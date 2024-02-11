@@ -1,13 +1,13 @@
-import { prisma } from '@/lib/prisma'
-import { client } from '@/sanity/lib/client'
-import { type MetadataRoute } from 'next'
-import { groq } from 'next-sanity'
+import { prisma } from '@/lib/prisma';
+import { client } from '@/sanity/lib/client';
+import { type MetadataRoute } from 'next';
+import { groq } from 'next-sanity';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
   : process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : 'http://localhost:3000'
+    : 'http://localhost:3000';
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
   const productsPromise = prisma.product.findMany({
@@ -15,27 +15,29 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
       slug: true,
       updatedAt: true,
     },
-  })
+  });
 
   const categoriesPromise = prisma.category.findMany({
     select: {
       title: true,
       updatedAt: true,
     },
-  })
+  });
 
   const articlesPromise: Promise<
     Array<{
-      slug: string
-      updatedAt: Date
+      slug: {
+        current: string;
+      };
+      updatedAt: Date;
     }>
-  > = client.fetch(groq`*[_type == "article"]{slug, updatedAt}`)
+  > = client.fetch(groq`*[_type == "article"]{slug, updatedAt}`);
 
   const [products, categories, articles] = await Promise.all([
     productsPromise,
     categoriesPromise,
     articlesPromise,
-  ])
+  ]);
 
   return [
     {
@@ -79,8 +81,8 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     ...articles.map((article) => ({
-      url: `${baseUrl}/articles/${article.slug}`,
+      url: `${baseUrl}/articles/${article.slug.current}`,
       lastModified: article.updatedAt,
     })),
-  ]
+  ];
 }

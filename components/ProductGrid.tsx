@@ -1,9 +1,9 @@
-import { Product } from '@prisma/client'
-import { ProductCard } from './ProductCard'
+import { Product } from '@prisma/client';
+import { ProductCard } from './ProductCard';
 
 type ProductGridProps = {
-  products?: Product[]
-}
+  products?: Product[];
+};
 
 export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
@@ -23,5 +23,5 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

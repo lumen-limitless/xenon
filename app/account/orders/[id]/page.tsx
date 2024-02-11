@@ -1,11 +1,11 @@
 type PageProps = {
-  params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: {};
+  searchParams: Record<string, string | Array<string> | undefined>;
+};
 
 export const metadata = {
   title: 'Orders',
-}
+};
 export default async function Page({}: PageProps) {
-  return <></>
+  return <></>;
 }

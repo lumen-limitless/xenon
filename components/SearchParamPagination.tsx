@@ -1,39 +1,62 @@
-'use client'
-
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Pagination } from './Pagination'
+'use client';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import { useSearchParams } from 'next/navigation';
 
 type SearchParamPaginationProps = {
-  currentPage: number
-  totalPages: number
-}
+  totalPages: number;
+};
 
 export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
-  currentPage,
   totalPages,
 }) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const otherSearchParams = Array.from(searchParams.entries()).filter(
-    ([key]) => key !== 'page',
-  )
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get('page') || '1');
+
+  const getPaginationLink = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    return `?${params.toString()}`;
+  };
 
   return (
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      setPage={(value) => {
-        router.push(
-          `${pathname}?${otherSearchParams.map((searchParam, i) => {
-            const [key, value] = searchParam
-            return (
-              `${key}=${value}` +
-              (i === otherSearchParams.length - 1 ? '' : '&')
-            )
-          })}&page=${value}`,
-        )
-      }}
-    />
-  )
-}
+    <Pagination>
+      <PaginationContent>
+        {currentPage > 1 && (
+          <PaginationItem>
+            <PaginationPrevious
+              href={getPaginationLink(currentPage - 1)}
+              aria-disabled={!currentPage || currentPage === 1}
+            />
+          </PaginationItem>
+        )}
+
+        {Array.from({ length: totalPages }, (_, i) => {
+          return (
+            <PaginationItem key={i}>
+              <PaginationLink href={getPaginationLink(i + 1)}>
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        })}
+
+        {currentPage < totalPages && (
+          <PaginationItem>
+            <PaginationNext
+              href={getPaginationLink(currentPage + 1)}
+              aria-disabled={!currentPage || currentPage === 1}
+            />
+          </PaginationItem>
+        )}
+      </PaginationContent>
+    </Pagination>
+  );
+};

@@ -1,10 +1,10 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
-})
+});
 
 const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
-})
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -35,12 +35,14 @@ const nextConfig = {
           },
         },
       ],
-    })
+    });
 
-    return config
+    return config;
   },
-}
+};
 
-const nextConfigWithBundleAnalyzer = withBundleAnalyzer(nextConfig)
-const nextConfigWithBundleAnalyzerAndPWA = withPWA(nextConfigWithBundleAnalyzer)
-module.exports = nextConfigWithBundleAnalyzerAndPWA
+const nextConfigWithBundleAnalyzer = withBundleAnalyzer(nextConfig);
+const nextConfigWithBundleAnalyzerAndPWA = withPWA(
+  nextConfigWithBundleAnalyzer,
+);
+module.exports = nextConfigWithBundleAnalyzerAndPWA;

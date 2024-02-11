@@ -1,41 +1,40 @@
-import { Carousel } from '@/components/Carousel'
-import { ProductScroller } from '@/components/ProductScroller'
-import { Section } from '@/components/ui/section'
-import { prisma } from '@/lib/prisma'
-import { capitalize, shuffle } from '@/lib/utils'
-import carousel1IMG from '@/public/img/carousel-1.webp'
-import { client as sanity } from '@/sanity/lib/client'
-import { urlForImage } from '@/sanity/lib/image'
-import { Category, Product } from '@prisma/client'
-import { groq } from 'next-sanity'
-import Image from 'next/image'
-import Link from 'next/link'
+import { Carousel } from '@/components/Carousel';
+import { ProductScroller } from '@/components/ProductScroller';
+import { prisma } from '@/lib/prisma';
+import { capitalize, shuffle } from '@/lib/utils';
+import carousel1IMG from '@/public/img/carousel-1.webp';
+import { client as sanity } from '@/sanity/lib/client';
+import { urlForImage } from '@/sanity/lib/image';
+import { Category, Product } from '@prisma/client';
+import { groq } from 'next-sanity';
+import Image from 'next/image';
+import Link from 'next/link';
 
 async function getProducts(): Promise<Array<Product>> {
   try {
-    const products = await prisma.product.findMany()
-    return products
+    const products = await prisma.product.findMany();
+    return products;
   } catch (err) {
-    console.error(err)
-    return []
+    console.error(err);
+    return [];
   }
 }
 
 async function getCategories(): Promise<Array<Category>> {
   try {
-    const categories = await prisma.category.findMany()
-    return categories
+    const categories = await prisma.category.findMany();
+    return categories;
   } catch (err) {
-    console.error(err)
-    return []
+    console.error(err);
+    return [];
   }
 }
 
 async function getHeroContent(): Promise<
   Array<{
-    title: string
-    link: string
-    image: string
+    title: string;
+    link: string;
+    image: string;
   }>
 > {
   try {
@@ -50,31 +49,31 @@ async function getHeroContent(): Promise<
       subtitle: item.subtitle,
       link: item.link,
       image: urlForImage(item.image).url(),
-    }))
+    }));
 
-    console.log(content)
-    return content
+    console.log(content);
+    return content;
   } catch (err) {
-    console.error(err)
-    return []
+    console.error(err);
+    return [];
   }
 }
 
 type PageProps = {
-  params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: {};
+  searchParams: Record<string, string | Array<string> | undefined>;
+};
 
 export default async function Page({}: PageProps) {
   const [products, categories, heroContent] = await Promise.all([
     getProducts(),
     getCategories(),
     getHeroContent(),
-  ])
+  ]);
 
   return (
     <>
-      <Section className={'h-[25rem] md:mx-0 md:pt-10'}>
+      <section className={'flex h-[25rem] md:mx-0 md:pt-10'}>
         <div className="w-full md:container">
           <Carousel autoScroll>
             {heroContent?.map((item) => (
@@ -93,9 +92,9 @@ export default async function Page({}: PageProps) {
             ))}
           </Carousel>
         </div>
-      </Section>
+      </section>
 
-      <Section className="py-10" id="shop-categories">
+      <section className="py-10" id="shop-categories">
         <div className="container">
           <div className="grid w-full grid-cols-2 place-content-center gap-2 md:grid-cols-4">
             {categories.map((category) => (
@@ -109,16 +108,16 @@ export default async function Page({}: PageProps) {
                   />
                 </div>
 
-                <h2 className="mt-2 text-lg">
+                <h2 className="mt-1 text-lg">
                   {capitalize(category.description)}
                 </h2>
               </Link>
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section className="bg-muted py-10" id="shop-featured">
+      <section className="bg-muted py-10" id="shop-featured">
         <div className="container">
           <h2 className="mb-5 text-3xl font-semibold">Featured Products</h2>
           <div className="grid grid-cols-2 place-content-center gap-2">
@@ -142,19 +141,19 @@ export default async function Page({}: PageProps) {
               ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section className="py-10" id="shop-trending">
+      <section className="py-10" id="shop-trending">
         <div className="container">
           <ProductScroller products={products} title="Trending Now" />
         </div>
-      </Section>
+      </section>
 
-      <Section className="py-10" id="shop-recommended">
+      <section className="py-10" id="shop-recommended">
         <div className="container">
           <ProductScroller products={products} title="Recommended for You" />
         </div>
-      </Section>
+      </section>
     </>
-  )
+  );
 }

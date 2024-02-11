@@ -1,19 +1,18 @@
-import { ProductWithReviews } from '@/@types'
-import { AddToCartButton } from '@/components/AddToCartButton'
-import { ProductDisplay } from '@/components/ProductDisplay'
-import { ProductScroller } from '@/components/ProductScroller'
-import { Badge } from '@/components/ui/badge'
-import { Section } from '@/components/ui/section'
-import { prisma } from '@/lib/prisma'
-import { formatDollars } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import { type Metadata, type ResolvingMetadata } from 'next'
-import { notFound } from 'next/navigation'
+import { AddToCartButton } from '@/components/AddToCartButton';
+import { ProductDisplay } from '@/components/ProductDisplay';
+import { ProductScroller } from '@/components/ProductScroller';
+import { Badge } from '@/components/ui/badge';
+import { prisma } from '@/lib/prisma';
+import { formatDollars } from '@/lib/utils';
+import { ProductWithReviews } from '@/types';
+import { Product } from '@prisma/client';
+import { type Metadata, type ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
-  params: { slug: string }
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: { slug: string };
+  searchParams: Record<string, string | Array<string> | undefined>;
+};
 
 async function getProduct(slug: string): Promise<ProductWithReviews | null> {
   try {
@@ -24,11 +23,11 @@ async function getProduct(slug: string): Promise<ProductWithReviews | null> {
       include: {
         reviews: true,
       },
-    })
-    return product
+    });
+    return product;
   } catch (error) {
-    console.error(error)
-    return null
+    console.error(error);
+    return null;
   }
 }
 
@@ -42,11 +41,11 @@ async function getSimilarProducts(slug: string): Promise<Array<Product>> {
       },
 
       take: 10,
-    })
-    return products
+    });
+    return products;
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
 }
 
@@ -54,9 +53,9 @@ export async function generateMetadata(
   { params, searchParams }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const product = await getProduct(params.slug)
+  const product = await getProduct(params.slug);
 
-  if (product === null) return notFound()
+  if (product === null) return notFound();
 
   return {
     title: product.title,
@@ -65,20 +64,20 @@ export async function generateMetadata(
       type: 'website',
     },
     description: product.description,
-  }
+  };
 }
 
 export default async function Page({ params }: PageProps) {
   const [product, similarProducts] = await Promise.all([
     getProduct(params.slug),
     getSimilarProducts(params.slug),
-  ])
+  ]);
 
-  if (product === null) notFound()
+  if (product === null) notFound();
 
   return (
     <>
-      <Section className="py-20">
+      <section className="py-20">
         <div className="container flex flex-col gap-20 lg:flex-row">
           <ProductDisplay product={product} />
 
@@ -99,24 +98,24 @@ export default async function Page({ params }: PageProps) {
                 <AddToCartButton
                   className="mx-auto w-full"
                   product={product}
-                  size={'lg'}
+                  size={'xl'}
                 />
               )}
             </div>
           </div>
         </div>
-      </Section>
-      <Section className="py-20">
+      </section>
+      <section className="py-20">
         <div className="container">{product.reviews.length > 0 && <></>}</div>
-      </Section>
-      <Section className="pb-48 pt-10">
+      </section>
+      <section className="pb-48 pt-10">
         <div className="container">
           <ProductScroller
             title="Similar Products"
             products={similarProducts}
           />
         </div>
-      </Section>
+      </section>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { SchemaTypeDefinition } from 'sanity'
+import { SchemaTypeDefinition } from 'sanity';
 
 export const article: SchemaTypeDefinition = {
   name: 'article',
@@ -47,4 +47,4 @@ export const article: SchemaTypeDefinition = {
     },
     // Add more fields as needed
   ],
-}
+};

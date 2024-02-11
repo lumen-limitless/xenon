@@ -107,7 +107,7 @@ exports[`ProductScroller should match snapshot 1`] = `
       id="scroll-left"
     >
       <svg
-        class="lucide lucide-chevron-left"
+        class="lucide lucide-chevron-left "
         fill="none"
         height="24"
         stroke="currentColor"
@@ -128,7 +128,7 @@ exports[`ProductScroller should match snapshot 1`] = `
       id="scroll-right"
     >
       <svg
-        class="lucide lucide-chevron-right"
+        class="lucide lucide-chevron-right "
         fill="none"
         height="24"
         stroke="currentColor"

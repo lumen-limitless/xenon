@@ -1,7 +1,6 @@
-import { authOptions } from '@/lib/auth'
-import { Metadata } from 'next'
-import { getServerSession } from 'next-auth'
-import { notFound } from 'next/navigation'
+import { auth } from '@/auth';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
   robots: {
@@ -12,18 +11,18 @@ export const metadata: Metadata = {
       follow: false,
     },
   },
-}
+};
 
 export default async function Layout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions)
+  const session = await auth();
 
   if (session === null || session.user.role !== 'ADMIN') {
-    return notFound()
+    return notFound();
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }

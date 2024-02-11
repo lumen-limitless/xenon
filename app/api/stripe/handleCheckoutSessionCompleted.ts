@@ -1,37 +1,37 @@
-import { prisma } from '@/lib/prisma'
-import { stripe } from '@/lib/stripe'
-import type Stripe from 'stripe'
+import { prisma } from '@/lib/prisma';
+import { stripe } from '@/lib/stripe';
+import type Stripe from 'stripe';
 
 export default async function handleCheckoutSessionCompleted(
   data: Stripe.Checkout.Session,
 ): Promise<void> {
   if (data.payment_intent == null) {
-    throw new Error('No payment intent')
+    throw new Error('No payment intent');
   }
 
-  const cartId = data.client_reference_id
+  const cartId = data.client_reference_id;
 
   if (cartId == null) {
-    throw new Error('No cart ID')
+    throw new Error('No cart ID');
   }
 
   const cart = await prisma.cart.findUnique({
     where: {
       id: cartId,
     },
-  })
+  });
 
   if (!cart) {
-    throw new Error('No cart found for ID ' + cartId)
+    throw new Error('No cart found for ID ' + cartId);
   }
 
   const checkoutSession = await stripe.checkout.sessions.retrieve(data.id, {
     expand: ['line_items.data.price.product'],
-  })
+  });
 
-  const lineItems = checkoutSession.line_items?.data ?? []
+  const lineItems = checkoutSession.line_items?.data ?? [];
 
-  console.debug('lineItems', JSON.stringify(lineItems, null, 2))
+  console.debug('lineItems', JSON.stringify(lineItems, null, 2));
 
   //convert line items price product object to valid JSON
   const parsedLineItems = lineItems.map((item) => ({
@@ -40,13 +40,16 @@ export default async function handleCheckoutSessionCompleted(
       ...item.price,
       product: JSON.parse(JSON.stringify(item.price?.product, null)),
     },
-  }))
+  }));
 
   await prisma.$transaction(async (tx) => {
     // Create order
     await tx.order.create({
       data: {
-        checkoutSessionId: data.id,
+        metadata: {
+          checkoutSessionId: data.id,
+          paymentIntentId: data.payment_intent?.toString(),
+        },
         name: data.shipping_details?.name,
         address1: data.shipping_details?.address?.line1,
         address2: data.shipping_details?.address?.line2,
@@ -63,7 +66,7 @@ export default async function handleCheckoutSessionCompleted(
           })),
         },
       },
-    })
+    });
 
     // Update stock
     for (const item of parsedLineItems) {
@@ -76,7 +79,7 @@ export default async function handleCheckoutSessionCompleted(
             decrement: item.quantity ?? 0,
           },
         },
-      })
+      });
     }
 
     // Delete cart
@@ -84,6 +87,6 @@ export default async function handleCheckoutSessionCompleted(
       where: {
         id: cart.id,
       },
-    })
-  })
+    });
+  });
 }

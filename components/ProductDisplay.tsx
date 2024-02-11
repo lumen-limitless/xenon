@@ -1,26 +1,33 @@
-'use client'
+'use client';
 
-import { cn } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import Image from 'next/image'
-import { useState } from 'react'
-import { useLockBodyScroll } from 'react-use'
+import { cn } from '@/lib/utils';
+import { Product } from '@prisma/client';
+import Image from 'next/image';
+import { useState } from 'react';
+import { useLockBodyScroll } from 'react-use';
 
 type ProductDisplayProps = {
-  product?: Product
-}
+  product?: Product;
+  className?: string;
+};
 
-export const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [zoomed, setZoomed] = useState(false)
-  useLockBodyScroll(zoomed)
+export const ProductDisplay: React.FC<ProductDisplayProps> = ({
+  product,
+  className,
+}) => {
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
+  useLockBodyScroll(zoomed);
 
-  if (product === undefined) return null
+  if (product === undefined) return null;
 
   return (
     <>
       <div
-        className="flex h-full flex-1 flex-col items-center gap-5"
+        className={cn(
+          'flex h-full flex-1 flex-col items-center gap-5',
+          className,
+        )}
         id="product-display"
         data-testid="product-display"
       >
@@ -76,5 +83,5 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({ product }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};

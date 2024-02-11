@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import { type ButtonProps } from '@/components/ui/button'
-import { updateCartAction } from '@/lib/actions'
-import { truncateText } from '@/lib/utils'
-import { type Product } from '@prisma/client'
-import { Loader2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useTransition } from 'react'
-import { Button } from './ui/button'
-import { toast } from './ui/use-toast'
+import { type ButtonProps } from '@/components/ui/button';
+import { updateCartAction } from '@/lib/actions';
+import { truncateText } from '@/lib/utils';
+import { type Product } from '@prisma/client';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { Button } from './ui/button';
+import { toast } from './ui/use-toast';
 
 type AddToCartButtonProps = {
-  product: Product
+  product: Product;
 } & Omit<
   ButtonProps,
   'children' | 'onClick' | 'asChild' | 'disabled' | 'aria-disabled'
->
+>;
 
 export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   product,
   ...props
 }) => {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <Button
@@ -34,13 +34,13 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
           const { success } = await updateCartAction({
             productId: product.id,
             value: 1,
-          })
+          });
           if (!success) {
             toast({
               title: 'Error',
               description: 'There was an error adding to your bag.',
-            })
-            return
+            });
+            return;
           }
 
           toast({
@@ -49,8 +49,8 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
               product.title,
               25,
             )} was added to your bag.`,
-          })
-          router.refresh()
+          });
+          router.refresh();
         })
       }
     >
@@ -60,5 +60,5 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         'Add to bag'
       )}
     </Button>
-  )
-}
+  );
+};

@@ -1,40 +1,31 @@
-import { Banner } from '@/components/Banner'
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
-import Main from '@/components/Main'
-import { Toaster } from '@/components/ui/toaster'
-import { authOptions } from '@/lib/auth'
-import { getCart } from '@/lib/cart'
-import { cn } from '@/lib/utils'
-import { Viewport } from 'next'
-import { getServerSession } from 'next-auth'
-import { Inter } from 'next/font/google'
-import Analytics from './analytics'
-import './globals.css'
-import { defaultMetadata } from './metadata'
-import { Providers } from './providers'
+import Footer from '@/app/footer';
+import Header from '@/app/header';
+import Main from '@/app/main';
+import { Banner } from '@/components/Banner';
+import { cn } from '@/lib/utils';
+import { Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import Analytics from './analytics';
+import './globals.css';
+import { defaultMetadata } from './metadata';
+import { Providers } from './providers';
 
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-})
+});
 
-export const metadata = defaultMetadata
+export const metadata = defaultMetadata;
 
 export const viewport: Viewport = {
   themeColor: '#ffffff',
-}
+};
 
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const [session, cart] = await Promise.all([
-    getServerSession(authOptions),
-    getCart(),
-  ])
-
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -57,9 +48,8 @@ export default async function RootLayout({
           <a href="#main" className="sr-only" aria-label="skip">
             skip to content
           </a>
-          <Toaster />
           <Banner />
-          <Header session={session} cart={cart} />
+          <Header />
 
           <Main>{children}</Main>
 
@@ -68,5 +58,5 @@ export default async function RootLayout({
         <Analytics />
       </body>
     </html>
-  )
+  );
 }

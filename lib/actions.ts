@@ -1,12 +1,12 @@
-'use server'
+'use server';
 
-import { client } from '@/sanity/lib/client'
-import { OrderStatus } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
-import { createCart, getCart } from './cart'
-import { prisma } from './prisma'
-import { stripe } from './stripe'
-import { generateSlug } from './utils'
+import { client } from '@/sanity/lib/client';
+import { OrderStatus } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
+import { createCart, getCart } from './cart';
+import { prisma } from './prisma';
+import { stripe } from './stripe';
+import { generateSlug } from './utils';
 
 /**
  *
@@ -20,28 +20,28 @@ export async function addProductAction(
   formData: FormData,
 ): Promise<{ message: string }> {
   try {
-    const title = formData.get('title')?.toString() || '--'
-    const description = formData.get('description')?.toString() || '--'
+    const title = formData.get('title')?.toString() || '--';
+    const description = formData.get('description')?.toString() || '--';
     const categories =
-      formData.getAll('category').map((c) => c.toString()) || []
-    const price = Math.round(Number(formData.get('price')?.toString()) * 100)
-    const stock = Math.round(Number(formData.get('stock')?.toString()))
+      formData.getAll('category').map((c) => c.toString()) || [];
+    const price = Math.round(Number(formData.get('price')?.toString()) * 100);
+    const stock = Math.round(Number(formData.get('stock')?.toString()));
     const images =
-      formData.getAll('image')?.map((i) => i.valueOf() as File) || []
-    console.debug('images', images)
+      formData.getAll('image')?.map((i) => i.valueOf() as File) || [];
+    console.debug('images', images);
 
     if (isNaN(price) || isNaN(stock) || price < 0 || stock < 0) {
-      return { message: 'Invalid input' }
+      return { message: 'Invalid input' };
     }
 
     const assets = await Promise.all(
       images.map(async (image) => {
-        const asset = await client.assets.upload('image', image)
-        return asset
+        const asset = await client.assets.upload('image', image);
+        return asset;
       }),
-    )
+    );
 
-    const product = await prisma.product.create({
+    await prisma.product.create({
       data: {
         title,
         slug: generateSlug(title),
@@ -53,12 +53,12 @@ export async function addProductAction(
           connect: categories.map((c) => ({ id: c })),
         },
       },
-    })
+    });
 
-    return { message: 'Product added' }
+    return { message: 'Product added' };
   } catch (err) {
-    console.error(err)
-    return { message: 'Error adding product' }
+    console.error(err);
+    return { message: 'Error adding product' };
   }
 }
 
@@ -78,14 +78,14 @@ export async function deleteProductAction(
       where: {
         id,
       },
-    })
+    });
 
-    revalidatePath('/manage-products')
+    revalidatePath('/manage-products');
 
-    return { message: 'Product deleted' }
+    return { message: 'Product deleted' };
   } catch (err) {
-    console.error(err)
-    return { message: 'Error deleting product' }
+    console.error(err);
+    return { message: 'Error deleting product' };
   }
 }
 
@@ -108,12 +108,12 @@ export async function updateOrderStatusAction(
       data: {
         status,
       },
-    })
+    });
 
-    return { success: true }
+    return { success: true };
   } catch (err) {
-    console.error(err)
-    return { success: false }
+    console.error(err);
+    return { success: false };
   }
 }
 
@@ -128,14 +128,14 @@ export async function updateCartAction({
   productId,
   value,
 }: {
-  productId: string
-  value: number
+  productId: string;
+  value: number;
 }): Promise<{ success: boolean }> {
   try {
-    const cart = (await getCart()) ?? (await createCart())
+    const cart = (await getCart()) ?? (await createCart());
 
     if (value === 0) {
-      return { success: true }
+      return { success: true };
     }
 
     await prisma.$transaction(async (tx) => {
@@ -144,10 +144,10 @@ export async function updateCartAction({
           cartId: cart.id,
           productId,
         },
-      })
+      });
 
       if (existingItem !== null) {
-        const isZero = existingItem.quantity + value === 0
+        const isZero = existingItem.quantity + value === 0;
         isZero
           ? await tx.cartItem.delete({ where: { id: existingItem.id } })
           : await tx.cartItem.update({
@@ -159,7 +159,7 @@ export async function updateCartAction({
                   increment: value,
                 },
               },
-            })
+            });
       } else {
         if (value > 0) {
           await tx.cartItem.create({
@@ -168,7 +168,7 @@ export async function updateCartAction({
               productId,
               quantity: value,
             },
-          })
+          });
         }
       }
 
@@ -180,13 +180,13 @@ export async function updateCartAction({
         data: {
           updatedAt: new Date(),
         },
-      })
-    })
+      });
+    });
 
-    return { success: true }
+    return { success: true };
   } catch (err) {
-    console.error(err)
-    return { success: false }
+    console.error(err);
+    return { success: false };
   }
 }
 
@@ -199,12 +199,12 @@ export async function stripeCheckoutAction(): Promise<string | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : 'http://localhost:3000'
+      : 'http://localhost:3000';
 
-    const cart = await getCart()
+    const cart = await getCart();
 
     if (cart === null || cart.size === 0) {
-      throw new Error('Cart is empty')
+      throw new Error('Cart is empty');
     }
 
     // https://stripe.com/docs/api/checkout/sessions
@@ -241,11 +241,11 @@ export async function stripeCheckoutAction(): Promise<string | null> {
       cancel_url: `${baseUrl}/checkout?session_id={CHECKOUT_SESSION_ID}`,
 
       automatic_tax: { enabled: true },
-    })
+    });
 
-    return session.url
+    return session.url;
   } catch (error) {
-    console.error(error)
-    return null
+    console.error(error);
+    return null;
   }
 }

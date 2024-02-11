@@ -1,36 +1,35 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Section } from '@/components/ui/section'
-import { prisma } from '@/lib/prisma'
-import { formatDollars } from '@/lib/utils'
-import { Order } from '@prisma/client'
-import { BookA, DollarSign, ExternalLink, User2 } from 'lucide-react'
-import Link from 'next/link'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { prisma } from '@/lib/prisma';
+import { formatDollars } from '@/lib/utils';
+import { Order } from '@prisma/client';
+import { BookA, DollarSign, ExternalLink, User2 } from 'lucide-react';
+import Link from 'next/link';
 
 type PageProps = {
-  params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: {};
+  searchParams: Record<string, string | string[] | undefined>;
+};
 
 export const metadata = {
   title: 'Admin Dashboard',
-}
+};
 
 async function getOrders(): Promise<Array<Order>> {
   try {
-    const orders = await prisma.order.findMany()
-    return orders
+    const orders = await prisma.order.findMany();
+    return orders;
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
 }
 export default async function Page({}: PageProps) {
-  const [orders] = await Promise.all([getOrders()])
+  const [orders] = await Promise.all([getOrders()]);
 
   return (
     <>
-      <Section id="admin-dashboard" className="py-20">
+      <section id="admin-dashboard" className="py-20">
         <div className="container grid grid-cols-12 place-content-center gap-5">
           <div className="col-span-12">
             <h2 className="text-2xl font-semibold">Quick Actions</h2>
@@ -147,7 +146,7 @@ export default async function Page({}: PageProps) {
             </CardContent>
           </Card>
         </div>
-      </Section>
+      </section>
     </>
-  )
+  );
 }

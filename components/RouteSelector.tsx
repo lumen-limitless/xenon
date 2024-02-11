@@ -1,23 +1,23 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type RouteSelectorProps = {
-  routes?: { name: string; path: string }[]
-  className?: string
-}
+  routes?: { name: string; path: string }[];
+  className?: string;
+};
 
 export const RouteSelector: React.FC<RouteSelectorProps> = ({
   routes,
   className,
 }) => {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   if (routes === undefined) {
-    return null
+    return null;
   }
 
   return (
@@ -41,5 +41,5 @@ export const RouteSelector: React.FC<RouteSelectorProps> = ({
         ))}
       </div>
     </>
-  )
-}
+  );
+};

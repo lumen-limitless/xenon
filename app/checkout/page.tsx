@@ -1,39 +1,40 @@
-import { Button } from '@/components/ui/button'
-import { Section } from '@/components/ui/section'
-import { stripe } from '@/lib/stripe'
-import { CheckCircle, XCircle } from 'lucide-react'
-import Link from 'next/link'
-import Stripe from 'stripe'
+import { Button } from '@/components/ui/button';
+import { stripe } from '@/lib/stripe';
+import { CheckCircle, XCircle } from 'lucide-react';
+import Link from 'next/link';
+import Stripe from 'stripe';
 
 type PageProps = {
-  params: {}
-  searchParams: Record<string, string | Array<string> | undefined>
-}
+  params: {};
+  searchParams: Record<string, string | string[] | undefined>;
+};
 
 export const metadata = {
   title: 'Checkout',
-}
+};
 
 async function getCheckoutSession(
   sessionId: string,
 ): Promise<Stripe.Response<Stripe.Checkout.Session> | null> {
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId)
-    return session
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return session;
   } catch (error) {
-    console.error(error)
-    return null
+    console.error(error);
+    return null;
   }
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const session = await getCheckoutSession(searchParams['session_id'] as string)
+  const session = await getCheckoutSession(
+    searchParams['session_id'] as string,
+  );
 
   if (searchParams['session_id'] === undefined || session === null)
-    return <>Invalid checkout session</>
+    return <>Invalid checkout session</>;
 
   return (
-    <Section className="flex-grow pb-48 pt-10">
+    <section className="flex flex-grow pb-48 pt-10">
       <div className="container flex flex-col items-center justify-center">
         {session.payment_status === 'paid' ? (
           <CheckCircle className="h-24 w-24 text-green-500" />
@@ -54,9 +55,9 @@ export default async function Page({ searchParams }: PageProps) {
         </div>
 
         <Button asChild>
-          <Link href="/account?view=orders">View Orders</Link>
+          <Link href="/account/orders">View Orders</Link>
         </Button>
       </div>
-    </Section>
-  )
+    </section>
+  );
 }

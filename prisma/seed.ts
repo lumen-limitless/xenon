@@ -1,17 +1,17 @@
-import { Category, PrismaClient } from '@prisma/client'
+import { Category, PrismaClient } from '@prisma/client';
 
 type MockProduct = {
-  id: number
-  title: string
-  description: string
-  category: string
-  image: string
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
   rating: {
-    rate: number
-    count: number
-  }
-  price: number
-}
+    rate: number;
+    count: number;
+  };
+  price: number;
+};
 
 const categories: Array<Partial<Category>> = [
   {
@@ -34,26 +34,26 @@ const categories: Array<Partial<Category>> = [
     description: 'Clothing products',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
-]
-const prisma = new PrismaClient()
+];
+const prisma = new PrismaClient();
 
 // seed the database with products from the fakestoreapi
 export default async function main() {
-  const res = await fetch('https://fakestoreapi.com/products/')
+  const res = await fetch('https://fakestoreapi.com/products/');
 
   if (!res.ok) {
-    throw new Error('Error fetching products')
+    throw new Error('Error fetching products');
   }
 
-  const products: MockProduct[] = await res.json()
+  const products: MockProduct[] = await res.json();
 
-  await prisma.category.deleteMany()
+  await prisma.category.deleteMany();
 
   const category = await prisma.category.createMany({
     data: categories as Array<Category>,
-  })
+  });
 
-  await prisma.product.deleteMany()
+  await prisma.product.deleteMany();
 
   for (const product of products) {
     await prisma.product.create({
@@ -74,16 +74,16 @@ export default async function main() {
         images: [product.image],
         price: parseInt((product.price * 100).toFixed(0)),
       },
-    })
+    });
   }
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (err) => {
-    console.error(err)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(err);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

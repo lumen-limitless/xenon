@@ -1,18 +1,18 @@
-import { type Cart, type CartItem } from '@prisma/client'
-import { CartWithProducts, type CartInfo } from '@types'
-import { getServerSession } from 'next-auth'
-import { cookies } from 'next/headers'
-import { authOptions } from './auth'
-import { prisma } from './prisma'
+import { auth } from '@/auth';
+import { CartWithProducts, type CartInfo } from '@/types';
+import { type Cart, type CartItem } from '@prisma/client';
+import { cookies } from 'next/headers';
+import { cache } from 'react';
+import { prisma } from './prisma';
 
 function encryptCookieValue(value: string): string {
   const cipher = require('crypto').createCipher(
     'aes-256-cbc',
     process.env.COOKIE_SECRET!,
-  )
-  let encrypted = cipher.update(value, 'utf8', 'hex')
-  encrypted += cipher.final('hex')
-  return encrypted
+  );
+  let encrypted = cipher.update(value, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
 }
 
 function decryptCookieValue(value: string): string | undefined {
@@ -20,49 +20,49 @@ function decryptCookieValue(value: string): string | undefined {
     const decipher = require('crypto').createDecipher(
       'aes-256-cbc',
       process.env.COOKIE_SECRET!,
-    )
-    let decrypted = decipher.update(value, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-    return decrypted
+    );
+    let decrypted = decipher.update(value, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
   } catch (err) {
-    console.error('Error decrypting cookie value:', err)
+    console.error('Error decrypting cookie value:', err);
   }
 }
 
 function getLocalCartId(): string | undefined {
-  const encryptedLocalCartId = cookies().get('localCartId')?.value
+  const encryptedLocalCartId = cookies().get('localCartId')?.value;
   if (encryptedLocalCartId !== undefined) {
-    return decryptCookieValue(encryptedLocalCartId)
+    return decryptCookieValue(encryptedLocalCartId);
   }
 }
 
 function setLocalCartId(cartId: string): void {
-  const encryptedLocalCartId = encryptCookieValue(cartId)
+  const encryptedLocalCartId = encryptCookieValue(cartId);
   cookies().set('localCartId', encryptedLocalCartId, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
-  })
+  });
 }
 
 export async function createCart(): Promise<CartInfo> {
-  let newCart: Cart
+  let newCart: Cart;
 
-  const session = await getServerSession(authOptions)
+  const session = await auth();
 
   if (session) {
     newCart = await prisma.cart.create({
       data: {
         userId: session.user.id,
       },
-    })
+    });
   } else {
     newCart = await prisma.cart.create({
       data: {},
-    })
+    });
 
-    setLocalCartId(newCart.id)
+    setLocalCartId(newCart.id);
   }
 
   return {
@@ -70,13 +70,13 @@ export async function createCart(): Promise<CartInfo> {
     items: [],
     size: 0,
     subtotal: 0,
-  }
+  };
 }
 
-export async function getCart(): Promise<CartInfo | null> {
-  let cart: CartWithProducts | null = null
+export const getCart = cache(async (): Promise<CartInfo | null> => {
+  let cart: CartWithProducts | null = null;
 
-  const session = await getServerSession(authOptions)
+  const session = await auth();
 
   if (session) {
     cart = await prisma.cart.findFirst({
@@ -93,9 +93,9 @@ export async function getCart(): Promise<CartInfo | null> {
           },
         },
       },
-    })
+    });
   } else {
-    const localCartId = getLocalCartId()
+    const localCartId = getLocalCartId();
 
     cart = localCartId
       ? await prisma.cart.findUnique({
@@ -113,11 +113,11 @@ export async function getCart(): Promise<CartInfo | null> {
             },
           },
         })
-      : null
+      : null;
   }
 
   if (cart === null) {
-    return null
+    return null;
   }
 
   return {
@@ -128,13 +128,13 @@ export async function getCart(): Promise<CartInfo | null> {
         (acc, item) => acc + item.quantity * item.product.price,
         0,
       ) ?? 0,
-  }
-}
+  };
+});
 
 export async function mergeAnonymousCartWithUserCart(
   userId: string,
 ): Promise<void> {
-  const localCartId = getLocalCartId()
+  const localCartId = getLocalCartId();
 
   const localCart = await prisma.cart.findUnique({
     where: {
@@ -143,10 +143,10 @@ export async function mergeAnonymousCartWithUserCart(
     include: {
       items: true,
     },
-  })
+  });
 
   if (localCart === null) {
-    return
+    return;
   }
 
   const userCart = await prisma.cart.findFirst({
@@ -156,35 +156,35 @@ export async function mergeAnonymousCartWithUserCart(
     include: {
       items: true,
     },
-  })
+  });
 
   const mergeCartItems = (
     ...cartItems: Array<Array<CartItem>>
   ): Array<CartItem> => {
     return cartItems.reduce((acc, items) => {
       items.forEach((item) => {
-        const existingItem = acc.find((i) => i.productId === item.productId)
+        const existingItem = acc.find((i) => i.productId === item.productId);
 
         if (existingItem) {
-          existingItem.quantity += item.quantity
+          existingItem.quantity += item.quantity;
         } else {
-          acc.push(item)
+          acc.push(item);
         }
-      })
+      });
 
-      return acc
-    }, [])
-  }
+      return acc;
+    }, []);
+  };
 
   await prisma.$transaction(async (tx) => {
     if (userCart) {
-      const mergedCartItems = mergeCartItems(localCart.items, userCart.items)
+      const mergedCartItems = mergeCartItems(localCart.items, userCart.items);
 
       await tx.cartItem.deleteMany({
         where: {
           cartId: userCart.id,
         },
-      })
+      });
 
       await tx.cartItem.createMany({
         data: mergedCartItems.map((item) => ({
@@ -192,7 +192,7 @@ export async function mergeAnonymousCartWithUserCart(
           productId: item.productId,
           quantity: item.quantity,
         })),
-      })
+      });
     } else {
       await tx.cart.create({
         data: {
@@ -206,15 +206,15 @@ export async function mergeAnonymousCartWithUserCart(
             },
           },
         },
-      })
+      });
     }
 
     await tx.cart.delete({
       where: {
         id: localCartId,
       },
-    })
+    });
 
-    cookies().set('localCartId', '')
-  })
+    cookies().set('localCartId', '');
+  });
 }

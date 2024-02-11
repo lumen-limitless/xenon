@@ -1,20 +1,20 @@
-import { cn, formatDollars, truncateText } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import Image from 'next/image'
-import Link from 'next/link'
-import { AddToCartButton } from './AddToCartButton'
-import { Button } from './ui/button'
+import { cn, formatDollars } from '@/lib/utils';
+import { Product } from '@prisma/client';
+import Image from 'next/image';
+import Link from 'next/link';
+import { AddToCartButton } from './AddToCartButton';
+import { Button } from './ui/button';
 
 type ProductCardProps = {
-  product?: Product
-  className?: string
-}
+  product?: Product;
+  className?: string;
+};
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   className,
 }) => {
-  if (!product) return null
+  if (!product) return null;
 
   return (
     <div
@@ -32,8 +32,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
         />
       </Link>
-      <h2 className="text-left text-sm md:text-base">
-        {truncateText(product.title, 50)}
+      <h2 className="truncate text-left text-sm md:text-base">
+        {product.title}
       </h2>
       <p className="mr-auto">{formatDollars(product.price)}</p>
 
@@ -47,5 +47,5 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};

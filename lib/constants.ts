@@ -1,2 +1,2 @@
 export const APP_DESCRIPTION =
-  'Xenon is a full featured ecommerce boilerplate for Next.js'
+  'Xenon is an E-commerce example application built with Next.js and Prisma.';

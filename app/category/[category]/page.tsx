@@ -1,15 +1,14 @@
-import { ProductGrid } from '@/components/ProductGrid'
-import { SearchParamPagination } from '@/components/SearchParamPagination'
-import { Section } from '@/components/ui/section'
-import { prisma } from '@/lib/prisma'
-import { capitalize } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import { Metadata, ResolvingMetadata } from 'next'
+import { ProductGrid } from '@/components/ProductGrid';
+import { SearchParamPagination } from '@/components/SearchParamPagination';
+import { prisma } from '@/lib/prisma';
+import { capitalize } from '@/lib/utils';
+import { Product } from '@prisma/client';
+import { Metadata, ResolvingMetadata } from 'next';
 
 type PageProps = {
-  params: { category: string }
-  searchParams: Record<string, string | undefined>
-}
+  params: { category: string };
+  searchParams: Record<string, string | undefined>;
+};
 
 export async function generateMetadata(
   { params, searchParams }: PageProps,
@@ -17,7 +16,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   return {
     title: capitalize(params?.category) || '',
-  }
+  };
 }
 
 async function getCategoryProducts(category: string): Promise<Product[]> {
@@ -30,30 +29,31 @@ async function getCategoryProducts(category: string): Promise<Product[]> {
           },
         },
       },
-    })
-    return products ?? []
+    });
+    return products ?? [];
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
 }
 
-const ITEMS_PER_PAGE = 12
+const ITEMS_PER_PAGE = 12;
 
 export default async function Page({ params, searchParams }: PageProps) {
-  const products = await getCategoryProducts(params.category)
+  const products = await getCategoryProducts(params.category);
 
-  const currentPage = parseInt(searchParams['page'] || '1')
-  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE)
+  const currentPage = parseInt(searchParams['page'] || '1');
+
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
   const currentProducts = products.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
-  )
+  );
 
   return (
     <>
-      <Section className="flex-grow flex-col pb-48 pt-10">
+      <section className="flex flex-grow flex-col pb-48 pt-10">
         <div className="container">
           <h1 className="mb-5 text-center text-3xl">
             {capitalize(params.category)} Products
@@ -65,12 +65,9 @@ export default async function Page({ params, searchParams }: PageProps) {
         </div>
 
         <div className="mt-auto">
-          <SearchParamPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
+          <SearchParamPagination totalPages={totalPages} />
         </div>
-      </Section>
+      </section>
     </>
-  )
+  );
 }

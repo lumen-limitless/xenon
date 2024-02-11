@@ -1,19 +1,19 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
-import { deleteProductAction } from '@/lib/actions'
-import { formatDollars } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import { Loader2 } from 'lucide-react'
-import Image from 'next/image'
-import { useTransition } from 'react'
+'use client';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { deleteProductAction } from '@/lib/actions';
+import { formatDollars } from '@/lib/utils';
+import { Product } from '@prisma/client';
+import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { useTransition } from 'react';
 
 type ProductTableProps = {
-  products: Product[]
-}
+  products: Product[];
+};
 
 export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
   return (
     <>
       <Table>
@@ -26,7 +26,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                   variant={'destructive'}
                   onClick={() =>
                     startTransition(async () => {
-                      await deleteProductAction(null, product.id)
+                      await deleteProductAction(null, product.id);
                     })
                   }
                 >
@@ -53,5 +53,5 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
         </TableBody>
       </Table>
     </>
-  )
-}
+  );
+};

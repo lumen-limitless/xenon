@@ -1,18 +1,15 @@
-'use client'
-import { cn } from '@/lib/utils'
-import { MessageSquare } from 'lucide-react'
-import { useBoolean } from 'react-use'
-import { Carousel } from './Carousel'
+'use client';
+import { cn } from '@/lib/utils';
+import { MessageSquare } from 'lucide-react';
+import { Carousel } from './Carousel';
 
-type BannerProps = {}
+type BannerProps = {};
 
 export const Banner: React.FC<BannerProps> = ({}) => {
-  const [hidden, toggle] = useBoolean(false)
   return (
     <div
       className={cn(
-        'relative w-full items-center justify-center bg-foreground px-5 py-2 text-background backdrop-blur',
-        hidden ? 'hidden' : 'flex',
+        'relative flex w-full items-center justify-center bg-foreground px-5 py-2 text-background backdrop-blur',
       )}
     >
       <Carousel autoScroll>
@@ -25,5 +22,5 @@ export const Banner: React.FC<BannerProps> = ({}) => {
         <p className="whitespace-nowrap">Chat or Call (111) 123-4567</p>
       </a>
     </div>
-  )
-}
+  );
+};

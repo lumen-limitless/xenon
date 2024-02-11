@@ -1,25 +1,25 @@
-'use client'
-import { cn } from '@/lib/utils'
-import { Product } from '@prisma/client'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useRef } from 'react'
-import { useScroll } from 'react-use'
-import { ProductCard } from './ProductCard'
-import { Button } from './ui/button'
+'use client';
+import { cn } from '@/lib/utils';
+import { Product } from '@prisma/client';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRef } from 'react';
+import { useScroll } from 'react-use';
+import { ProductCard } from './ProductCard';
+import { Button } from './ui/button';
 
 type ProductScrollerProps = {
-  products?: Array<Product>
-  title?: string
-}
+  products?: Array<Product>;
+  title?: string;
+};
 
 export const ProductScroller: React.FC<ProductScrollerProps> = ({
   products,
   title,
 }) => {
-  const scrollerRef = useRef<HTMLDivElement>(null)
-  const { x } = useScroll(scrollerRef)
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const { x } = useScroll(scrollerRef);
 
-  if (products === undefined || products?.length === 0) return null
+  if (products === undefined || products?.length === 0) return null;
 
   return (
     <>
@@ -45,8 +45,8 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
           size={'icon'}
           variant={'secondary'}
           onClick={() => {
-            if (!scrollerRef.current) return
-            scrollerRef.current.scrollLeft -= scrollerRef.current.offsetWidth
+            if (!scrollerRef.current) return;
+            scrollerRef.current.scrollLeft -= scrollerRef.current.offsetWidth;
           }}
         >
           <ChevronLeft />
@@ -63,13 +63,13 @@ export const ProductScroller: React.FC<ProductScrollerProps> = ({
           size={'icon'}
           variant={'secondary'}
           onClick={() => {
-            if (!scrollerRef.current) return
-            scrollerRef.current.scrollLeft += scrollerRef.current.offsetWidth
+            if (!scrollerRef.current) return;
+            scrollerRef.current.scrollLeft += scrollerRef.current.offsetWidth;
           }}
         >
           <ChevronRight />
         </Button>
       </div>
     </>
-  )
-}
+  );
+};

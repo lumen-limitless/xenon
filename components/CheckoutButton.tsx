@@ -1,18 +1,18 @@
-'use client'
+'use client';
 
-import { stripeCheckoutAction } from '@/lib/actions'
-import { formatDollars } from '@/lib/utils'
-import { Loader2 } from 'lucide-react'
-import { RedirectType, redirect } from 'next/navigation'
-import { useTransition } from 'react'
-import { Button } from './ui/button'
+import { stripeCheckoutAction } from '@/lib/actions';
+import { formatDollars } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
+import { RedirectType, redirect } from 'next/navigation';
+import { useTransition } from 'react';
+import { Button } from './ui/button';
 
 type CheckoutButtonProps = {
-  amount?: number
-}
+  amount?: number;
+};
 
 export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   return (
     <Button
@@ -21,9 +21,9 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
       aria-disabled={isPending}
       onClick={() =>
         startTransition(async () => {
-          const sessionUrl = await stripeCheckoutAction()
+          const sessionUrl = await stripeCheckoutAction();
           if (sessionUrl) {
-            redirect(sessionUrl, RedirectType.push)
+            redirect(sessionUrl, RedirectType.push);
           }
         })
       }
@@ -34,5 +34,5 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({ amount }) => {
         `Checkout ${amount && formatDollars(amount)}`
       )}
     </Button>
-  )
-}
+  );
+};

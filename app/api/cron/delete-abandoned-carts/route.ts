@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'
-import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,13 +10,13 @@ export async function POST(req: NextRequest) {
         },
         userId: null,
       },
-    })
+    });
 
     if (abandonedCarts.length === 0) {
       return NextResponse.json(
         { success: true, message: '0 abandoned carts were deleted.' },
         { status: 200 },
-      )
+      );
     }
 
     await prisma.cart.deleteMany({
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
           in: abandonedCarts.map((cart) => cart.id),
         },
       },
-    })
+    });
 
     return NextResponse.json(
       {
@@ -33,9 +33,9 @@ export async function POST(req: NextRequest) {
         message: `${abandonedCarts.length} abandoned carts were deleted.`,
       },
       { status: 200 },
-    )
+    );
   } catch (err) {
-    console.error(err)
-    return NextResponse.error()
+    console.error(err);
+    return NextResponse.error();
   }
 }

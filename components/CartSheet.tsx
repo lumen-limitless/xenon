@@ -1,17 +1,17 @@
-'use client'
+'use client';
 
-import { updateCartAction } from '@/lib/actions'
-import { formatDollars, truncateText } from '@/lib/utils'
-import { type CartItem } from '@prisma/client'
-import { type CartInfo } from '@types'
-import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useTransition } from 'react'
-import { CheckoutButton } from './CheckoutButton'
-import { Button } from './ui/button'
-import { ScrollArea } from './ui/scroll-area'
+import { updateCartAction } from '@/lib/actions';
+import { formatDollars, truncateText } from '@/lib/utils';
+import { type CartInfo } from '@/types';
+import { type CartItem } from '@prisma/client';
+import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
+import { CheckoutButton } from './CheckoutButton';
+import { Button } from './ui/button';
+import { ScrollArea } from './ui/scroll-area';
 import {
   Sheet,
   SheetClose,
@@ -20,23 +20,29 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from './ui/sheet'
-import { Table, TableBody, TableCaption, TableCell, TableRow } from './ui/table'
+} from './ui/sheet';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableRow,
+} from './ui/table';
 
 const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const update = (value: number) => {
     startTransition(async () => {
       await updateCartAction({
         productId: item.productId,
         value: value,
-      })
+      });
 
-      router.refresh()
-    })
-  }
+      router.refresh();
+    });
+  };
   return (
     <div className="mr-auto flex w-24 items-center gap-1 text-secondary-foreground">
       <Button
@@ -61,15 +67,15 @@ const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
         <PlusCircle />
       </Button>
     </div>
-  )
-}
+  );
+};
 
 type CartSheetProps = {
-  cart: CartInfo | null
-}
+  cart: CartInfo | null;
+};
 export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <Sheet>
@@ -106,9 +112,9 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
                           await updateCartAction({
                             productId: item.productId,
                             value: 0 - item.quantity,
-                          })
+                          });
 
-                          router.refresh()
+                          router.refresh();
                         })
                       }
                     >
@@ -161,5 +167,5 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

@@ -1,16 +1,14 @@
-'use client'
-
-import { type CartInfo } from '@types'
-import { Menu, User2 } from 'lucide-react'
-import { Session } from 'next-auth'
-import { signIn, signOut } from 'next-auth/react'
-import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
-import GoogleSVG from 'public/svg/google.svg'
-import LogoSVG from 'public/svg/logo.svg'
-import { CartSheet } from './CartSheet'
-import { SearchBar } from './SearchBar'
-import { Button } from './ui/button'
+'use client';
+import { type CartInfo } from '@/types';
+import { Menu, User2 } from 'lucide-react';
+import { Session } from 'next-auth';
+import { signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
+import GoogleSVG from 'public/svg/google.svg';
+import LogoSVG from 'public/svg/logo.svg';
+import { CartSheet } from './CartSheet';
+import { SearchBar } from './SearchBar';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,29 +17,26 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu'
+} from './ui/dropdown-menu';
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-} from './ui/navigation-menu'
+} from './ui/navigation-menu';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from './ui/sheet'
+} from './ui/sheet';
 
 type NavProps = {
-  session: Session | null
-  cart: CartInfo | null
-}
+  session: Session | null;
+  cart: CartInfo | null;
+};
 
-export const Nav: React.FC<NavProps> = ({ session, cart }) => {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-
+export const Nav: React.FC<NavProps> = async ({ session, cart }) => {
   return (
     <div className="container flex h-16 w-full items-center" id="navigation">
       <Sheet>
@@ -69,7 +64,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           <SearchBar />
         </div>
         <NavigationMenuList>
-          <Sheet defaultOpen={searchParams.has('signin') && session === null}>
+          <Sheet>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant={'ghost'}>
@@ -144,7 +139,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               </SheetHeader>
               <div className="flex flex-col items-center justify-center gap-5 py-10">
                 <Button
-                  onClick={() => signIn('google', { callbackUrl: pathname })}
+                  onClick={() => signIn('google')}
                   variant={'outline'}
                   size="lg"
                 >
@@ -168,5 +163,5 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
         </NavigationMenuList>
       </NavigationMenu>
     </div>
-  )
-}
+  );
+};

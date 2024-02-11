@@ -1,13 +1,13 @@
-import { APP_DESCRIPTION } from '@/lib/constants'
-import { Metadata } from 'next'
+import { APP_DESCRIPTION } from '@/lib/constants';
+import { Metadata } from 'next';
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Xenon'
+const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Xenon';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
   : process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : 'http://localhost:3000'
+    : 'http://localhost:3000';
 
 export const defaultMetadata: Metadata = {
   title: {
@@ -78,4 +78,4 @@ export const defaultMetadata: Metadata = {
   },
 
   manifest: '/manifest.json',
-}
+};

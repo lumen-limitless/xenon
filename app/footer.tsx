@@ -1,4 +1,4 @@
-import { APP_DESCRIPTION } from '@/lib/constants'
+import { APP_DESCRIPTION } from '@/lib/constants';
 
 const Footer = () => {
   return (
@@ -17,7 +17,7 @@ const Footer = () => {
         </p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { SubmitButton } from '@/components/SubmitButton'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { addProductAction } from '@/lib/actions'
-import { Category } from '@prisma/client'
-import { useEffect } from 'react'
-import { useFormState } from 'react-dom'
+import { SubmitButton } from '@/components/SubmitButton';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { addProductAction } from '@/lib/actions';
+import { Category } from '@prisma/client';
+import { useEffect } from 'react';
+import { useFormState } from 'react-dom';
 
 type AddProductFormProps = {
-  categories: Category[]
-}
+  categories: Category[];
+};
 
 const initialState = {
   message: null,
-}
+};
 
 export const AddProductForm: React.FC<AddProductFormProps> = ({
   categories,
@@ -24,13 +24,13 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
   const [state, formAction] = useFormState<
     { message: string | null },
     FormData
-  >(addProductAction, initialState)
+  >(addProductAction, initialState);
 
   useEffect(() => {
     if (state?.message) {
-      alert(state.message)
+      alert(state.message);
     }
-  }, [state?.message])
+  }, [state?.message]);
 
   return (
     <>
@@ -107,5 +107,5 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
         </SubmitButton>
       </form>
     </>
-  )
-}
+  );
+};
