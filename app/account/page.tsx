@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 type PageProps = {
   params: {};
-  searchParams: Record<string, string | Array<string> | undefined>;
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
 export const metadata = {
