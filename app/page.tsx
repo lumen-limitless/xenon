@@ -1,10 +1,5 @@
-import { ProductCard } from '@/components/ProductCard';
+import { ProductCarousel } from '@/components/ProductCarousel';
 import { Slideshow } from '@/components/Slideshow';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
 import { prisma } from '@/lib/prisma';
 import { capitalize, shuffle } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
@@ -164,37 +159,19 @@ export default async function Page({}: PageProps) {
 
       <section className="py-10" id="shop-trending">
         <div className="container">
-          <h2 className="mb-5 text-3xl font-semibold">Trending Now</h2>
-          <Carousel>
-            <CarouselContent>
-              {products.map((product) => (
-                <CarouselItem
-                  key={product.id}
-                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  <ProductCard product={product as Product} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <ProductCarousel
+            products={products as Product[]}
+            title="Trending Products"
+          />
         </div>
       </section>
 
       <section className="py-10" id="shop-recommended">
         <div className="container">
-          <h2 className="mb-5 text-3xl font-semibold">Recommended for You</h2>
-          <Carousel>
-            <CarouselContent>
-              {products.map((product) => (
-                <CarouselItem
-                  key={product.id}
-                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  <ProductCard product={product as Product} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
+          <ProductCarousel
+            products={products as Product[]}
+            title="Recommended for You"
+          />
         </div>
       </section>
     </>

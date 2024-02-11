@@ -1,17 +1,11 @@
 import { AddToCartButton } from '@/components/AddToCartButton';
-import { ProductCard } from '@/components/ProductCard';
+import { ProductCarousel } from '@/components/ProductCarousel';
 import { ProductDisplay } from '@/components/ProductDisplay';
 import { Badge } from '@/components/ui/badge';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import { prisma } from '@/lib/prisma';
 import { formatDollars } from '@/lib/utils';
 import { ProductWithReviews } from '@/types';
+import { Product } from '@prisma/client';
 import { type Metadata, type ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -128,21 +122,10 @@ export default async function Page({ params }: PageProps) {
       </section>
       <section className="pb-48 pt-10">
         <div className="container">
-          <h2 className="mb-5 text-3xl font-semibold">Recommended for You</h2>
-          <Carousel>
-            <CarouselContent>
-              {similarProducts.map((product) => (
-                <CarouselItem
-                  key={product.id}
-                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  <ProductCard product={product as any} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+          <ProductCarousel
+            products={similarProducts as Product[]}
+            title="Similar Products"
+          />
         </div>
       </section>
     </>
