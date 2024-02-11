@@ -1,6 +1,7 @@
 import { client } from '@/sanity/lib/client';
 import { PortableText } from '@portabletext/react';
 import { Metadata, ResolvingMetadata } from 'next';
+import { groq } from 'next-sanity';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
@@ -15,7 +16,7 @@ async function getArticle(slug: string): Promise<{
 } | null> {
   try {
     const article = await client.fetch(
-      `*[_type == "article" && slug.current == $slug][0]`,
+      groq`*[_type == "article" && slug.current == $slug][0]`,
       { slug },
     );
     console.debug(article);

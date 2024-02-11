@@ -83,7 +83,7 @@ async function getHeroContent(): Promise<
 
 type PageProps = {
   params: {};
-  searchParams: Record<string, string | Array<string> | undefined>;
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
 export default async function Page({}: PageProps) {
