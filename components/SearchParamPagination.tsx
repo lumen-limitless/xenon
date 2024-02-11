@@ -2,6 +2,7 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -38,7 +39,7 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
           </PaginationItem>
         )}
 
-        {Array.from({ length: totalPages }, (_, i) => {
+        {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
           return (
             <PaginationItem key={i}>
               <PaginationLink href={getPaginationLink(i + 1)}>
@@ -47,6 +48,23 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
             </PaginationItem>
           );
         })}
+
+        {totalPages > 6 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+
+        {totalPages > 6 &&
+          Array.from({ length: 3 }, (_, i) => {
+            return (
+              <PaginationItem key={i + totalPages - 3}>
+                <PaginationLink href={getPaginationLink(i + totalPages - 2)}>
+                  {i + totalPages - 2}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
 
         {currentPage < totalPages && (
           <PaginationItem>

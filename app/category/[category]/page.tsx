@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { capitalize } from '@/lib/utils';
 import { Product } from '@prisma/client';
 import { Metadata, ResolvingMetadata } from 'next';
+import { cache } from 'react';
 
 type PageProps = {
   params: { category: string };
@@ -19,23 +20,25 @@ export async function generateMetadata(
   };
 }
 
-async function getCategoryProducts(category: string): Promise<Product[]> {
-  try {
-    const products = await prisma.product.findMany({
-      where: {
-        categories: {
-          some: {
-            title: category,
+const getCategoryProducts = cache(
+  async (category: string): Promise<Product[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        where: {
+          categories: {
+            some: {
+              title: category,
+            },
           },
         },
-      },
-    });
-    return products ?? [];
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+      });
+      return products ?? [];
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  },
+);
 
 const ITEMS_PER_PAGE = 12;
 

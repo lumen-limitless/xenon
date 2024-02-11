@@ -34,7 +34,7 @@ exports[`ProductScroller should match snapshot 1`] = `
             />
           </a>
           <h2
-            class="text-left text-sm md:text-base"
+            class="truncate text-left text-sm md:text-base"
           >
             Product 1
           </h2>
@@ -48,7 +48,7 @@ exports[`ProductScroller should match snapshot 1`] = `
           >
             <button
               aria-disabled="false"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
             >
               Add to bag
             </button>
@@ -80,7 +80,7 @@ exports[`ProductScroller should match snapshot 1`] = `
             />
           </a>
           <h2
-            class="text-left text-sm md:text-base"
+            class="truncate text-left text-sm md:text-base"
           >
             Product 2
           </h2>
@@ -94,7 +94,7 @@ exports[`ProductScroller should match snapshot 1`] = `
           >
             <button
               aria-disabled="false"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+              class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
             >
               Add to bag
             </button>
@@ -103,7 +103,7 @@ exports[`ProductScroller should match snapshot 1`] = `
       </div>
     </div>
     <button
-      class="items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 w-10 absolute left-2 top-1/2 hidden -translate-y-1/2 md:inline-flex pointer-events-none opacity-0"
+      class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 w-10 absolute left-2 top-1/2 hidden -translate-y-1/2 md:inline-flex pointer-events-none opacity-0"
       id="scroll-left"
     >
       <svg
@@ -124,7 +124,7 @@ exports[`ProductScroller should match snapshot 1`] = `
       </svg>
     </button>
     <button
-      class="items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 w-10 absolute right-2 top-1/2 hidden -translate-y-1/2 md:inline-flex"
+      class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 w-10 absolute right-2 top-1/2 hidden -translate-y-1/2 md:inline-flex"
       id="scroll-right"
     >
       <svg
