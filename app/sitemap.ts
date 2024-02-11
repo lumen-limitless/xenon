@@ -81,7 +81,7 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
 
     ...articles.map((article) => ({
-      url: `${baseUrl}/articles/${article.slug.current}`,
+      url: `${baseUrl}/${article.slug.current}`,
       lastModified: article.updatedAt,
     })),
   ];

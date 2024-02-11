@@ -1,31 +1,36 @@
+import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { prisma } from '@/lib/prisma';
-import { Category, Product } from '@prisma/client';
 import { PlusCircle } from 'lucide-react';
+import { cache } from 'react';
 import { AddProductForm } from './AddProductForm';
-import { ProductTable } from './ProductTable';
+import { columns } from './columns';
 
 type PageProps = {
   params: {};
-  searchParams: Record<string, string | Array<string> | undefined>;
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
 export const metadata = {
   title: 'Manage Products',
 };
 
-async function getProducts(): Promise<Product[]> {
+const getProducts = cache(async () => {
   try {
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      include: {
+        categories: true,
+      },
+    });
     return products;
   } catch (error) {
     console.error(error);
     return [];
   }
-}
+});
 
-async function getCategories(): Promise<Category[]> {
+const getCategories = cache(async () => {
   try {
     const categories = await prisma.category.findMany();
     return categories;
@@ -33,7 +38,7 @@ async function getCategories(): Promise<Category[]> {
     console.error(error);
     return [];
   }
-}
+});
 
 export default async function Page({}: PageProps) {
   const [products, categories] = await Promise.all([
@@ -50,7 +55,7 @@ export default async function Page({}: PageProps) {
           </h1>
           <Sheet>
             <SheetTrigger asChild>
-              <Button>
+              <Button className="mb-5">
                 <PlusCircle /> Add Product
               </Button>
             </SheetTrigger>
@@ -59,7 +64,7 @@ export default async function Page({}: PageProps) {
             </SheetContent>
           </Sheet>
 
-          <ProductTable products={products} />
+          <DataTable columns={columns} data={products} />
         </div>
       </section>
     </>

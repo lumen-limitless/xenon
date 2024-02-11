@@ -1,6 +1,7 @@
 'use server';
 
 import { client } from '@/sanity/lib/client';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '../prisma';
 import { generateSlug } from '../utils';
 
@@ -50,6 +51,8 @@ export async function addProductAction(
         },
       },
     });
+
+    revalidatePath('/');
 
     return { message: 'Product added' };
   } catch (err) {

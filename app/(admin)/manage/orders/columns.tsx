@@ -5,19 +5,45 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDollars } from '@/lib/utils';
 import { OrderWithItemsAndProducts } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Truck,
+  User2,
+  XCircle,
+} from 'lucide-react';
 
 export const columns: ColumnDef<OrderWithItemsAndProducts>[] = [
   { accessorKey: 'id', header: 'Order ID' },
 
-  { accessorKey: 'createdAt', header: 'Order Date' },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Order Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+
+    cell: (data) => {
+      return (
+        <time suppressHydrationWarning>
+          {new Date(data.row.original.createdAt).toLocaleString()}
+        </time>
+      );
+    },
+  },
 
   {
     accessorKey: 'status',
@@ -87,11 +113,19 @@ export const columns: ColumnDef<OrderWithItemsAndProducts>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Mark Shipped</DropdownMenuItem>
-            <DropdownMenuItem>Cancel & Refund</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Truck className="mr-2 h-4 w-4" />
+              Mark Shipped
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <XCircle className="mr-2 h-4 w-4" />
+              Cancel & Refund
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>
+              <User2 className="mr-2 h-4 w-4" />
+              View customer
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <a
                 href={`https://dashboard.stripe.com/payments/${
