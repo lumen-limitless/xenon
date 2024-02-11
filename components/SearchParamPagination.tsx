@@ -30,14 +30,15 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
   return (
     <Pagination>
       <PaginationContent>
-        {currentPage > 1 && (
-          <PaginationItem>
-            <PaginationPrevious
-              href={getPaginationLink(currentPage - 1)}
-              aria-disabled={!currentPage || currentPage === 1}
-            />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <PaginationPrevious
+            href={getPaginationLink(currentPage - 1)}
+            aria-disabled={!currentPage || currentPage === 1}
+            className={
+              currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+            }
+          />
+        </PaginationItem>
 
         {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
           return (
@@ -66,14 +67,15 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
             );
           })}
 
-        {currentPage < totalPages && (
-          <PaginationItem>
-            <PaginationNext
-              href={getPaginationLink(currentPage + 1)}
-              aria-disabled={!currentPage || currentPage === 1}
-            />
-          </PaginationItem>
-        )}
+        <PaginationItem>
+          <PaginationNext
+            href={getPaginationLink(currentPage + 1)}
+            aria-disabled={!currentPage || currentPage === 1}
+            className={
+              currentPage === totalPages ? 'pointer-events-none opacity-50' : ''
+            }
+          />
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

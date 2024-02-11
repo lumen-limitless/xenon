@@ -13,7 +13,7 @@ const routes = [
   },
   {
     name: 'Settings',
-    path: '/account/settings',
+    path: '/account',
   },
 ];
 export default async function Layout({

@@ -5,7 +5,9 @@ import { mergeAnonymousCartWithUserCart } from './lib/cart';
 import { prisma } from './lib/prisma';
 
 const config: NextAuthConfig = {
-  theme: {},
+  theme: {
+    // logo: 'https://example.com/logo.png',
+  },
 
   providers: [
     Google({

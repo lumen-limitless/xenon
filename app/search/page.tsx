@@ -57,7 +57,7 @@ export default async function Page({ searchParams }: PageProps) {
           )}
           <ProductGrid products={currentProducts} />
         </div>
-        <div className="mt-auto">
+        <div className="py-10">
           <SearchParamPagination totalPages={totalPages} />
         </div>
       </section>

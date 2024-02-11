@@ -1,34 +1,37 @@
 import { prisma } from '@/lib/prisma';
 import { OrderWithItemsAndProducts } from '@/types';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 
 type PageProps = {
   params: {
     id: string;
   };
-  searchParams: Record<string, string | Array<string> | undefined>;
+  searchParams: Record<string, string | string[] | undefined>;
 };
 
-async function getOrder(id: string): Promise<OrderWithItemsAndProducts | null> {
-  try {
-    const order = await prisma.order.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
+const getOrder = cache(
+  async (id: string): Promise<OrderWithItemsAndProducts | null> => {
+    try {
+      const order = await prisma.order.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    });
-    return order;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
+      });
+      return order;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  },
+);
 
 export async function generateMetadata({ params }: PageProps) {
   const order = await getOrder(params.id);

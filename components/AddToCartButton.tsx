@@ -5,10 +5,9 @@ import { updateCartAction } from '@/lib/actions';
 import { truncateText } from '@/lib/utils';
 import { type Product } from '@prisma/client';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
+import { toast } from 'sonner';
 import { Button } from './ui/button';
-import { toast } from './ui/use-toast';
 
 type AddToCartButtonProps = {
   product: Product;
@@ -22,7 +21,6 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   ...props
 }) => {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   return (
     <Button
@@ -36,21 +34,11 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
             value: 1,
           });
           if (!success) {
-            toast({
-              title: 'Error',
-              description: 'There was an error adding to your bag.',
-            });
+            toast("Couldn't add to bag. Please try again.");
             return;
           }
 
-          toast({
-            title: 'Added to bag',
-            description: `${truncateText(
-              product.title,
-              25,
-            )} was added to your bag.`,
-          });
-          router.refresh();
+          toast(`Added ${truncateText(product.title, 20)} to bag`);
         })
       }
     >

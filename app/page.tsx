@@ -1,34 +1,56 @@
-import { Carousel } from '@/components/Carousel';
-import { ProductScroller } from '@/components/ProductScroller';
+import { ProductCard } from '@/components/ProductCard';
+import { Slideshow } from '@/components/Slideshow';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { prisma } from '@/lib/prisma';
 import { capitalize, shuffle } from '@/lib/utils';
-import carousel1IMG from '@/public/img/carousel-1.webp';
 import { client as sanity } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
-import { Category, Product } from '@prisma/client';
 import { groq } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cache } from 'react';
 
-async function getProducts(): Promise<Array<Product>> {
+const getProducts = cache(async () => {
   try {
-    const products = await prisma.product.findMany();
+    const products = await prisma.product.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        slug: true,
+        images: true,
+        stock: true,
+        price: true,
+      },
+    });
     return products;
   } catch (err) {
     console.error(err);
     return [];
   }
-}
+});
 
-async function getCategories(): Promise<Array<Category>> {
+const getCategories = cache(async () => {
   try {
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+      },
+    });
     return categories;
   } catch (err) {
     console.error(err);
     return [];
   }
-}
+});
 
 async function getHeroContent(): Promise<
   Array<{
@@ -75,7 +97,7 @@ export default async function Page({}: PageProps) {
     <>
       <section className={'flex h-[25rem] md:mx-0 md:pt-10'}>
         <div className="w-full md:container">
-          <Carousel autoScroll>
+          <Slideshow autoScroll>
             {heroContent?.map((item) => (
               <Link key={item.title} href={item.link}>
                 <div className="relative h-full w-full">
@@ -90,7 +112,7 @@ export default async function Page({}: PageProps) {
                 </div>
               </Link>
             ))}
-          </Carousel>
+          </Slideshow>
         </div>
       </section>
 
@@ -103,7 +125,7 @@ export default async function Page({}: PageProps) {
                   <Image
                     className="h-auto w-auto rounded-md object-cover object-center"
                     fill
-                    src={carousel1IMG}
+                    src="/img/placeholder.webp"
                     alt={category.title}
                   />
                 </div>
@@ -145,13 +167,41 @@ export default async function Page({}: PageProps) {
 
       <section className="py-10" id="shop-trending">
         <div className="container">
-          <ProductScroller products={products} title="Trending Now" />
+          <h2 className="mb-5 text-3xl font-semibold">Trending Now</h2>
+          <Carousel>
+            <CarouselContent>
+              {products.map((product) => (
+                <CarouselItem
+                  key={product.id}
+                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                >
+                  <ProductCard product={product as any} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </section>
 
       <section className="py-10" id="shop-recommended">
         <div className="container">
-          <ProductScroller products={products} title="Recommended for You" />
+          <h2 className="mb-5 text-3xl font-semibold">Recommended for You</h2>
+          <Carousel>
+            <CarouselContent>
+              {products.map((product) => (
+                <CarouselItem
+                  key={product.id}
+                  className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                >
+                  <ProductCard product={product as any} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </section>
     </>

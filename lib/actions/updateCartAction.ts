@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { createCart, getCart } from '../cart';
 import { prisma } from '../prisma';
 /**
@@ -67,6 +68,8 @@ export async function updateCartAction({
         },
       });
     });
+
+    revalidatePath('/');
 
     return { success: true };
   } catch (err) {

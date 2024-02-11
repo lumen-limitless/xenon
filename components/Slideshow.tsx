@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useState } from 'react';
 
-type CarouselProps = {
+type SlideshowProps = {
   children?: React.ReactNode;
   autoScroll?: boolean;
   controls?: boolean;
@@ -11,7 +11,10 @@ type CarouselProps = {
 
 const swipeConfidenceThreshold = 10000;
 
-export const Carousel: React.FC<CarouselProps> = ({ children, autoScroll }) => {
+export const Slideshow: React.FC<SlideshowProps> = ({
+  children,
+  autoScroll,
+}) => {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
 

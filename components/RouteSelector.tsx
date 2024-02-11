@@ -34,7 +34,8 @@ export const RouteSelector: React.FC<RouteSelectorProps> = ({
             asChild
             variant={pathname === route.path ? 'default' : 'secondary'}
             aria-current={pathname === route.path ? true : false}
-            role="button"
+            role="link"
+            aria-label={route.name}
           >
             <Link href={`${route.path}`}>{route.name}</Link>
           </Button>

@@ -2,10 +2,10 @@ import { auth } from '@/auth';
 import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/prisma';
 import { formatDollars } from '@/lib/utils';
-import { OrderWithItemsAndProducts } from '@/types';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cache } from 'react';
 
 type PageProps = {
   params: {};
@@ -16,9 +16,7 @@ export const metadata = {
   title: 'My Account',
 };
 
-async function getOrdersForUser(
-  userId?: string,
-): Promise<Array<OrderWithItemsAndProducts>> {
+const getOrdersForUser = cache(async (userId?: string) => {
   try {
     const orders = await prisma.order.findMany({
       where: {
@@ -38,7 +36,7 @@ async function getOrdersForUser(
     console.error(error);
     return [];
   }
-}
+});
 
 export default async function Page({}: PageProps) {
   const session = await auth();

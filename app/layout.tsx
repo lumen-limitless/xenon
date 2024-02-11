@@ -5,6 +5,7 @@ import { Banner } from '@/components/Banner';
 import { cn } from '@/lib/utils';
 import { Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { Toaster } from 'sonner';
 import Analytics from './analytics';
 import './globals.css';
 import { defaultMetadata } from './metadata';
@@ -45,10 +46,18 @@ export default async function RootLayout({
         )}
       >
         <Providers>
-          <a href="#main" className="sr-only" aria-label="skip">
-            skip to content
+          <a
+            href="#main"
+            className="sr-only absolute left-[-999px] top-[-999px] block border bg-[#ffc] text-black focus:not-sr-only focus:bottom-0 focus:top-0 focus:border-[#990000]"
+            aria-label="skip"
+            id="skip"
+          >
+            Skip Content
           </a>
+
+          <Toaster />
           <Banner />
+
           <Header />
 
           <Main>{children}</Main>
