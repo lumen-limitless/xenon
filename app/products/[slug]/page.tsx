@@ -98,7 +98,7 @@ export default async function Page({ params }: PageProps) {
                 <AddToCartButton
                   className="mx-auto w-full"
                   product={product}
-                  size={'xl'}
+                  size={'lg'}
                 />
               )}
             </div>
