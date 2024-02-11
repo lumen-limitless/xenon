@@ -1,6 +1,6 @@
-import Google from '@auth/core/providers/google';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import NextAuth, { type NextAuthConfig } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 import { mergeAnonymousCartWithUserCart } from './lib/cart';
 import { prisma } from './lib/prisma';
 
@@ -10,9 +10,10 @@ const config: NextAuthConfig = {
   },
 
   providers: [
-    Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 

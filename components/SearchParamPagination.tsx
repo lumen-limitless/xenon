@@ -27,6 +27,8 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
     return `?${params.toString()}`;
   };
 
+  if (totalPages <= 1) return null;
+
   return (
     <Pagination>
       <PaginationContent>

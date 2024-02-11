@@ -79,7 +79,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.50.1",
-    "react-resizable-panels": "^2.0.4",
+    "react-resizable-panels": "^2.0.5",
     "react-use": "^17.5.0",
     "sanity": "^3.28.0",
     "sharp": "^0.33.2",
