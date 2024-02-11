@@ -13,8 +13,12 @@ export const Banner: React.FC<BannerProps> = ({}) => {
       )}
     >
       <Slideshow autoScroll>
-        <p>This is an example ecommerce web application</p>
-        <p>It is built using Next.js, TailwindCSS, and TypeScript</p>
+        <p className="truncate text-nowrap">
+          This is an example ecommerce web application
+        </p>
+        <p className="truncate text-nowrap">
+          It is built using Next.js, TailwindCSS, and TypeScript
+        </p>
       </Slideshow>
 
       <a className="hidden items-center gap-1 md:flex" href="tel:111-123-4567">
