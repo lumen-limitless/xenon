@@ -50,11 +50,16 @@ export default async function Page({ searchParams }: PageProps) {
     <>
       <section id="search-results" className="flex-grow flex-col py-10">
         <div className="container flex h-full flex-grow flex-col">
-          {products.length === 0 ? (
-            <p className="">No results found</p>
-          ) : (
-            <p className="">{products.length} results found</p>
-          )}
+          <div className="mb-1">
+            {products.length === 0 ? (
+              <p>No results found</p>
+            ) : (
+              <p>
+                {products.length} result{products.length > 1 ? 's' : null} found
+              </p>
+            )}
+          </div>
+
           <ProductGrid products={currentProducts} />
         </div>
         <div className="py-10">

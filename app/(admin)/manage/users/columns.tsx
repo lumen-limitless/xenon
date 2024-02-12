@@ -25,6 +25,16 @@ export const columns: ColumnDef<
   },
 
   {
+    accessorKey: 'role',
+    header: 'Role',
+  },
+
+  {
+    accessorKey: 'email',
+    header: 'Email',
+  },
+
+  {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {

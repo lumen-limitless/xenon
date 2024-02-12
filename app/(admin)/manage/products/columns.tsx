@@ -20,6 +20,7 @@ import {
   View,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export const columns: ColumnDef<
   Prisma.ProductGetPayload<{
@@ -56,12 +57,17 @@ export const columns: ColumnDef<
     header: 'Images',
     cell: (data) => {
       return (
-        <Image
-          src={data.row.original.images[0]}
-          alt={data.row.original.title}
-          width={50}
-          height={50}
-        />
+        <>
+          {data.row.original.images.map((image, i) => (
+            <Image
+              key={i}
+              src={image}
+              alt={data.row.original.title}
+              width={50}
+              height={50}
+            />
+          ))}
+        </>
       );
     },
   },
@@ -122,9 +128,11 @@ export const columns: ColumnDef<
               Delete Product
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
-              <View className="mr-2 h-4 w-4" />
-              View Product
+            <DropdownMenuItem asChild>
+              <Link href={`/products/${row.original.slug}`}>
+                <View className="mr-2 h-4 w-4" />
+                View Product
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuItem onClick={() => null}>
