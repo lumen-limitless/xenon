@@ -14,6 +14,37 @@ type SearchParamPaginationProps = {
   totalPages: number;
 };
 
+function pagination(c: number, m: number): (number | null)[] {
+  var current = c,
+    last = m,
+    delta = 2,
+    left = current - delta,
+    right = current + delta + 1,
+    range = [],
+    rangeWithDots = [],
+    l;
+
+  for (let i = 1; i <= last; i++) {
+    if (i == 1 || i == last || (i >= left && i < right)) {
+      range.push(i);
+    }
+  }
+
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l !== 1) {
+        rangeWithDots.push(null);
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+
+  return rangeWithDots;
+}
+
 export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
   totalPages,
 }) => {
@@ -34,6 +65,7 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            data-testid="pagination-previous"
             href={getPaginationLink(currentPage - 1)}
             aria-disabled={currentPage === 1}
             className={
@@ -42,35 +74,30 @@ export const SearchParamPagination: React.FC<SearchParamPaginationProps> = ({
           />
         </PaginationItem>
 
-        {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
+        {pagination(currentPage, totalPages).map((page, index) => {
+          if (page === null) {
+            return (
+              <PaginationItem key={index}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            );
+          }
+
           return (
-            <PaginationItem key={i}>
-              <PaginationLink href={getPaginationLink(i + 1)}>
-                {i + 1}
+            <PaginationItem key={index}>
+              <PaginationLink
+                href={getPaginationLink(page as number)}
+                isActive={currentPage === page}
+              >
+                {page}
               </PaginationLink>
             </PaginationItem>
           );
         })}
 
-        {totalPages > 6 && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-
-        {totalPages > 6 &&
-          Array.from({ length: 3 }, (_, i) => {
-            return (
-              <PaginationItem key={i + totalPages - 3}>
-                <PaginationLink href={getPaginationLink(i + totalPages - 2)}>
-                  {i + totalPages - 2}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-
         <PaginationItem>
           <PaginationNext
+            data-testid="pagination-next"
             href={getPaginationLink(currentPage + 1)}
             aria-disabled={currentPage === totalPages}
             className={
