@@ -1,12 +1,12 @@
 import { cn, formatDollars } from '@/lib/utils';
-import { Product } from '@prisma/client';
+import type { productTable } from '@/schema';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AddToCartButton } from './AddToCartButton';
 import { Button } from './ui/button';
 
 type ProductCardProps = {
-  product?: Product;
+  product?: typeof productTable.$inferSelect;
   className?: string;
 };
 
@@ -25,7 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <Link href={`/products/${product.slug}`} className="rounded-md bg-muted">
         <Image
           className="h-32 w-full object-contain object-center"
-          src={product.images[0]}
+          src={product.images?.[0] ?? '/img/placeholder.webp'}
           alt={product.title}
           width={100}
           height={100}

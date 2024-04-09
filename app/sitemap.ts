@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { client } from '@/sanity/lib/client';
 import { type MetadataRoute } from 'next';
 import { groq } from 'next-sanity';
@@ -10,15 +10,15 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL
     : 'http://localhost:3000';
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
-  const productsPromise = prisma.product.findMany({
-    select: {
+  const productsPromise = db.query.productTable.findMany({
+    columns: {
       slug: true,
       updatedAt: true,
     },
   });
 
-  const categoriesPromise = prisma.category.findMany({
-    select: {
+  const categoriesPromise = db.query.categoryTable.findMany({
+    columns: {
       title: true,
       updatedAt: true,
     },

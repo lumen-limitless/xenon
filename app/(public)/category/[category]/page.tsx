@@ -1,8 +1,8 @@
 import { ProductGrid } from '@/components/ProductGrid';
 import { SearchParamPagination } from '@/components/SearchParamPagination';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { capitalize } from '@/lib/utils';
-import { Product } from '@prisma/client';
+import { productTable } from '@/schema';
 import { Metadata, ResolvingMetadata } from 'next';
 import { cache } from 'react';
 
@@ -21,18 +21,10 @@ export async function generateMetadata(
 }
 
 const getCategoryProducts = cache(
-  async (category: string): Promise<Product[]> => {
+  async (category: string): Promise<(typeof productTable.$inferSelect)[]> => {
     try {
-      const products = await prisma.product.findMany({
-        where: {
-          categories: {
-            some: {
-              title: category,
-            },
-          },
-        },
-      });
-      return products ?? [];
+      const products = await db.query.productTable.findMany();
+      return products;
     } catch (error) {
       console.error(error);
       return [];

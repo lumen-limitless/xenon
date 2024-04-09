@@ -1,15 +1,19 @@
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
+import { cartTable } from '@/schema';
+import { eq, isNull, lte, or } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   try {
-    const abandonedCarts = await prisma.cart.findMany({
-      where: {
-        updatedAt: {
-          lte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 7 days
-        },
-        userId: null,
-      },
+    const abandonedCarts = await db.query.cartTable.findMany({
+      where: isNull(cartTable.userId).append(
+        lte(
+          cartTable.updatedAt,
+          new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
+        ),
+      ),
     });
 
     if (abandonedCarts.length === 0) {
@@ -19,13 +23,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await prisma.cart.deleteMany({
-      where: {
-        id: {
-          in: abandonedCarts.map((cart) => cart.id),
-        },
-      },
-    });
+    await db
+      .delete(cartTable)
+      .where(or(...abandonedCarts.map((cart) => eq(cartTable.id, cart.id))));
 
     return NextResponse.json(
       {

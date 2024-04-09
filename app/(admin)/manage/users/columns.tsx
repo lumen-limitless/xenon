@@ -8,15 +8,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { deleteProductAction } from '@/lib/actions';
-import { Prisma } from '@prisma/client';
+import { UserWithCartAndOrders } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { Copy, Delete, Edit, MoreHorizontal, View } from 'lucide-react';
 
-export const columns: ColumnDef<
-  Prisma.UserGetPayload<{
-    include: { cart: true; orders: true };
-  }>
->[] = [
+export const columns: ColumnDef<UserWithCartAndOrders>[] = [
   { accessorKey: 'id', header: 'User ID' },
 
   {

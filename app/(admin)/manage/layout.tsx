@@ -1,4 +1,4 @@
-import { RouteSelector } from '@/components/RouteSelector';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const routes = [
   { name: 'Products', path: '/manage/products' },
@@ -10,8 +10,8 @@ const routes = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <RouteSelector routes={routes} className="pt-10" />
-      {children}
+      {/* <RouteSelector routes={routes} className="pt-10" /> */}
+      <TooltipProvider>{children}</TooltipProvider>
     </>
   );
 }

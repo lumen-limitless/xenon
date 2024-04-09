@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { formatDollars } from '@/lib/utils';
-import { Order } from '@prisma/client';
+import { orderTable } from '@/schema';
 import { BookA, DollarSign, ExternalLink, User2 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -15,9 +15,9 @@ export const metadata = {
   title: 'Admin Dashboard',
 };
 
-async function getOrders(): Promise<Array<Order>> {
+async function getOrders(): Promise<Array<typeof orderTable.$inferInsert>> {
   try {
-    const orders = await prisma.order.findMany();
+    const orders = await db.query.orderTable.findMany();
     return orders;
   } catch (error) {
     console.error(error);

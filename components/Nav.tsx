@@ -10,6 +10,7 @@ import LogoSVG from 'public/svg/logo.svg';
 import { useBoolean, useLockBodyScroll } from 'react-use';
 import { CartSheet } from './CartSheet';
 import { SearchBar } from './SearchBar';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import {
   DropdownMenu,
@@ -72,7 +73,12 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant={'ghost'}>
-                    <User2 />
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={session?.user.image ?? ''} />
+                      <AvatarFallback>
+                        <User2 className="h-6" />
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="sr-only">Account</span>
                   </Button>
                 </DropdownMenuTrigger>

@@ -3,14 +3,14 @@
 import { type ButtonProps } from '@/components/ui/button';
 import { updateCartAction } from '@/lib/actions';
 import { truncateText } from '@/lib/utils';
-import { type Product } from '@prisma/client';
+import { productTable } from '@/schema';
 import { Loader2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
 
 type AddToCartButtonProps = {
-  product: Product;
+  product: typeof productTable.$inferSelect;
 } & Omit<
   ButtonProps,
   'children' | 'onClick' | 'asChild' | 'disabled' | 'aria-disabled'

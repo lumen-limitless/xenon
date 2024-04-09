@@ -6,12 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { addProductAction } from '@/lib/actions';
-import { Category } from '@prisma/client';
+import { categoryTable } from '@/schema';
 import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 
 type AddProductFormProps = {
-  categories: Category[];
+  categories: Array<typeof categoryTable.$inferSelect>;
 };
 
 const initialState = {

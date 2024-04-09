@@ -1,7 +1,8 @@
 'use server';
 
-import { OrderStatus } from '@prisma/client';
-import { prisma } from '../prisma';
+import { orderStatus, orderTable } from '@/schema';
+import { eq } from 'drizzle-orm';
+import { db } from '../drizzle';
 
 /**
  *
@@ -12,17 +13,15 @@ import { prisma } from '../prisma';
  */
 export async function updateOrderStatusAction(
   orderId: string,
-  status: OrderStatus,
+  status: (typeof orderStatus.enumValues)[number],
 ): Promise<{ success: boolean }> {
   try {
-    await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
+    await db
+      .update(orderTable)
+      .set({
         status,
-      },
-    });
+      })
+      .where(eq(orderTable.id, orderId));
 
     return { success: true };
   } catch (err) {

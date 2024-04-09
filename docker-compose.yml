@@ -12,17 +12,15 @@ services:
     ports:
       - 5432:5432
 
-  app:
-    image: node:20
-    volumes:
-      - ./:/app
-    working_dir: /app
-    command: bash -c "npm install -g pnpm concurrently && pnpm install && concurrently \"pnpm dev\" \"pnpm prisma studio --port 5555\""
-    ports:
-      - '3000:3000'
-      - '5555:5555'
-    depends_on:
-      - db
-    environment:
-      POSTGRES_PRISMA_URL: postgres://default:mypassword@db:5432/explor3
-      POSTGRES_URL_NON_POOLING: postgres://default:mypassword@db:5432/explor3?connection_limit=1
+  # app:
+  #   image: node:20
+  #   volumes:
+  #     - ./:/app
+  #   working_dir: /app
+  #   command: bash -c "npm install -g pnpm concurrently && pnpm install && concurrently \"pnpm dev\" \"pnpm drizzle-kit studio\""
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     POSTGRES_URL: postgres://default:mypassword@db:5432/explor3?sslmode=disable

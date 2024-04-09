@@ -1,27 +1,35 @@
 import { auth } from '@/auth';
+import { cartItemTable, cartTable } from '@/schema';
 import { CartWithProducts, type CartInfo } from '@/types';
-import { type Cart, type CartItem } from '@prisma/client';
+import crypto from 'crypto';
+import { asc, eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-import { prisma } from './prisma';
+import { db } from './drizzle';
 
 function encryptCookieValue(value: string): string {
-  const cipher = require('crypto').createCipher(
-    'aes-256-cbc',
-    process.env.COOKIE_SECRET!,
-  );
+  const algorithm = 'aes-256-cbc';
+  const key = crypto.scryptSync(process.env.COOKIE_SECRET!, 'salt', 32);
+  const iv = crypto.randomBytes(16);
+
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
   let encrypted = cipher.update(value, 'utf8', 'hex');
   encrypted += cipher.final('hex');
-  return encrypted;
+  return iv.toString('hex') + ':' + encrypted;
 }
 
 function decryptCookieValue(value: string): string | undefined {
   try {
-    const decipher = require('crypto').createDecipher(
-      'aes-256-cbc',
-      process.env.COOKIE_SECRET!,
+    const algorithm = 'aes-256-cbc';
+    const key = crypto.scryptSync(process.env.COOKIE_SECRET!, 'salt', 32);
+    const [iv, encrypted] = value.split(':');
+    const decipher = crypto.createDecipheriv(
+      algorithm,
+      key,
+      Buffer.from(iv, 'hex'),
     );
-    let decrypted = decipher.update(value, 'hex', 'utf8');
+
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
   } catch (err) {
@@ -47,20 +55,21 @@ function setLocalCartId(cartId: string): void {
 }
 
 export async function createCart(): Promise<CartInfo> {
-  let newCart: Cart;
+  let newCart: typeof cartTable.$inferSelect;
 
   const session = await auth();
 
   if (session) {
-    newCart = await prisma.cart.create({
-      data: {
-        userId: session.user.id,
-      },
-    });
+    newCart = (
+      await db
+        .insert(cartTable)
+        .values({
+          userId: session.user.id,
+        })
+        .returning()
+    )[0];
   } else {
-    newCart = await prisma.cart.create({
-      data: {},
-    });
+    newCart = (await db.insert(cartTable).values({}).returning())[0];
 
     setLocalCartId(newCart.id);
   }
@@ -79,40 +88,33 @@ export const getCart = cache(async (): Promise<CartInfo | null> => {
   const session = await auth();
 
   if (session) {
-    cart = await prisma.cart.findFirst({
-      where: {
-        userId: session.user.id,
-      },
-      include: {
-        items: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-          include: {
-            product: true,
+    cart =
+      (await db.query.cartTable.findFirst({
+        where: eq(cartTable.userId, session.user.id),
+        with: {
+          items: {
+            with: {
+              product: true,
+            },
+            orderBy: asc(cartItemTable.updatedAt),
           },
         },
-      },
-    });
+      })) ?? null;
   } else {
     const localCartId = getLocalCartId();
 
     cart = localCartId
-      ? await prisma.cart.findUnique({
-          where: {
-            id: localCartId,
-          },
-          include: {
+      ? (await db.query.cartTable.findFirst({
+          where: eq(cartTable.id, localCartId),
+          with: {
             items: {
-              orderBy: {
-                createdAt: 'desc',
-              },
-              include: {
+              orderBy: asc(cartItemTable.createdAt),
+              with: {
                 product: true,
               },
             },
           },
-        })
+        })) ?? null
       : null;
   }
 
@@ -136,31 +138,32 @@ export async function mergeAnonymousCartWithUserCart(
 ): Promise<void> {
   const localCartId = getLocalCartId();
 
-  const localCart = await prisma.cart.findUnique({
-    where: {
-      id: localCartId,
-    },
-    include: {
+  if (localCartId === undefined) {
+    return;
+  }
+
+  const localCart = await db.query.cartTable.findFirst({
+    where: eq(cartTable.id, localCartId),
+
+    with: {
       items: true,
     },
   });
 
-  if (localCart === null) {
+  if (localCart === undefined) {
     return;
   }
 
-  const userCart = await prisma.cart.findFirst({
-    where: {
-      userId,
-    },
-    include: {
+  const userCart = await db.query.cartTable.findFirst({
+    where: eq(cartTable.userId, userId),
+    with: {
       items: true,
     },
   });
 
   const mergeCartItems = (
-    ...cartItems: Array<Array<CartItem>>
-  ): Array<CartItem> => {
+    ...cartItems: Array<Array<typeof cartItemTable.$inferInsert>>
+  ): Array<typeof cartItemTable.$inferInsert> => {
     return cartItems.reduce((acc, items) => {
       items.forEach((item) => {
         const existingItem = acc.find((i) => i.productId === item.productId);
@@ -176,44 +179,43 @@ export async function mergeAnonymousCartWithUserCart(
     }, []);
   };
 
-  await prisma.$transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     if (userCart) {
       const mergedCartItems = mergeCartItems(localCart.items, userCart.items);
 
-      await tx.cartItem.deleteMany({
-        where: {
-          cartId: userCart.id,
-        },
-      });
+      await tx
+        .delete(cartItemTable)
+        .where(eq(cartItemTable.cartId, userCart.id));
 
-      await tx.cartItem.createMany({
-        data: mergedCartItems.map((item) => ({
+      await tx.insert(cartItemTable).values(
+        mergedCartItems.map((item) => ({
           cartId: userCart.id,
           productId: item.productId,
           quantity: item.quantity,
         })),
-      });
+      );
     } else {
-      await tx.cart.create({
-        data: {
-          userId,
-          items: {
-            createMany: {
-              data: localCart.items.map((item) => ({
-                productId: item.productId,
-                quantity: item.quantity,
-              })),
-            },
-          },
-        },
-      });
+      const newCart = (
+        await tx
+          .insert(cartTable)
+          .values({
+            userId,
+          })
+          .returning({
+            id: cartTable.id,
+          })
+      )[0];
+
+      await tx.insert(cartItemTable).values(
+        localCart.items.map((item) => ({
+          cartId: newCart.id,
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      );
     }
 
-    await tx.cart.delete({
-      where: {
-        id: localCartId,
-      },
-    });
+    await tx.delete(cartTable).where(eq(cartTable.id, localCartId));
 
     cookies().set('localCartId', '');
   });

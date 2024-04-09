@@ -1,5 +1,7 @@
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { stripe } from '@/lib/stripe';
+import { cartTable, orderItemTable, orderTable, productTable } from '@/schema';
+import { eq, sql } from 'drizzle-orm';
 import type Stripe from 'stripe';
 
 export default async function handleCheckoutSessionCompleted(
@@ -15,10 +17,8 @@ export default async function handleCheckoutSessionCompleted(
     throw new Error('No cart ID');
   }
 
-  const cart = await prisma.cart.findUnique({
-    where: {
-      id: cartId,
-    },
+  const cart = await db.query.cartTable.findFirst({
+    where: eq(cartTable.id, cartId),
   });
 
   if (!cart) {
@@ -42,10 +42,11 @@ export default async function handleCheckoutSessionCompleted(
     },
   }));
 
-  await prisma.$transaction(async (tx) => {
+  await db.transaction(async (tx) => {
     // Create order
-    await tx.order.create({
-      data: {
+    const orderId = await tx
+      .insert(orderTable)
+      .values({
         metadata: {
           checkoutSessionId: data.id,
           paymentIntentId: data.payment_intent?.toString(),
@@ -59,34 +60,29 @@ export default async function handleCheckoutSessionCompleted(
         country: data.shipping_details?.address?.country,
         userId: cart.userId,
         total: data.amount_total ?? 0,
-        items: {
-          create: parsedLineItems.map((item) => ({
-            quantity: item.quantity ?? 0,
-            productId: item.price.product.metadata['productId'],
-          })),
-        },
-      },
-    });
+      })
+      .returning({ id: orderTable.id })
+      .then((res) => res[0].id);
+
+    await tx.insert(orderItemTable).values(
+      parsedLineItems.map((item) => ({
+        quantity: item.quantity ?? 0,
+        productId: item.price.product.metadata['productId'],
+        orderId,
+      })),
+    );
 
     // Update stock
     for (const item of parsedLineItems) {
-      await tx.product.update({
-        where: {
-          id: item.price.product.metadata['productId'],
-        },
-        data: {
-          stock: {
-            decrement: item.quantity ?? 0,
-          },
-        },
-      });
+      await tx
+        .update(productTable)
+        .set({
+          stock: sql`${productTable.stock} - ${item.quantity ?? 0}`,
+        })
+        .where(eq(productTable.id, item.price.product.metadata['productId']));
     }
 
     // Delete cart
-    await tx.cart.delete({
-      where: {
-        id: cart.id,
-      },
-    });
+    await tx.delete(cartTable).where(eq(cartTable.id, cartId));
   });
 }

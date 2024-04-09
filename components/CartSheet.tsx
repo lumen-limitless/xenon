@@ -2,8 +2,8 @@
 
 import { updateCartAction } from '@/lib/actions';
 import { formatDollars, truncateText } from '@/lib/utils';
+import { cartItemTable } from '@/schema';
 import { type CartInfo } from '@/types';
-import { type CartItem } from '@prisma/client';
 import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,7 +29,9 @@ import {
   TableRow,
 } from './ui/table';
 
-const CartQuantitySelector: React.FC<{ item: CartItem }> = ({ item }) => {
+const CartQuantitySelector: React.FC<{
+  item: typeof cartItemTable.$inferSelect;
+}> = ({ item }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -126,9 +128,9 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
                         <Image
                           className="h-auto w-auto"
                           src={
-                            item.product.images[0]
-                              ? item.product.images[0]
-                              : '/images/placeholder.png'
+                            item.product.images?.[0]
+                              ? item.product.images?.[0]
+                              : '/img/placeholder.webp'
                           }
                           alt={item.product.title}
                           height={50}

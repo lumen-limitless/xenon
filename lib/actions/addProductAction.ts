@@ -1,8 +1,9 @@
 'use server';
 
 import { client } from '@/sanity/lib/client';
+import { productTable } from '@/schema';
 import { revalidatePath } from 'next/cache';
-import { prisma } from '../prisma';
+import { db } from '../drizzle';
 import { generateSlug } from '../utils';
 
 /**
@@ -38,17 +39,15 @@ export async function addProductAction(
       }),
     );
 
-    await prisma.product.create({
-      data: {
-        title,
-        slug: generateSlug(title),
-        price,
-        images: assets.map((a) => a.url),
-        stock,
-        description,
-        categories: {
-          connect: categories.map((c) => ({ id: c })),
-        },
+    await db.insert(productTable).values({
+      title,
+      slug: generateSlug(title),
+      price,
+      images: assets.map((a) => a.url),
+      stock,
+      description,
+      metadata: {
+        size: 'large',
       },
     });
 

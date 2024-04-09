@@ -1,11 +1,3 @@
-jest.mock('@/lib/prisma', () => {
-  return {
-    product: {
-      create: jest.fn(),
-    },
-  };
-});
-
 // import { addProductAction } from '@/lib/actions'
 // import { prisma } from '@/lib/prisma'
 

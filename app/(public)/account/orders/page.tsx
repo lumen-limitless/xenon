@@ -1,10 +1,13 @@
 import { auth } from '@/auth';
 import { Button } from '@/components/ui/button';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { formatDollars } from '@/lib/utils';
+import { orderTable } from '@/schema';
+import { eq } from 'drizzle-orm';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 type PageProps = {
@@ -16,15 +19,13 @@ export const metadata = {
   title: 'My Account',
 };
 
-const getOrdersForUser = cache(async (userId?: string) => {
+const getOrdersForUser = cache(async (userId: string) => {
   try {
-    const orders = await prisma.order.findMany({
-      where: {
-        userId,
-      },
-      include: {
+    const orders = await db.query.orderTable.findMany({
+      where: eq(orderTable.userId, userId),
+      with: {
         items: {
-          include: {
+          with: {
             product: true,
           },
         },
@@ -40,6 +41,11 @@ const getOrdersForUser = cache(async (userId?: string) => {
 
 export default async function Page({}: PageProps) {
   const session = await auth();
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const orders = await getOrdersForUser(session?.user.id);
 
   return (
@@ -91,7 +97,7 @@ export default async function Page({}: PageProps) {
                   >
                     <div>
                       <Image
-                        src={item.product.images[0]}
+                        src={item.product.images?.[0] ?? 'img/placeholder.webp'}
                         alt={item.product.title}
                         height={50}
                         width={50}

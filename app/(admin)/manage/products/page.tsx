@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { PlusCircle } from 'lucide-react';
 import { cache } from 'react';
 import { AddProductForm } from './AddProductForm';
@@ -18,9 +18,13 @@ export const metadata = {
 
 const getProducts = cache(async () => {
   try {
-    const products = await prisma.product.findMany({
-      include: {
-        categories: true,
+    const products = await db.query.productTable.findMany({
+      with: {
+        categories: {
+          with: {
+            category: true,
+          },
+        },
       },
     });
     return products;
@@ -32,7 +36,7 @@ const getProducts = cache(async () => {
 
 const getCategories = cache(async () => {
   try {
-    const categories = await prisma.category.findMany();
+    const categories = await db.query.categoryTable.findMany();
     return categories;
   } catch (error) {
     console.error(error);

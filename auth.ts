@@ -1,9 +1,10 @@
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { eq } from 'drizzle-orm';
 import NextAuth, { type NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { mergeAnonymousCartWithUserCart } from './lib/cart';
-import { prisma } from './lib/prisma';
-
+import { db } from './lib/drizzle';
+import { userTable } from './schema';
 const config: NextAuthConfig = {
   theme: {
     // logo: 'https://example.com/logo.png',
@@ -18,20 +19,40 @@ const config: NextAuthConfig = {
   ],
 
   callbacks: {
-    session({ session, user }: any) {
-      session.user.id = user.id;
-      session.user.role = user.role;
+    async session({ session, user }) {
+      // console.debug('session', session);
+      // console.debug('user', user);
 
-      return session;
+      const role = (
+        await db
+          .select({
+            role: userTable.role,
+          })
+          .from(userTable)
+          .where(eq(userTable.id, user.id))
+      )[0].role;
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+          role,
+        },
+      };
     },
   },
   events: {
     async signIn({ user, account, profile, isNewUser }) {
-      await mergeAnonymousCartWithUserCart(user.id || '');
+      const userId = user.id;
+      if (!userId) {
+        return;
+      }
+      await mergeAnonymousCartWithUserCart(userId);
     },
   },
 
-  adapter: PrismaAdapter(prisma),
+  adapter: DrizzleAdapter(db),
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

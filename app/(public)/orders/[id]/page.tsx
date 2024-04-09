@@ -1,5 +1,6 @@
-import { prisma } from '@/lib/prisma';
-import { OrderWithItemsAndProducts } from '@/types';
+import { db } from '@/lib/drizzle';
+import { orderTable } from '@/schema';
+import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
@@ -10,28 +11,25 @@ type PageProps = {
   searchParams: Record<string, string | string[] | undefined>;
 };
 
-const getOrder = cache(
-  async (id: string): Promise<OrderWithItemsAndProducts | null> => {
-    try {
-      const order = await prisma.order.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          items: {
-            include: {
-              product: true,
-            },
+const getOrder = cache(async (id: string) => {
+  try {
+    const order = await db.query.orderTable.findFirst({
+      where: eq(orderTable.id, id),
+      with: {
+        items: {
+          with: {
+            product: true,
           },
         },
-      });
-      return order;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  },
-);
+      },
+    });
+
+    return order ?? null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+});
 
 export async function generateMetadata({ params }: PageProps) {
   const order = await getOrder(params.id);

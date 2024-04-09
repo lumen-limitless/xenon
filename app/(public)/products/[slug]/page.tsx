@@ -2,10 +2,10 @@ import { AddToCartButton } from '@/components/AddToCartButton';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { ProductDisplay } from '@/components/ProductDisplay';
 import { Badge } from '@/components/ui/badge';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { formatDollars } from '@/lib/utils';
-import { ProductWithReviews } from '@/types';
-import { Product } from '@prisma/client';
+import { productTable } from '@/schema';
+import { eq, not } from 'drizzle-orm';
 import { type Metadata, type ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -15,45 +15,31 @@ type PageProps = {
   searchParams: Record<string, string | string[] | undefined>;
 };
 
-const getProduct = cache(
-  async (slug: string): Promise<ProductWithReviews | null> => {
-    try {
-      const product = await prisma.product.findUnique({
-        where: {
-          slug,
-        },
-        include: {
-          reviews: true,
-        },
-      });
-      return product;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  },
-);
+const getProduct = cache(async (slug: string) => {
+  try {
+    const product = await db.query.productTable.findFirst({
+      where: eq(productTable.slug, slug),
+
+      with: {
+        reviews: true,
+      },
+    });
+
+    return product ?? null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+});
 
 const getSimilarProducts = cache(async (slug: string) => {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        slug: {
-          not: slug,
-        },
-      },
+    const products = await db.query.productTable.findMany({
+      where: not(eq(productTable.slug, slug)),
 
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        images: true,
-        price: true,
-        stock: true,
-      },
-
-      take: 10,
+      limit: 10,
     });
+
     return products;
   } catch (error) {
     console.error(error);
@@ -72,7 +58,7 @@ export async function generateMetadata(
   return {
     title: product.title,
     openGraph: {
-      images: product.images,
+      images: product.images ?? [],
       type: 'website',
     },
     description: product.description,
@@ -123,7 +109,7 @@ export default async function Page({ params }: PageProps) {
       <section className="pb-48 pt-10">
         <div className="container">
           <ProductCarousel
-            products={similarProducts as Product[]}
+            products={similarProducts}
             title="Similar Products"
           />
         </div>

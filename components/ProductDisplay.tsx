@@ -1,13 +1,13 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Product } from '@prisma/client';
+import type { productTable } from '@/schema';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useLockBodyScroll } from 'react-use';
 
 type ProductDisplayProps = {
-  product?: Product;
+  product?: typeof productTable.$inferSelect;
   className?: string;
 };
 
@@ -32,7 +32,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
         data-testid="product-display"
       >
         <Image
-          src={product.images[selectedImage]}
+          src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
           alt={product.title}
           height={400}
           width={400}
@@ -46,7 +46,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
           className="flex w-full items-center justify-start gap-2"
           id="other-images"
         >
-          {product.images.map((image, i) => (
+          {product.images?.map((image, i) => (
             <div
               className={cn(
                 'group relative h-16 w-16 cursor-pointer overflow-clip rounded-md border transition-all duration-300 ease-in-out',
@@ -72,7 +72,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
           onClick={() => setZoomed(false)}
         >
           <Image
-            src={product.images[selectedImage]}
+            src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
             alt={product.title}
             height={800}
             width={800}

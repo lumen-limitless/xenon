@@ -1,7 +1,3 @@
-import Footer from '@/app/footer';
-import Header from '@/app/header';
-import Main from '@/app/main';
-import { Banner } from '@/components/Banner';
 import { cn } from '@/lib/utils';
 import { Viewport } from 'next';
 import { Inter } from 'next/font/google';
@@ -56,14 +52,10 @@ export default async function RootLayout({
           </a>
 
           <Toaster />
-          <Banner />
 
-          <Header />
-
-          <Main>{children}</Main>
-
-          <Footer />
+          {children}
         </Providers>
+
         <Analytics />
       </body>
     </html>

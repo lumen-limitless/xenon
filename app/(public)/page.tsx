@@ -1,28 +1,23 @@
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { Slideshow } from '@/components/Slideshow';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { capitalize, shuffle } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
-import { Product } from '@prisma/client';
 import { groq } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cache } from 'react';
 
+export const runtime = 'nodejs';
+
+export const dynamic = 'auto';
+
+export const revalidate = false;
+
 const getProducts = cache(async () => {
   try {
-    const products = await prisma.product.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        slug: true,
-        images: true,
-        stock: true,
-        price: true,
-      },
-    });
+    const products = await db.query.productTable.findMany();
     return products;
   } catch (err) {
     console.error(err);
@@ -32,8 +27,8 @@ const getProducts = cache(async () => {
 
 const getCategories = cache(async () => {
   try {
-    const categories = await prisma.category.findMany({
-      select: {
+    const categories = await db.query.categoryTable.findMany({
+      columns: {
         id: true,
         title: true,
         description: true,
@@ -67,7 +62,6 @@ async function getHeroContent(): Promise<
       image: urlForImage(item.image).url(),
     }));
 
-    console.log(content);
     return content;
   } catch (err) {
     console.error(err);
@@ -145,7 +139,7 @@ export default async function Page({}: PageProps) {
                 >
                   <Image
                     className="h-auto w-auto transition-all duration-300 ease-in-out group-hover:scale-105"
-                    src={product.images[0]}
+                    src={product.images?.[0] ?? '/img/placeholder.webp'}
                     width={100}
                     height={100}
                     alt={product.title}
@@ -159,19 +153,13 @@ export default async function Page({}: PageProps) {
 
       <section className="py-10" id="shop-trending">
         <div className="container">
-          <ProductCarousel
-            products={products as Product[]}
-            title="Trending Products"
-          />
+          <ProductCarousel products={products} title="Trending Products" />
         </div>
       </section>
 
       <section className="py-10" id="shop-recommended">
         <div className="container">
-          <ProductCarousel
-            products={products as Product[]}
-            title="Recommended for You"
-          />
+          <ProductCarousel products={products} title="Recommended for You" />
         </div>
       </section>
     </>

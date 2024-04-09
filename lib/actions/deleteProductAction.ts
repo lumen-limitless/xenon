@@ -1,7 +1,9 @@
 'use server';
 
+import { productTable } from '@/schema';
+import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
-import { prisma } from '../prisma';
+import { db } from '../drizzle';
 /**
  *
  * @description Server action to delete a product from the store
@@ -14,11 +16,7 @@ export async function deleteProductAction(
   id: string,
 ): Promise<{ message: string }> {
   try {
-    await prisma.product.delete({
-      where: {
-        id,
-      },
-    });
+    await db.delete(productTable).where(eq(productTable.id, id));
 
     revalidatePath('/manage-products');
 

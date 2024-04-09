@@ -128,9 +128,7 @@ export const columns: ColumnDef<OrderWithItemsAndProducts>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <a
-                href={`https://dashboard.stripe.com/payments/${
-                  (row.original.metadata as any)?.['paymentIntentId']
-                }`}
+                href={`https://dashboard.stripe.com/payments/${row.original.metadata?.['paymentIntentId']}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

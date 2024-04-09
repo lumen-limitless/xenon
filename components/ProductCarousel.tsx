@@ -1,9 +1,9 @@
-import { Product } from '@prisma/client';
+import type { productTable } from '@/schema';
 import { ProductCard } from './ProductCard';
 import { Carousel, CarouselContent, CarouselItem } from './ui/carousel';
 
 type ProductCarouselProps = {
-  products?: Array<Product>;
+  products?: Array<typeof productTable.$inferSelect>;
   title?: string;
 };
 

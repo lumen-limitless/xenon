@@ -1,8 +1,10 @@
 'use server';
 
+import { cartItemTable, cartTable } from '@/schema';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { createCart, getCart } from '../cart';
-import { prisma } from '../prisma';
+import { db } from '../drizzle';
 /**
  *
  * @description Server action to update an item in the cart
@@ -24,49 +26,43 @@ export async function updateCartAction({
       return { success: true };
     }
 
-    await prisma.$transaction(async (tx) => {
-      const existingItem = await tx.cartItem.findFirst({
-        where: {
-          cartId: cart.id,
-          productId,
-        },
+    await db.transaction(async (tx) => {
+      const existingItem = await tx.query.cartItemTable.findFirst({
+        where: and(
+          eq(cartItemTable.cartId, cart.id),
+          eq(cartItemTable.productId, productId),
+        ),
       });
 
-      if (existingItem !== null) {
+      if (existingItem !== undefined) {
         const isZero = existingItem.quantity + value === 0;
         isZero
-          ? await tx.cartItem.delete({ where: { id: existingItem.id } })
-          : await tx.cartItem.update({
-              where: {
-                id: existingItem.id,
-              },
-              data: {
-                quantity: {
-                  increment: value,
-                },
-              },
-            });
+          ? await tx
+              .delete(cartItemTable)
+              .where(eq(cartItemTable.id, existingItem.id))
+          : await tx
+              .update(cartItemTable)
+              .set({
+                quantity: existingItem.quantity + value,
+              })
+              .where(eq(cartItemTable.id, existingItem.id));
       } else {
         if (value > 0) {
-          await tx.cartItem.create({
-            data: {
-              cartId: cart.id,
-              productId,
-              quantity: value,
-            },
+          await tx.insert(cartItemTable).values({
+            cartId: cart.id,
+            productId,
+            quantity: value,
           });
         }
       }
 
       // manually update cart updatedAt
-      await tx.cart.update({
-        where: {
-          id: cart.id,
-        },
-        data: {
+      await tx
+        .update(cartTable)
+        .set({
           updatedAt: new Date(),
-        },
-      });
+        })
+        .where(eq(cartTable.id, cart.id));
     });
 
     revalidatePath('/');

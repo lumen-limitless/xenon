@@ -1,8 +1,8 @@
-import { Product } from '@prisma/client';
+import { productTable } from '@/schema';
 import { ProductCard } from './ProductCard';
 
 type ProductGridProps = {
-  products?: Product[];
+  products?: Array<typeof productTable.$inferSelect>;
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {

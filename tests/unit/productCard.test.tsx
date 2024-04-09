@@ -7,11 +7,11 @@ jest.mock('next/navigation', () => ({
 }));
 
 import { ProductCard } from '@/components/ProductCard';
-import { Product } from '@prisma/client';
+import { productTable } from '@/schema';
 import { render } from '@testing-library/react';
 
 describe('ProductCard', () => {
-  const product: Product = {
+  const product: typeof productTable.$inferSelect = {
     id: '1',
     title: 'Product 1',
     slug: 'product-1',
@@ -19,7 +19,9 @@ describe('ProductCard', () => {
     stock: 10,
     images: ['https://example.com/product1.jpg'],
     description: 'Product 1 description',
-    metadata: {},
+    metadata: {
+      size: 'large',
+    },
     createdAt: new Date(),
     updatedAt: new Date(),
   };

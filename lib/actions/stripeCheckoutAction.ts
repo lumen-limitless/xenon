@@ -27,7 +27,7 @@ export async function stripeCheckoutAction(): Promise<string | null> {
           currency: 'usd',
           product_data: {
             name: item.product.title,
-            images: [item.product.images[0]],
+            images: [item.product.images?.[0] ?? 'img/placeholder.webp'],
             metadata: {
               ['productId']: item.product.id,
             },

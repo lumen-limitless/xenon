@@ -1,5 +1,5 @@
 import { DataTable } from '@/components/DataTable';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/drizzle';
 import { cache } from 'react';
 import { columns } from './columns';
 
@@ -14,8 +14,8 @@ export const metadata = {
 
 const getUsers = cache(async () => {
   try {
-    const users = await prisma.user.findMany({
-      include: {
+    const users = await db.query.userTable.findMany({
+      with: {
         cart: true,
         orders: true,
       },

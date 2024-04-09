@@ -1,4 +1,6 @@
-import { Category, PrismaClient } from '@prisma/client';
+import * as schema from '@/schema';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Client } from 'pg';
 
 type MockProduct = {
   id: number;
@@ -13,7 +15,7 @@ type MockProduct = {
   price: number;
 };
 
-const categories: Array<Partial<Category>> = [
+const categories: Array<typeof schema.categoryTable.$inferInsert> = [
   {
     title: 'all',
     description: 'All products',
@@ -35,10 +37,17 @@ const categories: Array<Partial<Category>> = [
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
 ];
-const prisma = new PrismaClient();
 
 // seed the database with products from the fakestoreapi
-export default async function main() {
+async function main() {
+  const client = new Client({
+    connectionString: process.env.POSTGRES_URL,
+  });
+
+  const db = drizzle(client, {
+    schema,
+  });
+
   const res = await fetch('https://fakestoreapi.com/products/');
 
   if (!res.ok) {
@@ -47,43 +56,33 @@ export default async function main() {
 
   const products: MockProduct[] = await res.json();
 
-  await prisma.category.deleteMany();
+  await db.delete(schema.categoryTable);
 
-  const category = await prisma.category.createMany({
-    data: categories as Array<Category>,
-  });
+  await db
+    .insert(schema.categoryTable)
+    .values(categories as Array<typeof schema.categoryTable.$inferInsert>);
 
-  await prisma.product.deleteMany();
+  await db.delete(schema.productTable);
 
   for (const product of products) {
-    await prisma.product.create({
-      data: {
-        title: product.title,
-        slug: product.title
-          .toLowerCase()
-          .split(' ')
-          .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
-          .join('-'),
-        description: product.description,
-        categories: {
-          connect: {
-            title: 'all',
-          },
-        },
-        stock: Math.floor(Math.random() * 100),
-        images: [product.image],
-        price: parseInt((product.price * 100).toFixed(0)),
-      },
+    await db.insert(schema.productTable).values({
+      title: product.title,
+      slug: product.title
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
+        .join('-'),
+      description: product.description,
+      stock: Math.floor(Math.random() * 100),
+      images: [product.image],
+      price: parseInt((product.price * 100).toFixed(0)),
     });
   }
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
+  .then(async () => {})
   .catch(async (err) => {
     console.error(err);
-    await prisma.$disconnect();
     process.exit(1);
   });

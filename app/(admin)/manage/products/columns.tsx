@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { deleteProductAction } from '@/lib/actions';
 import { formatDollars } from '@/lib/utils';
-import { Prisma } from '@prisma/client';
+import { ProductWithCategories } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -22,11 +22,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
-export const columns: ColumnDef<
-  Prisma.ProductGetPayload<{
-    include: { categories: true };
-  }>
->[] = [
+export const columns: ColumnDef<ProductWithCategories>[] = [
   { accessorKey: 'id', header: 'Product ID' },
 
   {
@@ -58,7 +54,7 @@ export const columns: ColumnDef<
     cell: (data) => {
       return (
         <>
-          {data.row.original.images.map((image, i) => (
+          {data.row.original.images?.map((image, i) => (
             <Image
               key={i}
               src={image}
@@ -96,7 +92,7 @@ export const columns: ColumnDef<
     cell: (data) => {
       return (
         <ul>
-          {data.row.original.categories.map((category) => (
+          {data.row.original.categories.map(({ category }) => (
             <li key={category.id}>{category.title}</li>
           ))}
         </ul>

@@ -1,7 +1,8 @@
 import { ProductGrid } from '@/components/ProductGrid';
 import { SearchParamPagination } from '@/components/SearchParamPagination';
-import { prisma } from '@/lib/prisma';
-import { Product } from '@prisma/client';
+import { db } from '@/lib/drizzle';
+import { productTable } from '@/schema';
+import { sql } from 'drizzle-orm';
 
 type PageProps = {
   params: {};
@@ -14,16 +15,11 @@ export const metadata = {
 
 async function getProductsFromQuery(
   query: string | undefined,
-): Promise<Array<Product>> {
+): Promise<Array<typeof productTable.$inferSelect>> {
   try {
     if (query === undefined) return [];
-    const products = await prisma.product.findMany({
-      where: {
-        title: {
-          contains: query as string,
-          mode: 'insensitive',
-        },
-      },
+    const products = await db.query.productTable.findMany({
+      where: sql`to_tsvector('simple', ${productTable.title}) @@ to_tsquery('simple', ${query})`,
     });
 
     return products;
