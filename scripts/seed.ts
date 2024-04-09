@@ -1,6 +1,6 @@
 import * as schema from '@/schema';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 
 type MockProduct = {
   id: number;
@@ -40,11 +40,17 @@ const categories: Array<typeof schema.categoryTable.$inferInsert> = [
 
 // seed the database with products from the fakestoreapi
 async function main() {
-  const client = new Client({
-    connectionString: process.env.POSTGRES_URL,
+  const connectionString = process.env.POSTGRES_URL;
+
+  if (!connectionString) {
+    throw new Error('POSTGRES_URL environment variable is required');
+  }
+
+  const pool = new Pool({
+    connectionString,
   });
 
-  const db = drizzle(client, {
+  const db = drizzle(pool, {
     schema,
   });
 
@@ -80,9 +86,7 @@ async function main() {
   }
 }
 
-main()
-  .then(async () => {})
-  .catch(async (err) => {
-    console.error(err);
-    process.exit(1);
-  });
+main().catch(async (err) => {
+  console.error(err);
+  process.exit(1);
+});

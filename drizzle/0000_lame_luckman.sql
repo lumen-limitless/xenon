@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS "category" (
 	"description" text NOT NULL,
 	"image" text NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL
+	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "orderItem" (
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "orderItem" (
 	"productId" uuid NOT NULL,
 	"orderId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL
+	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "order" (
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 	"status" "OrderStatus" DEFAULT 'PENDING' NOT NULL,
 	"total" integer NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"userId" uuid,
 	"city" text,
 	"country" text,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS "returnItem" (
 	"productId" uuid NOT NULL,
 	"orderId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"returnId" uuid
 );
 --> statement-breakpoint
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS "return" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"orderId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL,
+	"updatedAt" timestamp DEFAULT now() NOT NULL,
 	"userId" uuid NOT NULL,
 	"status" "ReturnStatus" DEFAULT 'PENDING' NOT NULL
 );
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS "review" (
 	"productId" uuid NOT NULL,
 	"userId" uuid NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	"updatedAt" timestamp NOT NULL
+	"updatedAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (

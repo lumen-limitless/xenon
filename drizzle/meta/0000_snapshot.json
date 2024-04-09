@@ -1,5 +1,5 @@
 {
-  "id": "691b9e45-0c17-41c7-b108-cf68d3734296",
+  "id": "29c6c282-4420-4b52-96b5-a0ee67588b2e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -286,7 +286,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -342,7 +343,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -421,7 +423,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "userId": {
           "name": "userId",
@@ -689,7 +692,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "returnId": {
           "name": "returnId",
@@ -780,7 +784,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "userId": {
           "name": "userId",
@@ -880,7 +885,8 @@
           "name": "updatedAt",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},

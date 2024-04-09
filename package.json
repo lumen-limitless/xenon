@@ -10,6 +10,7 @@
     "build": "next build",
     "db:generate": "drizzle-kit generate:pg",
     "db:push": "drizzle-kit push:pg",
+    "db:seed": "tsx scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
     "predev": "",
     "dev": "next dev",
