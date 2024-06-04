@@ -1,7 +1,8 @@
+import { auth } from '@/auth';
 import { db } from '@/lib/drizzle';
 import { orderTable } from '@/schema';
 import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
 type PageProps = {
@@ -42,9 +43,15 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function Page({ params }: PageProps) {
+  const session = await auth();
+
+  if (session === null) redirect('/login');
+
   const order = await getOrder(params.id);
 
   if (order === null) notFound();
+
+  if (order.userId !== session.user.id) notFound();
 
   return (
     <>

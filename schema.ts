@@ -127,7 +127,8 @@ export const productTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
     images: text('images').array(),
     metadata: jsonb('metadata').$type<ProductMetadata>(),
   },
@@ -167,7 +168,8 @@ export const orderItemTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (orderItem) => {
     return {
@@ -205,7 +207,8 @@ export const categoryTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => {
     return {
@@ -231,7 +234,8 @@ export const cartTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => {
     return {
@@ -270,7 +274,8 @@ export const cartItemTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => {
     return {
@@ -342,7 +347,10 @@ export const reviewTable = pgTable('review', {
       onUpdate: 'cascade',
     }),
   createdAt: timestamp('createdAt', { mode: 'date' }).defaultNow().notNull(),
-  updatedAt: timestamp('updatedAt', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt', { mode: 'date' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
 export const reviewRelations = relations(reviewTable, ({ one, many }) => ({
@@ -361,7 +369,10 @@ export const orderTable = pgTable('order', {
   status: orderStatus('status').default('PENDING').notNull(),
   total: integer('total').notNull(),
   createdAt: timestamp('createdAt', { mode: 'date' }).defaultNow().notNull(),
-  updatedAt: timestamp('updatedAt', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt', { mode: 'date' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
   userId: uuid('userId').references(() => userTable.id, {
     onDelete: 'set null',
     onUpdate: 'cascade',
@@ -408,7 +419,8 @@ export const returnItemTable = pgTable(
       mode: 'date',
     })
       .notNull()
-      .defaultNow(),
+      .defaultNow()
+      .$onUpdate(() => new Date()),
     returnId: uuid('returnId').references(() => returnTable.id, {
       onDelete: 'set null',
       onUpdate: 'cascade',
@@ -451,7 +463,10 @@ export const returnTable = pgTable('return', {
       onUpdate: 'cascade',
     }),
   createdAt: timestamp('createdAt', { mode: 'date' }).defaultNow().notNull(),
-  updatedAt: timestamp('updatedAt', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt', { mode: 'date' })
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
   userId: uuid('userId')
     .notNull()
     .references(() => userTable.id, {

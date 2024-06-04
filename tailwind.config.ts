@@ -1,5 +1,5 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss';
+const config = {
   darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -79,7 +79,7 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-animate'),
-    function ({ addUtilities }) {
+    function ({ addUtilities }: { addUtilities: Function }) {
       addUtilities({
         '.scrollbar-hide': {
           scrollbarWidth: 'none',
@@ -91,4 +91,6 @@ module.exports = {
       });
     },
   ],
-};
+} satisfies Config;
+
+export default config;

@@ -1,5 +1,7 @@
 import { DataTable } from '@/components/DataTable';
 import { db } from '@/lib/drizzle';
+import { userTable } from '@/schema';
+import { eq, not } from 'drizzle-orm';
 import { cache } from 'react';
 import { columns } from './columns';
 
@@ -19,6 +21,7 @@ const getUsers = cache(async () => {
         cart: true,
         orders: true,
       },
+      where: not(eq(userTable.role, 'ADMIN')),
     });
     return users;
   } catch (error) {

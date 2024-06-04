@@ -5,7 +5,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import { mergeAnonymousCartWithUserCart } from './lib/cart';
 import { db } from './lib/drizzle';
 import { userTable } from './schema';
-const config: NextAuthConfig = {
+
+const config = {
   theme: {
     // logo: 'https://example.com/logo.png',
   },
@@ -52,7 +53,7 @@ const config: NextAuthConfig = {
     },
   },
 
-  adapter: DrizzleAdapter(db),
-};
+  adapter: DrizzleAdapter(db) as any,
+} satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
