@@ -1,7 +1,7 @@
 'use server';
 
-import { cartItemTable, cartTable } from '@/schema';
-import { and, eq } from 'drizzle-orm';
+import { cartItemTable, productTable } from '@/schema';
+import { and, eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { createCart, getCart } from '../cart';
 import { db } from '../drizzle';
@@ -9,14 +9,17 @@ import { db } from '../drizzle';
  *
  * @description Server action to update an item in the cart
  * @param productId The id of the product to update
+ * @param variantId The id of the variant to update
  * @param value The value to update the quantity by
  * @returns object with success key
  */
 export async function updateCartAction({
   productId,
   value,
+  variantId,
 }: {
   productId: string;
+  variantId?: string;
   value: number;
 }): Promise<{ success: boolean }> {
   try {
@@ -29,6 +32,7 @@ export async function updateCartAction({
     await db.transaction(async (tx) => {
       const existingItem = await tx.query.cartItemTable.findFirst({
         where: and(
+          variantId ? eq(cartItemTable.variantId, variantId) : undefined,
           eq(cartItemTable.cartId, cart.id),
           eq(cartItemTable.productId, productId),
         ),
@@ -51,18 +55,12 @@ export async function updateCartAction({
           await tx.insert(cartItemTable).values({
             cartId: cart.id,
             productId,
+            variantId,
             quantity: value,
+            price: sql`(SELECT COALESCE(${productTable.salePrice}, ${productTable.regularPrice}) FROM ${productTable} WHERE ${productTable.id} = ${productId})`,
           });
         }
       }
-
-      // manually update cart updatedAt
-      await tx
-        .update(cartTable)
-        .set({
-          updatedAt: new Date(),
-        })
-        .where(eq(cartTable.id, cart.id));
     });
 
     revalidatePath('/');

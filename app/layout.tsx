@@ -16,6 +16,10 @@ export const metadata = defaultMetadata;
 
 export const viewport: Viewport = {
   themeColor: '#ffffff',
+  userScalable: false,
+  maximumScale: 1.0,
+  initialScale: 1.0,
+  width: 'device-width',
 };
 
 export default async function RootLayout({
@@ -55,9 +59,9 @@ export default async function RootLayout({
 
           {children}
         </Providers>
-
-        <Analytics />
       </body>
+
+      <Analytics />
     </html>
   );
 }

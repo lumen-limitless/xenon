@@ -4,6 +4,8 @@ import { db } from '@/lib/drizzle';
 import { capitalize, shuffle } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
+import { productTable } from '@/schema';
+import { eq } from 'drizzle-orm';
 import { groq } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +19,9 @@ export const revalidate = false;
 
 const getProducts = cache(async () => {
   try {
-    const products = await db.query.productTable.findMany();
+    const products = await db.query.productTable.findMany({
+      where: eq(productTable.status, 'PUBLISHED'),
+    });
     return products;
   } catch (err) {
     console.error(err);
@@ -32,6 +36,7 @@ const getCategories = cache(async () => {
         id: true,
         title: true,
         description: true,
+        image: true,
       },
     });
     return categories;
@@ -113,7 +118,7 @@ export default async function Page({}: PageProps) {
                   <Image
                     className="h-auto w-auto rounded-md object-cover object-center"
                     fill
-                    src="/img/placeholder.webp"
+                    src={category.image ?? '/img/placeholder.webp'}
                     alt={category.title}
                   />
                 </div>

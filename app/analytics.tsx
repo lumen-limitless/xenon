@@ -1,12 +1,11 @@
 'use client';
 
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
-import { GoogleAnalytics } from 'nextjs-google-analytics';
-
 export default function Analytics() {
   return (
     <>
-      <GoogleAnalytics trackPageViews />
+      <GoogleAnalytics gaId="G-H3834R7E84" />
       <VercelAnalytics />
     </>
   );

@@ -34,7 +34,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           aria-roledescription="Toggle Mobile Menu"
           aria-expanded={isMobileMenuOpen}
           aria-label="Toggle Mobile Menu"
-          className="absolute left-3 z-50 block md:hidden"
+          className="left-3 z-50 block md:hidden"
           variant={'ghost'}
           size={'sm'}
           onClick={toggleIsMobileMenuOpen}
@@ -42,7 +42,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           {isMobileMenuOpen ? <X className="h-6" /> : <Menu className="h-6" />}
         </Button>
 
-        <Link href="/" className="ml-20 md:ml-0">
+        <Link href="/" className="ml-2 md:ml-0">
           <LogoSVG className="h-6" />
           <span className="sr-only">Xenon</span>
         </Link>

@@ -6,9 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { addProductAction } from '@/lib/actions';
+import { CLOUDINARY_UPLOAD_PRESET } from '@/lib/constants';
 import { categoryTable } from '@/schema';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { CloudUploadIcon } from 'lucide-react';
+import {
+  CldUploadButton,
+  type CloudinaryUploadWidgetInfo,
+} from 'next-cloudinary';
+import { useState } from 'react';
 
 type AddProductFormProps = {
   categories: Array<typeof categoryTable.$inferSelect>;
@@ -21,24 +26,35 @@ const initialState = {
 export const AddProductForm: React.FC<AddProductFormProps> = ({
   categories,
 }) => {
-  const [state, formAction] = useFormState<
-    { message: string | null },
-    FormData
-  >(addProductAction, initialState);
+  const [uploadedImages, setUploadedImages] = useState<
+    Array<CloudinaryUploadWidgetInfo>
+  >([]);
 
-  useEffect(() => {
-    if (state?.message) {
-      alert(state.message);
-    }
-  }, [state?.message]);
+  // const [state, formAction] = useFormState<
+  //   { message: string | null },
+  //   FormData
+  // >(addProductAction, initialState);
+
+  // useEffect(() => {
+  //   if (state?.message) {
+  //     alert(state.message);
+  //   }
+  // }, [state?.message]);
 
   return (
     <>
-      <form action={formAction}>
+      <form action={addProductAction.bind(null, uploadedImages)}>
         <fieldset className="my-5">
           <Label htmlFor="title">
             Product Name
             <Input placeholder="Title" id="title" name="title" required />
+          </Label>
+        </fieldset>
+
+        <fieldset className="my-5">
+          <Label htmlFor="sku">
+            Product SKU
+            <Input placeholder="SKU" id="sku" name="sku" required />
           </Label>
         </fieldset>
 
@@ -68,20 +84,32 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
           </Label>
         </fieldset>
 
-        <fieldset className="my-5">
-          <Label htmlFor="image">
-            Image
-            <Input
-              className="mb-3"
-              placeholder="Upload Images"
-              id={`image`}
-              name={`image`}
-              type="file"
-              accept=".jpg,.jpeg,.png"
-              required
-              multiple
+        <div className="flex gap-4" id="images">
+          {uploadedImages.map((image) => (
+            <img
+              key={image.asset_id as string}
+              src={image.secure_url}
+              alt={image.public_id}
+              className="h-20 w-20 rounded-md object-cover"
             />
-          </Label>
+          ))}
+        </div>
+
+        <fieldset className="my-5">
+          <CldUploadButton
+            uploadPreset={CLOUDINARY_UPLOAD_PRESET}
+            className="flex w-full flex-col items-center justify-center rounded-md border border-dashed p-5"
+            onSuccess={(res) => {
+              if (res.event !== 'success') return;
+              setUploadedImages((prev) => [
+                ...prev,
+                res.info as CloudinaryUploadWidgetInfo,
+              ]);
+            }}
+          >
+            <CloudUploadIcon className="h-8 w-8" />
+            Upload Images
+          </CldUploadButton>
         </fieldset>
 
         <fieldset className="my-5">
@@ -100,6 +128,13 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
               {category.title}
             </Label>
           ))}
+        </fieldset>
+
+        <fieldset>
+          <Label htmlFor="published">
+            <Checkbox name="published" className="mr-1" />
+            Publish Product
+          </Label>
         </fieldset>
 
         <SubmitButton type="submit" className="w-72">

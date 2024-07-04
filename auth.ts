@@ -4,7 +4,12 @@ import NextAuth, { type NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { mergeAnonymousCartWithUserCart } from './lib/cart';
 import { db } from './lib/drizzle';
-import { userTable } from './schema';
+import {
+  accountTable,
+  sessionTable,
+  userTable,
+  verificationTokenTable,
+} from './schema';
 
 const config = {
   theme: {
@@ -47,13 +52,19 @@ const config = {
     async signIn({ user, account, profile, isNewUser }) {
       const userId = user.id;
       if (!userId) {
+        console.error('No user id');
         return;
       }
       await mergeAnonymousCartWithUserCart(userId);
     },
   },
 
-  adapter: DrizzleAdapter(db) as any,
+  adapter: DrizzleAdapter(db, {
+    usersTable: userTable,
+    accountsTable: accountTable,
+    sessionsTable: sessionTable,
+    verificationTokensTable: verificationTokenTable,
+  }),
 } satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

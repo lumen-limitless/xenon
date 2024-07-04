@@ -9,6 +9,10 @@ export function truncateText(text: string, length: number): string {
   return text.length > length ? text.substring(0, length) + '...' : text;
 }
 
+export function shortenUUID(uuid: string): string {
+  return uuid.split('-')[0] + '...' + uuid.slice(-4);
+}
+
 export function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -38,4 +42,18 @@ export function shuffle<T>(array: Array<T>): Array<T> {
     shuffled[j] = temp;
   }
   return shuffled;
+}
+
+export function calculateDiscount(
+  regularPrice: number,
+  salePrice: number,
+): string {
+  return (((regularPrice - salePrice) / regularPrice) * 100).toFixed(0);
+}
+
+export function calculatePercentageDifference(
+  previous: number,
+  current: number,
+): string {
+  return (((current - previous) / previous) * 100).toFixed(0);
 }

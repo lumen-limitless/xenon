@@ -1,7 +1,5 @@
 import { DataTable } from '@/components/DataTable';
 import { db } from '@/lib/drizzle';
-import { userTable } from '@/schema';
-import { eq, not } from 'drizzle-orm';
 import { cache } from 'react';
 import { columns } from './columns';
 
@@ -21,20 +19,20 @@ const getUsers = cache(async () => {
         cart: true,
         orders: true,
       },
-      where: not(eq(userTable.role, 'ADMIN')),
     });
     return users;
   } catch (error) {
     return [];
   }
 });
+
 export default async function Page({}: PageProps) {
   const users = await getUsers();
   return (
     <>
       <section className="pb-48 pt-10">
         <div className="container">
-          <h1>Order Fulfillment</h1>
+          <h1>Users</h1>
 
           <DataTable columns={columns} data={users} />
         </div>

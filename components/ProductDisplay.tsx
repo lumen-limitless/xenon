@@ -1,13 +1,13 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import type { productTable } from '@/schema';
+import type { Product } from '@/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useLockBodyScroll } from 'react-use';
 
 type ProductDisplayProps = {
-  product?: typeof productTable.$inferSelect;
+  product?: Product;
   className?: string;
 };
 

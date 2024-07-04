@@ -70,7 +70,7 @@ export default async function Page({}: PageProps) {
             <div key={o.id}>
               <div className="flex w-full flex-wrap items-center justify-between gap-y-5 bg-muted p-5">
                 <div>
-                  <p>Order #:</p>
+                  <p>Order ID:</p>
                   <strong className="text-blue-500 underline hover:text-blue-600">
                     <Link href={`/orders/${o.id}`}>{o.id}</Link>
                   </strong>
@@ -106,7 +106,7 @@ export default async function Page({}: PageProps) {
                     <div className="w-96">
                       <strong>{item.product.title}</strong>
                     </div>
-                    <div>Price: {formatDollars(item.product.price)}</div>
+                    <div>Price: {formatDollars(0)}</div>
                     <div>Qty: {item.quantity}</div>
                     <div>
                       <Button variant={'outline'} asChild>

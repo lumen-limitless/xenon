@@ -1,9 +1,10 @@
 'use client';
 
 import {
-  FileImage,
   Home,
   LineChart,
+  LogOut,
+  NotebookPen,
   Package,
   Package2,
   Settings,
@@ -20,7 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 
-type SideNavProps = {};
+type AdminSideNavProps = {};
 
 const navItems = [
   {
@@ -39,13 +40,13 @@ const navItems = [
     href: '/manage/products',
   },
   {
-    title: 'Customers',
+    title: 'Users',
     icon: Users2,
-    href: '/manage/customers',
+    href: '/manage/users',
   },
   {
     title: 'Content Studio',
-    icon: FileImage,
+    icon: NotebookPen,
     href: '/studio',
   },
   {
@@ -55,7 +56,7 @@ const navItems = [
   },
 ];
 
-export const SideNav: React.FC<SideNavProps> = ({}) => {
+export const AdminSideNav: React.FC<AdminSideNavProps> = ({}) => {
   const pathname = usePathname();
 
   return (
@@ -75,7 +76,7 @@ export const SideNav: React.FC<SideNavProps> = ({}) => {
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-lg  transition-colors hover:text-foreground md:h-8 md:w-8',
+                    'flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8',
                     pathname === item.href
                       ? 'bg-accent text-accent-foreground'
                       : '',
@@ -101,6 +102,18 @@ export const SideNav: React.FC<SideNavProps> = ({}) => {
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Settings</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href="/"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground text-red-500 transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <LogOut className="h-5 w-5" />
+                <span className="sr-only">Leave Admin Panel</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Leave Admin Panel</TooltipContent>
           </Tooltip>
         </nav>
       </aside>

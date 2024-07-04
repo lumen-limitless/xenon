@@ -1,4 +1,5 @@
 import * as schema from '@/schema';
+import { Category } from '@/types';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 
@@ -64,29 +65,35 @@ async function main() {
 
   await db.delete(schema.categoryTable);
 
-  await db
-    .insert(schema.categoryTable)
-    .values(categories as Array<typeof schema.categoryTable.$inferInsert>);
+  await db.insert(schema.categoryTable).values(categories as Array<Category>);
 
   await db.delete(schema.productTable);
 
   for (const product of products) {
     await db.insert(schema.productTable).values({
       title: product.title,
+      sku: product.id.toString(),
       slug: product.title
         .toLowerCase()
         .split(' ')
         .map((word) => word.replace(/[^a-zA-Z0-9]/g, ''))
         .join('-'),
-      description: product.description,
+      shortDescription: product.description.slice(0, 100),
+      productDescription: product.description,
       stock: Math.floor(Math.random() * 100),
+      status: 'PUBLISHED',
       images: [product.image],
-      price: parseInt((product.price * 100).toFixed(0)),
+      regularPrice: parseInt((product.price * 100).toFixed(0)),
     });
   }
 }
 
-main().catch(async (err) => {
-  console.error(err);
-  process.exit(1);
-});
+main()
+  .then(() => {
+    console.log('Database seeded');
+    process.exit(0);
+  })
+  .catch(async (err) => {
+    console.error(err);
+    process.exit(1);
+  });

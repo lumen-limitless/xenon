@@ -69,6 +69,7 @@ export default async function handleCheckoutSessionCompleted(
         quantity: item.quantity ?? 0,
         productId: item.price.product.metadata['productId'],
         orderId,
+        price: item.price.unit_amount ?? 0,
       })),
     );
 

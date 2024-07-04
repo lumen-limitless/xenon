@@ -8,7 +8,7 @@ exports[`ProductCard should match snapshot 1`] = `
     id="1"
   >
     <a
-      class="rounded-md bg-muted"
+      class="rounded-md bg-muted p-5"
       href="/products/product-1"
     >
       <img
@@ -30,11 +30,27 @@ exports[`ProductCard should match snapshot 1`] = `
     >
       Product 1
     </h2>
-    <p
-      class="mr-auto"
+    <div>
+      <div
+        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      >
+        9% OFF
+      </div>
+    </div>
+    <div
+      class="flex gap-1"
     >
-      $10.99
-    </p>
+      <p
+        class="text-primary"
+      >
+        $9.99
+      </p>
+      <p
+        class="text-gray-500 line-through"
+      >
+        $10.99
+      </p>
+    </div>
     <div
       class="mt-auto"
     >

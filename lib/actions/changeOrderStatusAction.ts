@@ -5,13 +5,13 @@ import { eq } from 'drizzle-orm';
 import { db } from '../drizzle';
 
 /**
+ * Changes the status of an order.
  *
- * @description Server action to update a product in the store
- * @param prevState The previous state of the form
- * @param formData The form data from the request
- * @returns object with message key
+ * @param orderId - The ID of the order to update.
+ * @param status - The new status of the order.
+ * @returns A promise that resolves to an object indicating the success of the operation.
  */
-export async function updateOrderStatusAction(
+export async function changeOrderStatusAction(
   orderId: string,
   status: (typeof orderStatus.enumValues)[number],
 ): Promise<{ success: boolean }> {

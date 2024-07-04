@@ -1,10 +1,9 @@
 import { auth } from '@/auth';
 import { cartItemTable, cartTable } from '@/schema';
-import { CartWithProducts, type CartInfo } from '@/types';
+import { Cart, CartWithProducts, type CartInfo } from '@/types';
 import crypto from 'crypto';
 import { asc, eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
-import { cache } from 'react';
 import { db } from './drizzle';
 
 function encryptCookieValue(value: string): string {
@@ -55,7 +54,7 @@ function setLocalCartId(cartId: string): void {
 }
 
 export async function createCart(): Promise<CartInfo> {
-  let newCart: typeof cartTable.$inferSelect;
+  let newCart: Cart;
 
   const session = await auth();
 
@@ -82,7 +81,7 @@ export async function createCart(): Promise<CartInfo> {
   };
 }
 
-export const getCart = cache(async (): Promise<CartInfo | null> => {
+export const getCart = async (): Promise<CartInfo | null> => {
   let cart: CartWithProducts | null = null;
 
   const session = await auth();
@@ -127,11 +126,13 @@ export const getCart = cache(async (): Promise<CartInfo | null> => {
     size: cart?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0,
     subtotal:
       cart?.items.reduce(
-        (acc, item) => acc + item.quantity * item.product.price,
+        (acc, item) =>
+          acc +
+          item.quantity * (item.product.salePrice ?? item.product.regularPrice),
         0,
       ) ?? 0,
   };
-});
+};
 
 export async function mergeAnonymousCartWithUserCart(
   userId: string,
@@ -192,6 +193,7 @@ export async function mergeAnonymousCartWithUserCart(
           cartId: userCart.id,
           productId: item.productId,
           quantity: item.quantity,
+          price: item.price,
         })),
       );
     } else {
@@ -211,6 +213,7 @@ export async function mergeAnonymousCartWithUserCart(
           cartId: newCart.id,
           productId: item.productId,
           quantity: item.quantity,
+          price: item.price,
         })),
       );
     }

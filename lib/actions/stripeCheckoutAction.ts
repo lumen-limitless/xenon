@@ -4,9 +4,8 @@ import { getCart } from '../cart';
 import { stripe } from '../stripe';
 
 /**
- *
- * @description Server action to create an order
- * @returns object with success key
+ * Performs a Stripe checkout action.
+ * @returns A Promise that resolves to a string representing the URL of the checkout session, or null if an error occurs.
  */
 export async function stripeCheckoutAction(): Promise<string | null> {
   try {
@@ -29,11 +28,12 @@ export async function stripeCheckoutAction(): Promise<string | null> {
             name: item.product.title,
             images: [item.product.images?.[0] ?? 'img/placeholder.webp'],
             metadata: {
-              ['productId']: item.product.id,
+              ['productId']: item.productId,
+              ['variantId']: item.variantId,
             },
           },
 
-          unit_amount: item.product.price,
+          unit_amount: item.price,
         },
         quantity: item.quantity,
       })),

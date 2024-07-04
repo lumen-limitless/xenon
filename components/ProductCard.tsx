@@ -1,12 +1,14 @@
-import { cn, formatDollars } from '@/lib/utils';
-import type { productTable } from '@/schema';
+'use client';
+import { calculateDiscount, cn, formatDollars } from '@/lib/utils';
+import type { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AddToCartButton } from './AddToCartButton';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 
 type ProductCardProps = {
-  product?: typeof productTable.$inferSelect;
+  product?: Product;
   className?: string;
 };
 
@@ -16,16 +18,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   if (!product) return null;
 
+  const primaryImage = product.images?.[0] ?? '/img/placeholder.webp';
+
   return (
     <div
       className={cn('flex h-full flex-col', className)}
       id={product.id}
       data-testid={'product-card'}
     >
-      <Link href={`/products/${product.slug}`} className="rounded-md bg-muted">
+      <Link
+        href={`/products/${product.slug}`}
+        className="rounded-md bg-muted p-5"
+      >
         <Image
           className="h-32 w-full object-contain object-center"
-          src={product.images?.[0] ?? '/img/placeholder.webp'}
+          src={primaryImage}
           alt={product.title}
           width={100}
           height={100}
@@ -35,10 +42,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <h2 className="truncate text-left text-sm md:text-base">
         {product.title}
       </h2>
-      <p className="mr-auto">{formatDollars(product.price)}</p>
+      <div>
+        {product.salePrice && (
+          <Badge variant={'secondary'}>
+            {calculateDiscount(product.regularPrice, product.salePrice)}% OFF
+          </Badge>
+        )}
+      </div>
+
+      <div className="flex gap-1">
+        {product.salePrice && (
+          <p className="text-primary">{formatDollars(product.salePrice)}</p>
+        )}
+        <p
+          className={cn(
+            product.salePrice ? 'text-gray-500 line-through' : 'text-primary',
+          )}
+        >
+          {formatDollars(product.regularPrice)}
+        </p>
+      </div>
 
       <div className="mt-auto">
-        {product.stock > 0 ? (
+        {product.stock === null || product.stock > 0 ? (
           <AddToCartButton className="w-full" product={product} />
         ) : (
           <Button variant={'secondary'} className="w-full" disabled>

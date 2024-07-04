@@ -66,9 +66,6 @@ export const Account: React.FC<AccountProps> = ({ session }) => {
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                       <DropdownMenuItem asChild>
-                        <Link href="/dashboard">Admin Dashboard</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
                         <Link href="/studio">Content Studio</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>

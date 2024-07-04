@@ -10,6 +10,7 @@ import {
 import { deleteProductAction } from '@/lib/actions';
 import { formatDollars } from '@/lib/utils';
 import { ProductWithCategories } from '@/types';
+import { useMutation } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -77,7 +78,7 @@ export const columns: ColumnDef<ProductWithCategories>[] = [
     accessorKey: 'price',
     header: 'Price',
     cell: (data) => {
-      return <span>{formatDollars(data.row.original.price)}</span>;
+      return <span>{formatDollars(data.row.original.regularPrice)}</span>;
     },
   },
 
@@ -105,6 +106,9 @@ export const columns: ColumnDef<ProductWithCategories>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       console.log(row);
+      const { mutate: deleteProduct, isPending } = useMutation({
+        mutationFn: deleteProductAction,
+      });
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -118,10 +122,11 @@ export const columns: ColumnDef<ProductWithCategories>[] = [
               Edit Product
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => deleteProductAction(null, row.original.id)}
+              disabled={isPending}
+              onClick={() => deleteProduct({ id: row.original.id })}
             >
               <Delete className="mr-2 h-4 w-4" />
-              Delete Product
+              {isPending ? 'Deleting...' : 'Delete Product'}
             </DropdownMenuItem>
 
             <DropdownMenuItem asChild>

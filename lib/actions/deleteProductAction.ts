@@ -4,21 +4,23 @@ import { productTable } from '@/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { db } from '../drizzle';
+
 /**
+ * Deletes a product with the specified ID.
  *
- * @description Server action to delete a product from the store
- * @param prevState The previous state of the form
- * @param formData The form data from the request
- * @returns object with message key
+ * @param {Object} params - The parameters for the deleteProductAction function.
+ * @param {string} params.id - The ID of the product to delete.
+ * @returns {Promise<{ message: string }>} A promise that resolves to an object with a message property indicating the result of the deletion.
  */
-export async function deleteProductAction(
-  prevState: any,
-  id: string,
-): Promise<{ message: string }> {
+export async function deleteProductAction({
+  id,
+}: {
+  id: string;
+}): Promise<{ message: string }> {
   try {
     await db.delete(productTable).where(eq(productTable.id, id));
 
-    revalidatePath('/manage-products');
+    revalidatePath('/');
 
     return { message: 'Product deleted' };
   } catch (err) {

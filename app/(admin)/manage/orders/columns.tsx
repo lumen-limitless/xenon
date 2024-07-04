@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDollars } from '@/lib/utils';
-import { OrderWithItemsAndProducts } from '@/types';
+import type { OrderWithItemsAndProducts } from '@/types';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -22,28 +22,28 @@ import {
 export const columns: ColumnDef<OrderWithItemsAndProducts>[] = [
   { accessorKey: 'id', header: 'Order ID' },
 
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Order Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+  // {
+  //   accessorKey: 'createdAt',
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+  //       >
+  //         Order Date
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
 
-    cell: (data) => {
-      return (
-        <time suppressHydrationWarning>
-          {new Date(data.row.original.createdAt).toLocaleString()}
-        </time>
-      );
-    },
-  },
+  //   cell: (data) => {
+  //     return (
+  //       <time suppressHydrationWarning>
+  //         {new Date(data.row.original.createdAt).toLocaleString()}
+  //       </time>
+  //     );
+  //   },
+  // },
 
   {
     accessorKey: 'status',
@@ -60,40 +60,42 @@ export const columns: ColumnDef<OrderWithItemsAndProducts>[] = [
       );
     },
   },
-  {
-    accessorKey: 'user',
-    header: 'User',
-    cell: ({ row }) => {
-      return row.original.userId ?? 'Guest';
-    },
-  },
 
-  {
-    accessorKey: 'items',
-    header: 'Items',
-    cell: ({ row }) => {
-      return (
-        <ul className="divide-y divide-gray-200">
-          {(row.getValue('items') as OrderWithItemsAndProducts['items']).map(
-            (item) => (
-              <li key={item.id} className="flex py-4">
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
-                    {item.product.title} ({item.product.id})
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {formatDollars(item.product.price)}
-                  </p>
+  // {
+  //   accessorKey: 'user',
+  //   header: 'User',
+  //   cell: ({ row }) => {
+  //     return row.original.userId ?? 'Guest';
+  //   },
+  // },
 
-                  <p className="text-sm text-gray-500">X {item.quantity}</p>
-                </div>
-              </li>
-            ),
-          )}
-        </ul>
-      );
-    },
-  },
+  // {
+  //   accessorKey: 'items',
+  //   header: 'Items',
+  //   cell: ({ row }) => {
+  //     return (
+  //       <ul className="divide-y divide-gray-200">
+  //         {(row.getValue('items') as OrderWithItemsAndProducts['items']).map(
+  //           (item) => (
+  //             <li key={item.id} className="flex py-4">
+  //               <div className="ml-3">
+  //                 <p className="text-sm font-medium text-gray-900">
+  //                   {item.product.title} ({item.product.id})
+  //                 </p>
+  //                 <p className="text-sm text-gray-500">
+  //                   {formatDollars(item.price)}
+  //                 </p>
+
+  //                 <p className="text-sm text-gray-500">X {item.quantity}</p>
+  //               </div>
+  //             </li>
+  //           ),
+  //         )}
+  //       </ul>
+  //     );
+  //   },
+  // },
+
   {
     accessorKey: 'total',
     header: 'Total Amount',
