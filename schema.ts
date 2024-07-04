@@ -307,9 +307,11 @@ export const categoryTable = pgTable(
   {
     id: uuid('id').primaryKey().notNull().defaultRandom(),
     title: text('title').notNull(),
+    slug: text('slug').notNull(),
     description: text('description'),
     icon: text('icon'),
     image: text('image'),
+    parentCategoryId: uuid('parent_category_id'),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', {
       mode: 'date',
@@ -320,13 +322,17 @@ export const categoryTable = pgTable(
   },
   (table) => {
     return {
-      titleKey: uniqueIndex('category_title_key').on(table.title),
+      slugKey: uniqueIndex('category_slug_key').on(table.slug),
     };
   },
 );
 
 export const categoryRelations = relations(categoryTable, ({ one, many }) => ({
   productsToCategories: many(productToCategoryTable),
+  parentCategory: one(categoryTable, {
+    fields: [categoryTable.parentCategoryId],
+    references: [categoryTable.id],
+  }),
 }));
 
 // Product Categories

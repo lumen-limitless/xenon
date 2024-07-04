@@ -1,11 +1,12 @@
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { Slideshow } from '@/components/Slideshow';
 import { db } from '@/lib/drizzle';
-import { capitalize, shuffle } from '@/lib/utils';
+import { capitalize } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import { productTable } from '@/schema';
 import { eq } from 'drizzle-orm';
+import _ from 'lodash';
 import { groq } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -134,7 +135,7 @@ export default async function Page({}: PageProps) {
         <div className="container">
           <h2 className="mb-5 text-3xl font-semibold">Featured Products</h2>
           <div className="grid grid-cols-2 place-content-center gap-2">
-            {shuffle(products)
+            {_.shuffle(products)
               .slice(0, 4)
               .map((product) => (
                 <Link

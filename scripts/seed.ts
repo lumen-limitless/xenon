@@ -19,21 +19,25 @@ type MockProduct = {
 const categories: Array<typeof schema.categoryTable.$inferInsert> = [
   {
     title: 'all',
+    slug: 'all',
     description: 'All products',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
   {
     title: 'electronics',
+    slug: 'electronics',
     description: 'Electronic products',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
   {
     title: 'jewelery',
+    slug: 'jewelery',
     description: 'Jewelery products',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
   {
     title: 'clothing',
+    slug: 'clothing',
     description: 'Clothing products',
     image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
   },
