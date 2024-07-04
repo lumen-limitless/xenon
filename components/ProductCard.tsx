@@ -1,5 +1,5 @@
 'use client';
-import { calculateDiscount, cn, formatDollars } from '@/lib/utils';
+import { calculatePercentageDifference, cn, formatDollars } from '@/lib/utils';
 import type { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -45,7 +45,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div>
         {product.salePrice && (
           <Badge variant={'secondary'}>
-            {calculateDiscount(product.regularPrice, product.salePrice)}% OFF
+            {calculatePercentageDifference(
+              product.regularPrice,
+              product.salePrice,
+            )}
+            % OFF
           </Badge>
         )}
       </div>

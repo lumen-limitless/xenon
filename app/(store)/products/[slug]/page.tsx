@@ -3,7 +3,7 @@ import { ProductCarousel } from '@/components/ProductCarousel';
 import { ProductDisplay } from '@/components/ProductDisplay';
 import { Badge } from '@/components/ui/badge';
 import { db } from '@/lib/drizzle';
-import { calculateDiscount, formatDollars } from '@/lib/utils';
+import { calculatePercentageDifference, formatDollars } from '@/lib/utils';
 import { productTable, reviewTable } from '@/schema';
 import { desc, eq, not } from 'drizzle-orm';
 import { type Metadata, type ResolvingMetadata } from 'next';
@@ -112,8 +112,11 @@ export default async function Page({ params }: PageProps) {
               )}
               {Boolean(product.salePrice) && (
                 <Badge variant="secondary" className="text-lg">
-                  {calculateDiscount(product.regularPrice, product.salePrice!)}%
-                  OFF
+                  {calculatePercentageDifference(
+                    product.regularPrice,
+                    product.salePrice!,
+                  )}
+                  % OFF
                 </Badge>
               )}
               <Badge
