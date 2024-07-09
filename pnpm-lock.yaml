@@ -223,7 +223,7 @@ importers:
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       stripe:
         specifier: ^16.1.0
-        version: 16.1.0
+        version: 16.2.0
       styled-components:
         specifier: ^6.1.11
         version: 6.1.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -7433,8 +7433,8 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  stripe@16.1.0:
-    resolution: {integrity: sha512-syeEEd112om/waJ5gOQ+SaYi+setuidQ4ZIPiQREF4yJeegXhn2HKy6C0JYm7uhVQKfMAvuZ22dIRsnoDv7AMw==}
+  stripe@16.2.0:
+    resolution: {integrity: sha512-kNHb5x6mlQJ8V92Afn+F+uyHG3U0+Mc1pOYxDkbEh/kI3oF63URnUt6dwTQthELYWBy04arerm2XjwgtzEPDEA==}
     engines: {node: '>=12.*'}
 
   style-mod@4.1.2:
@@ -16251,7 +16251,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@16.1.0:
+  stripe@16.2.0:
     dependencies:
       '@types/node': 20.14.9
       qs: 6.12.2
