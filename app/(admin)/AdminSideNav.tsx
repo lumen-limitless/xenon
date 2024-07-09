@@ -107,7 +107,7 @@ export const AdminSideNav: React.FC<AdminSideNavProps> = ({}) => {
             <TooltipTrigger asChild>
               <Link
                 href="/"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground text-red-500 transition-colors hover:text-foreground md:h-8 md:w-8"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <LogOut className="h-5 w-5" />
                 <span className="sr-only">Leave Admin Panel</span>

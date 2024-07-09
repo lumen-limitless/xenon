@@ -38,7 +38,10 @@ import {
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { updateProductAction } from '@/lib/actions';
+import { CLOUDINARY_UPLOAD_PRESET } from '@/lib/constants';
 import type { Category, ProductWithVariants } from '@/types';
+import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
 import { ChevronLeft, PlusCircle, Upload } from 'lucide-react';
 import { CldUploadButton, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
@@ -57,7 +60,11 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
 }) => {
   const router = useRouter();
   const [edited, setEdited] = useState<ProductWithVariants>(product);
-  console.debug(edited);
+  console.debug('edited', edited);
+
+  const { mutate: updateProduct, isPending } = useMutation({
+    mutationFn: updateProductAction,
+  });
 
   const hasChanged = !_.isEqual(product, edited);
 
@@ -96,8 +103,23 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
             >
               Discard
             </Button>
-            <Button size="sm" disabled={!hasChanged}>
-              Save Product
+            <Button
+              size="sm"
+              disabled={!hasChanged}
+              onClick={() =>
+                updateProduct(
+                  {
+                    product: edited,
+                  },
+                  {
+                    onSuccess: () => {
+                      toast('Successfully updated product.');
+                    },
+                  },
+                )
+              }
+            >
+              {isPending ? 'Saving...' : 'Save Product'}
             </Button>
           </div>
         </div>
@@ -303,10 +325,46 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-                <Button size="sm" variant="ghost" className="gap-1">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  Add New Attribute
-                </Button>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="ghost" className="gap-1">
+                      <PlusCircle className="h-3.5 w-3.5" />
+                      Add New Attribute
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Attribute</DialogTitle>
+                      <DialogDescription>
+                        Create a new attribute for this product.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="attributeName">Attribute Name</Label>
+                          <Input
+                            id="attributeName"
+                            placeholder="e.g. Color, Size"
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="attributeValue">
+                            Attribute Value
+                          </Label>
+                          <Input
+                            id="attributeValue"
+                            placeholder="e.g. Red, Large"
+                          />
+                        </div>
+                      </div>
+                    </form>
+                    <DialogFooter>
+                      <Button type="submit">Add Attribute</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </CardFooter>
             </Card>
             <Card x-chunk="dashboard-07-chunk-2">
@@ -410,6 +468,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                     ))}
 
                     <CldUploadButton
+                      uploadPreset={CLOUDINARY_UPLOAD_PRESET}
                       className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed"
                       onSuccess={({ event, info }) => {
                         if (event !== 'success' || !info) {

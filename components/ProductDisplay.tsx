@@ -31,16 +31,17 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
         id="product-display"
         data-testid="product-display"
       >
-        <Image
-          src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
-          alt={product.title}
-          height={400}
-          width={400}
-          priority
-          quality={100}
-          className="cursor-zoom-in"
-          onClick={() => setZoomed(true)}
-        />
+        <div className="relative h-[400px] w-[400px]">
+          <Image
+            src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
+            alt={product.title}
+            fill
+            priority
+            quality={100}
+            className="cursor-zoom-in object-contain"
+            onClick={() => setZoomed(true)}
+          />
+        </div>
 
         <div
           className="flex w-full items-center justify-start gap-2"
@@ -57,7 +58,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
               onMouseOver={() => setSelectedImage(i)}
             >
               <Image
-                className="relative h-auto w-auto object-contain object-center"
+                className="object-contain"
                 src={image}
                 alt={product.title}
                 fill
@@ -71,15 +72,16 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
           className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80 backdrop-blur-lg"
           onClick={() => setZoomed(false)}
         >
-          <Image
-            src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
-            alt={product.title}
-            height={800}
-            width={800}
-            priority
-            quality={100}
-            className="cursor-zoom-out"
-          />
+          <div className="relative h-[800px] w-[800px]">
+            <Image
+              src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
+              alt={product.title}
+              fill
+              priority
+              quality={100}
+              className="cursor-zoom-out object-contain"
+            />
+          </div>
         </div>
       )}
     </>

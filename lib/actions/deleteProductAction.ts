@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@/auth';
 import { productTable } from '@/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -17,6 +18,12 @@ export async function deleteProductAction({
 }: {
   id: string;
 }): Promise<{ message: string }> {
+  const session = await auth();
+
+  if (!session || session.user.role !== 'ADMIN') {
+    throw new Error('Unauthorized: Only admins can delete products');
+  }
+
   try {
     await db.delete(productTable).where(eq(productTable.id, id));
 
