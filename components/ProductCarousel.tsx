@@ -1,9 +1,9 @@
-import type { productTable } from '@/schema';
+import type { Product } from '@/types';
 import { ProductCard } from './ProductCard';
 import { Carousel, CarouselContent, CarouselItem } from './ui/carousel';
 
 type ProductCarouselProps = {
-  products?: Array<typeof productTable.$inferSelect>;
+  products?: Array<Product>;
   title?: string;
 };
 

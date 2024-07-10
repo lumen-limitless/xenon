@@ -9,7 +9,6 @@ import { Providers } from './providers';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
 });
 
 export const metadata = defaultMetadata;

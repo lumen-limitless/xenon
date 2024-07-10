@@ -1,7 +1,7 @@
 import { AddToCartButton } from '@/components/AddToCartButton';
 import { ProductCarousel } from '@/components/ProductCarousel';
-import { ProductDisplay } from '@/components/ProductDisplay';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { db } from '@/lib/drizzle';
 import { calculatePercentageDifference, formatDollars } from '@/lib/utils';
 import { productTable, reviewTable } from '@/schema';
@@ -9,6 +9,8 @@ import { desc, eq, not } from 'drizzle-orm';
 import { type Metadata, type ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import { ProductDescription } from './ProductDescription';
+import { ProductDisplay } from './ProductDisplay';
 
 type PageProps = {
   params: { slug: string };
@@ -93,23 +95,14 @@ export default async function Page({ params }: PageProps) {
     <>
       <section className="py-20">
         <div className="container flex flex-col gap-20 lg:flex-row">
-          <ProductDisplay product={product} />
+          <ProductDisplay product={product} className="lg:sticky lg:top-20" />
 
           <div className="flex-1 space-y-5" id="product-details">
-            <h1 className="text-3xl font-bold">{product.title}</h1>
+            <h1 className="text-3xl font-semibold">{product.title}</h1>
             <h2 className="text-sm text-muted-foreground">
               Item No. {product.sku}
             </h2>
             <div className="flex items-center gap-1">
-              {product.salePrice ? (
-                <Badge className="text-lg">
-                  {formatDollars(product.salePrice)}
-                </Badge>
-              ) : (
-                <Badge className="text-lg">
-                  {formatDollars(product.regularPrice)}
-                </Badge>
-              )}
               {Boolean(product.salePrice) && (
                 <Badge variant="secondary" className="text-lg">
                   {calculatePercentageDifference(
@@ -122,7 +115,7 @@ export default async function Page({ params }: PageProps) {
               <Badge
                 variant={
                   product.stock === null || product.stock > 0
-                    ? 'outline'
+                    ? 'default'
                     : 'destructive'
                 }
                 className={'text-lg'}
@@ -132,9 +125,6 @@ export default async function Page({ params }: PageProps) {
                   : 'Sold Out'}
               </Badge>
             </div>
-            <p className="prose break-words text-xl">
-              {product.productDescription}
-            </p>
 
             {Boolean(product.note) && (
               <p className="prose break-words text-sm text-muted-foreground">
@@ -161,7 +151,17 @@ export default async function Page({ params }: PageProps) {
                 </div>
               ))}
             </div>
-            <div className="sticky bottom-0 w-full bg-background p-5 md:relative">
+
+            {product.salePrice ? (
+              <span className="text-3xl font-semibold">
+                {formatDollars(product.salePrice)}
+              </span>
+            ) : (
+              <span className="text-3xl font-semibold">
+                {formatDollars(product.regularPrice)}
+              </span>
+            )}
+            <div className="sticky bottom-0 w-full bg-background p-5 md:relative lg:p-0">
               {product.stock === null ||
                 (product.stock > 0 && (
                   <AddToCartButton
@@ -171,12 +171,17 @@ export default async function Page({ params }: PageProps) {
                   />
                 ))}
             </div>
+
+            <ProductDescription
+              description={product?.productDescription || ''}
+            />
           </div>
         </div>
       </section>
-      <section className="py-20" id="reviews">
+      <Separator />
+      {/* <section className="py-5" id="reviews">
         <div className="container">{product.reviews.length > 0 && <></>}</div>
-      </section>
+      </section> */}
       <section className="pb-48 pt-10">
         <div className="container">
           <ProductCarousel

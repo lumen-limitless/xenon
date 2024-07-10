@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = async () => {
     <header
       id="header"
       className={cn(
-        'sticky top-0 z-40 w-full border-b bg-background transition-all duration-300 ease-in-out',
+        'z-40 w-full border-b bg-background transition-all duration-300 ease-in-out',
         // visible ? 'translate-y-0' : '-translate-y-[200%]',
       )}
     >

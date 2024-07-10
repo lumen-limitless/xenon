@@ -3,9 +3,7 @@ import { calculatePercentageDifference, cn, formatDollars } from '@/lib/utils';
 import type { Product } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AddToCartButton } from './AddToCartButton';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
 
 type ProductCardProps = {
   product?: Product;
@@ -39,35 +37,39 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw"
         />
       </Link>
-      <h2 className="truncate text-left text-sm md:text-base">
+      <h2 className="mt-2 truncate text-left text-sm md:text-base">
         {product.title}
       </h2>
       <div>
         {product.salePrice && (
           <Badge variant={'secondary'}>
             {calculatePercentageDifference(
-              product.regularPrice,
               product.salePrice,
+              product.regularPrice,
             )}
             % OFF
           </Badge>
         )}
       </div>
 
-      <div className="flex gap-1">
+      <div className="mt-2 flex gap-1">
         {product.salePrice && (
-          <p className="text-primary">{formatDollars(product.salePrice)}</p>
+          <p className="font-semibold text-primary">
+            {formatDollars(product.salePrice)}
+          </p>
         )}
         <p
           className={cn(
-            product.salePrice ? 'text-gray-500 line-through' : 'text-primary',
+            product.salePrice
+              ? 'text-gray-500 line-through'
+              : 'font-semibold text-primary',
           )}
         >
           {formatDollars(product.regularPrice)}
         </p>
       </div>
 
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         {product.stock === null || product.stock > 0 ? (
           <AddToCartButton className="w-full" product={product} />
         ) : (
@@ -75,7 +77,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             Out of Stock
           </Button>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -160,7 +160,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                       onChange={(e) => {
                         setEdited((prev) => ({
                           ...prev,
-                          title: e.target.value,
+                          slug: e.target.value,
                         }));
                       }}
                     />

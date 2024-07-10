@@ -26,7 +26,7 @@ exports[`ProductCard should match snapshot 1`] = `
       />
     </a>
     <h2
-      class="truncate text-left text-sm md:text-base"
+      class="mt-2 truncate text-left text-sm md:text-base"
     >
       Product 1
     </h2>
@@ -34,14 +34,14 @@ exports[`ProductCard should match snapshot 1`] = `
       <div
         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
       >
-        -9% OFF
+        10% OFF
       </div>
     </div>
     <div
-      class="flex gap-1"
+      class="mt-2 flex gap-1"
     >
       <p
-        class="text-primary"
+        class="font-semibold text-primary"
       >
         $9.99
       </p>
@@ -50,16 +50,6 @@ exports[`ProductCard should match snapshot 1`] = `
       >
         $10.99
       </p>
-    </div>
-    <div
-      class="mt-auto"
-    >
-      <button
-        aria-disabled="false"
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
-      >
-        Add to bag
-      </button>
     </div>
   </div>
 </DocumentFragment>

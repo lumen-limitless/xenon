@@ -34,7 +34,7 @@ export const Nav: React.FC<NavProps> = ({ session, cart }) => {
           aria-roledescription="Toggle Mobile Menu"
           aria-expanded={isMobileMenuOpen}
           aria-label="Toggle Mobile Menu"
-          className="left-3 z-50 block md:hidden"
+          className="z-50 block md:hidden"
           variant={'ghost'}
           size={'sm'}
           onClick={toggleIsMobileMenuOpen}
