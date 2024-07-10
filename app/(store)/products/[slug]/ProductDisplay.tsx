@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
+import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useLockBodyScroll } from 'react-use';
@@ -18,8 +19,16 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
   const [selectedImage, setSelectedImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   useLockBodyScroll(zoomed);
+  const controls = useAnimation();
 
   if (product === undefined) return null;
+
+  const handleSwipe = (direction: number) => {
+    const newIndex =
+      (selectedImage + direction + product.images!.length) %
+      product.images!.length;
+    setSelectedImage(newIndex);
+  };
 
   return (
     <>
@@ -31,7 +40,20 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
         id="product-display"
         data-testid="product-display"
       >
-        <div className="relative h-[400px] w-[400px]">
+        <motion.div
+          className="relative h-[400px] w-[400px]"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          onDragEnd={(e, { offset, velocity }) => {
+            const swipe = offset.x;
+
+            if (swipe < -50) {
+              handleSwipe(1);
+            } else if (swipe > 50) {
+              handleSwipe(-1);
+            }
+          }}
+        >
           <Image
             src={product.images?.[selectedImage] ?? '/img/placeholder.webp'}
             alt={product.title}
@@ -41,7 +63,7 @@ export const ProductDisplay: React.FC<ProductDisplayProps> = ({
             className="cursor-zoom-in object-contain"
             onClick={() => setZoomed(true)}
           />
-        </div>
+        </motion.div>
 
         <div
           className="flex w-full items-center justify-start gap-2"
