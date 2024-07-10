@@ -57,6 +57,7 @@ type EditProductFormProps = {
 
 export const EditProductForm: React.FC<EditProductFormProps> = ({
   product,
+  categories,
 }) => {
   const router = useRouter();
   const [edited, setEdited] = useState<ProductWithVariants>(product);
@@ -69,7 +70,19 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
   const hasChanged = !_.isEqual(product, edited);
 
   const handleNewVariant = (formData: FormData) => {
-    console.log(formData);
+    console.debug(formData);
+
+    const newVariant = {
+      id: `new-variant-${Date.now()}`,
+      sku: formData.get('sku') as string,
+      stock: parseInt(formData.get('stock') as string, 10),
+      price: parseFloat(formData.get('price') as string),
+      variantValues: edited.productsToAttributes.map((pta) => ({
+        id: `new-variant-value-${Date.now()}`,
+        attributeId: pta.attribute.id,
+        value: formData.get(pta.attribute.attributeName || '') as string,
+      })),
+    };
   };
 
   return (
@@ -380,9 +393,15 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="clothing">Clothing</SelectItem>
-                        <SelectItem value="electronics">Electronics</SelectItem>
-                        <SelectItem value="accessories">Accessories</SelectItem>
+                        {categories
+                          .filter(
+                            (category) => category.parentCategoryId === null,
+                          )
+                          .map((category) => (
+                            <SelectItem value={category.id} key={category.id}>
+                              {category.title}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>

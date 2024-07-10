@@ -16,7 +16,9 @@ import type {
 } from '@/schema';
 
 // metadata types
-export type ProductMetadata = {} | null;
+export type ProductMetadata = {
+  details?: Record<string, string | string[] | undefined>;
+} | null;
 
 export type OrderMetadata = {
   checkoutSessionId?: string;
