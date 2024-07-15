@@ -251,7 +251,7 @@ importers:
         version: 14.2.4(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@next/env':
         specifier: ^14.2.4
-        version: 14.2.4
+        version: 14.2.5
       '@playwright/test':
         specifier: ^1.45.1
         version: 1.45.1
@@ -1861,6 +1861,9 @@ packages:
 
   '@next/env@14.2.4':
     resolution: {integrity: sha512-3EtkY5VDkuV2+lNmKlbkibIJxcO4oIHEhBWne6PaAp+76J9KoSsGvNikp6ivzAT8dhhBMYrm6op2pS1ApG0Hzg==}
+
+  '@next/env@14.2.5':
+    resolution: {integrity: sha512-/zZGkrTOsraVfYjGP8uM0p6r0BDT6xWpkjdVbcz66PJVSpwXX3yNiRycxAuDfBKGWBrZBXRuK/YVlkNgxHGwmA==}
 
   '@next/eslint-plugin-next@14.2.4':
     resolution: {integrity: sha512-svSFxW9f3xDaZA3idQmlFw7SusOuWTpDTAeBlO3AEPDltrraV+lqs7mAc6A27YdnpQVVIA3sODqUAAHdWhVWsA==}
@@ -9892,6 +9895,8 @@ snapshots:
       - utf-8-validate
 
   '@next/env@14.2.4': {}
+
+  '@next/env@14.2.5': {}
 
   '@next/eslint-plugin-next@14.2.4':
     dependencies:
