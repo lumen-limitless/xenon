@@ -78,7 +78,7 @@ export const columns: ColumnDef<ProductWithCategories>[] = [
     accessorKey: 'price',
     header: 'Price',
     cell: (data) => {
-      return <span>{formatDollars(data.row.original.regularPrice)}</span>;
+      return <span>{formatDollars(data.row.original.price)}</span>;
     },
   },
 

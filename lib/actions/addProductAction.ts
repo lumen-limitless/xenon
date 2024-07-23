@@ -74,8 +74,6 @@ export async function addProductAction(
       status: published ? 'PUBLISHED' : 'DRAFT',
       metadata: {
         details: {},
-        variants: [],
-        attributes: [],
       },
     });
 
