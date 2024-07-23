@@ -43,11 +43,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div>
         {product.salePrice && (
           <Badge variant={'secondary'}>
-            {calculatePercentageDifference(
-              product.salePrice,
-              product.regularPrice,
-            )}
-            % OFF
+            {calculatePercentageDifference(product.price, product.salePrice)}%
+            OFF
           </Badge>
         )}
       </div>
@@ -65,7 +62,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               : 'font-semibold text-primary',
           )}
         >
-          {formatDollars(product.regularPrice)}
+          {formatDollars(product.price)}
         </p>
       </div>
 

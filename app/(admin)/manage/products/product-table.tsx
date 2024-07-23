@@ -99,7 +99,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                       {product.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{formatDollars(product.regularPrice)}</TableCell>
+                  <TableCell>{formatDollars(product.price)}</TableCell>
                   <TableCell>
                     {product.salePrice ? formatDollars(product.salePrice) : '—'}
                   </TableCell>
@@ -136,10 +136,10 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                                 { id: product.id, status: 'DRAFT' },
                                 {
                                   onSuccess: (res) => {
-                                    toast(res.message);
+                                    toast.success(res.message);
                                   },
                                   onError: (res) => {
-                                    toast(res.message);
+                                    toast.error(res.message);
                                   },
                                 },
                               );
@@ -154,10 +154,10 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                                 { id: product.id, status: 'PUBLISHED' },
                                 {
                                   onSuccess: (res) => {
-                                    toast(res.message);
+                                    toast.success(res.message);
                                   },
                                   onError: (res) => {
-                                    toast(res.message);
+                                    toast.error(res.message);
                                   },
                                 },
                               );

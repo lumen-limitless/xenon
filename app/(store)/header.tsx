@@ -1,25 +1,19 @@
-// "use client";
-
 import { auth } from '@/auth';
-import { Nav } from '@/components/Nav';
-import { SearchBar } from '@/components/SearchBar';
+import { Nav } from '@/components/nav';
+import { SearchBar } from '@/components/search-bar';
 import { getCart } from '@/lib/cart';
 import { cn } from '@/lib/utils';
 
-const scrollThreshold = 100;
-
 type HeaderProps = {};
 
-const Header: React.FC<HeaderProps> = async () => {
-  const session = await auth();
-  const cart = await getCart();
+async function Header() {
+  const [session, cart] = await Promise.all([auth(), getCart()]);
 
   return (
     <header
       id="header"
       className={cn(
         'z-40 w-full border-b bg-background transition-all duration-300 ease-in-out',
-        // visible ? 'translate-y-0' : '-translate-y-[200%]',
       )}
     >
       <Nav session={session} cart={cart} />
@@ -30,6 +24,6 @@ const Header: React.FC<HeaderProps> = async () => {
       </div>
     </header>
   );
-};
+}
 
 export default Header;

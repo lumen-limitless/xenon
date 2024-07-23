@@ -14,8 +14,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-import { Account } from '@/components/Account';
-import { BreadcrumbComponent } from '@/components/BreadcrumbComponent';
+import { Account } from '@/components/account';
+import { BreadcrumbComponent } from '@/components/breadcrumb-component';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';

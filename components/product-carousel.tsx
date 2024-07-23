@@ -1,5 +1,5 @@
 import type { Product } from '@/types';
-import { ProductCard } from './ProductCard';
+import { ProductCard } from './product-card';
 import { Carousel, CarouselContent, CarouselItem } from './ui/carousel';
 
 type ProductCarouselProps = {
@@ -11,7 +11,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
   products,
   title,
 }) => {
-  if (products === undefined || products?.length === 0) return null;
+  if (!products) return null;
 
   return (
     <>

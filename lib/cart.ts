@@ -1,10 +1,13 @@
+'server only';
+
 import { auth } from '@/auth';
 import { cartItemTable, cartTable } from '@/schema';
-import { Cart, CartWithProducts, type CartInfo } from '@/types';
+import type { Cart, CartInfo, CartWithProducts } from '@/types';
 import crypto from 'crypto';
 import { asc, eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { db } from './drizzle';
+import { getCartItemPrice } from './utils';
 
 function encryptCookieValue(value: string): string {
   const algorithm = 'aes-256-cbc';
@@ -59,16 +62,19 @@ export async function createCart(): Promise<CartInfo> {
   const session = await auth();
 
   if (session) {
-    newCart = (
-      await db
-        .insert(cartTable)
-        .values({
-          userId: session.user.id,
-        })
-        .returning()
-    )[0];
+    newCart = await db
+      .insert(cartTable)
+      .values({
+        userId: session.user.id,
+      })
+      .returning()
+      .then((res) => res[0]);
   } else {
-    newCart = (await db.insert(cartTable).values({}).returning())[0];
+    newCart = await db
+      .insert(cartTable)
+      .values({})
+      .returning()
+      .then((res) => res[0]);
 
     setLocalCartId(newCart.id);
   }
@@ -103,7 +109,7 @@ export const getCart = async (): Promise<CartInfo | null> => {
     const localCartId = getLocalCartId();
 
     cart = localCartId
-      ? (await db.query.cartTable.findFirst({
+      ? ((await db.query.cartTable.findFirst({
           where: eq(cartTable.id, localCartId),
           with: {
             items: {
@@ -113,7 +119,7 @@ export const getCart = async (): Promise<CartInfo | null> => {
               },
             },
           },
-        })) ?? null
+        })) ?? null)
       : null;
   }
 
@@ -125,12 +131,10 @@ export const getCart = async (): Promise<CartInfo | null> => {
     ...cart,
     size: cart?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0,
     subtotal:
-      cart?.items.reduce(
-        (acc, item) =>
-          acc +
-          item.quantity * (item.product.salePrice ?? item.product.regularPrice),
-        0,
-      ) ?? 0,
+      cart?.items.reduce((acc, item) => {
+        const itemPrice = getCartItemPrice(item);
+        return acc + item.quantity * itemPrice;
+      }, 0) ?? 0,
   };
 };
 
@@ -193,7 +197,6 @@ export async function mergeAnonymousCartWithUserCart(
           cartId: userCart.id,
           productId: item.productId,
           quantity: item.quantity,
-          price: item.price,
         })),
       );
     } else {
@@ -213,7 +216,6 @@ export async function mergeAnonymousCartWithUserCart(
           cartId: newCart.id,
           productId: item.productId,
           quantity: item.quantity,
-          price: item.price,
         })),
       );
     }

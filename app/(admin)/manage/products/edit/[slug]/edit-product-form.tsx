@@ -19,6 +19,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -28,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -37,13 +44,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { updateProductAction } from '@/lib/actions';
-import { CLOUDINARY_UPLOAD_PRESET } from '@/lib/constants';
-import type { Category, ProductWithVariants } from '@/types';
+import { changeProductStatusAction, updateProductAction } from '@/lib/actions';
+import { cn } from '@/lib/utils';
+import type { Category, Product } from '@/types';
 import { useMutation } from '@tanstack/react-query';
 import _ from 'lodash';
-import { ChevronLeft, PlusCircle, Upload } from 'lucide-react';
+import { ChevronLeft, MoreHorizontal, PlusCircle, Upload } from 'lucide-react';
 import { CldUploadButton, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -51,7 +57,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 type EditProductFormProps = {
-  product: ProductWithVariants;
+  product: Product;
   categories: Array<Category>;
 };
 
@@ -60,7 +66,8 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
   categories,
 }) => {
   const router = useRouter();
-  const [edited, setEdited] = useState<ProductWithVariants>(product);
+  const [edited, setEdited] = useState<Product>(product);
+
   console.debug('edited', edited);
 
   const { mutate: updateProduct, isPending } = useMutation({
@@ -70,19 +77,134 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
   const hasChanged = !_.isEqual(product, edited);
 
   const handleNewVariant = (formData: FormData) => {
-    console.debug(formData);
+    const sku = formData.get('sku') as string;
+    const stock = parseInt(formData.get('stock') as string, 10);
+    const price = parseFloat(formData.get('price') as string);
+
+    if (!sku || isNaN(stock) || isNaN(price)) {
+      toast.error('Please provide valid SKU, stock, and price');
+      return;
+    }
+
+    const attributes: Record<string, string> = {};
+    edited.attributes.forEach((attr) => {
+      const value = formData.get(attr.name) as string;
+      if (value) {
+        attributes[attr.name] = value;
+      }
+    });
+
+    // Validate that all required attributes have values
+    const missingAttributes = edited.attributes.filter(
+      (attr) => !attributes[attr.name],
+    );
+    if (missingAttributes.length > 0) {
+      toast.error(
+        `Please provide values for all attributes: ${missingAttributes.map((attr) => attr.name).join(', ')}`,
+      );
+      return;
+    }
 
     const newVariant = {
-      id: `new-variant-${Date.now()}`,
-      sku: formData.get('sku') as string,
-      stock: parseInt(formData.get('stock') as string, 10),
-      price: parseFloat(formData.get('price') as string),
-      variantValues: edited.productsToAttributes.map((pta) => ({
-        id: `new-variant-value-${Date.now()}`,
-        attributeId: pta.attribute.id,
-        value: formData.get(pta.attribute.attributeName || '') as string,
-      })),
+      id: crypto.randomUUID(),
+      sku,
+      stock,
+      price,
+      attributes,
+      imageIndex: 0, // Default to first image
     };
+
+    setEdited((prevProduct) => ({
+      ...prevProduct,
+
+      variants: [...prevProduct.variants, newVariant],
+    }));
+
+    toast.success('New variant added successfully');
+  };
+
+  const handleNewAttribute = (formData: FormData) => {
+    const attributeName = formData.get('attributeName') as string;
+    const attributeValue = formData.get('attributeValue') as string;
+
+    if (!attributeName || !attributeValue) {
+      toast.error('Please provide both attribute name and value');
+      return;
+    }
+
+    setEdited((prevProduct) => {
+      const updatedAttributes = [...prevProduct.attributes];
+      const existingAttribute = updatedAttributes.find(
+        (attr) => attr.name === attributeName,
+      );
+
+      if (existingAttribute) {
+        // Add the new value if it doesn't already exist
+        if (!existingAttribute.values.includes(attributeValue)) {
+          existingAttribute.values.push(attributeValue);
+        }
+      } else {
+        // Create a new attribute
+        updatedAttributes.push({
+          name: attributeName,
+          values: [attributeValue],
+        });
+      }
+
+      return {
+        ...prevProduct,
+        attributes: updatedAttributes,
+      };
+    });
+
+    toast.success('New attribute added successfully');
+  };
+
+  const handlePopulateVariants = () => {
+    const generateCombinations = (attributes: Product['attributes']) => {
+      const attributeNames = attributes.map((attr) => attr.name);
+      const attributeValues = attributes.map((attr) => attr.values);
+
+      const combinations = attributeValues.reduce(
+        (acc, curr) => acc.flatMap((x) => curr.map((y) => [...x, y])),
+        [[]] as string[][],
+      );
+
+      return combinations.map((combination) => {
+        const attributes: Record<string, string> = {};
+        combination.forEach((value, index) => {
+          attributes[attributeNames[index]] = value;
+        });
+        return attributes;
+      });
+    };
+
+    const combinations = generateCombinations(edited.attributes);
+
+    const newVariants = combinations.map((combination, index) => ({
+      id: crypto.randomUUID(),
+      sku: `${product.sku}-${index + 1}`,
+      stock: 0,
+      price: edited.price,
+      attributes: combination,
+      imageIndex: 0,
+    }));
+
+    // Filter out combinations that already exist in current variants
+    const existingVariants = new Set(
+      edited.variants.map((variant) => JSON.stringify(variant.attributes)),
+    );
+
+    const filteredNewVariants = newVariants.filter(
+      (variant) => !existingVariants.has(JSON.stringify(variant.attributes)),
+    );
+
+    setEdited((prevProduct) => ({
+      ...prevProduct,
+      variants: [...prevProduct.variants, ...filteredNewVariants],
+    }));
+
+    toast.success(`Added ${newVariants.length} new variants`);
   };
 
   return (
@@ -93,7 +215,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
             variant="outline"
             size="icon"
             className="h-7 w-7"
-            onClick={() => router.back()}
+            onClick={router.back}
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
@@ -102,11 +224,11 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
             {product.title.slice(0, 25) +
               (product.title.length > 25 ? '...' : '')}
           </h1>
-          <Badge variant="outline" className="ml-auto sm:ml-0">
-            {product.stock === null || product.stock > 0
-              ? 'In Stock'
-              : 'Out of Stock'}
-          </Badge>
+          {product.stock !== null && (
+            <Badge variant="outline" className="ml-auto sm:ml-0">
+              {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+            </Badge>
+          )}
           <div className="hidden items-center gap-2 md:ml-auto md:flex">
             <Button
               variant="outline"
@@ -118,7 +240,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
             </Button>
             <Button
               size="sm"
-              disabled={!hasChanged}
+              disabled={!hasChanged || isPending}
               onClick={() =>
                 updateProduct(
                   {
@@ -126,7 +248,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                   },
                   {
                     onSuccess: () => {
-                      toast('Successfully updated product.');
+                      toast.success('Successfully updated product.');
                     },
                   },
                 )
@@ -164,9 +286,10 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                     />
                   </div>
                   <div className="grid gap-3">
-                    <Label htmlFor="name">Slug</Label>
+                    <Label htmlFor="slug">Slug</Label>
                     <Input
                       id="slug"
+                      name="slug"
                       type="text"
                       className="w-full"
                       defaultValue={product.slug}
@@ -174,6 +297,57 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                         setEdited((prev) => ({
                           ...prev,
                           slug: e.target.value,
+                        }));
+                      }}
+                    />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="sku">SKU</Label>
+                    <Input
+                      id="sku"
+                      name="sku"
+                      type="text"
+                      className="w-full"
+                      defaultValue={product.sku}
+                      onChange={(e) => {
+                        setEdited((prev) => ({
+                          ...prev,
+                          sku: e.target.value,
+                        }));
+                      }}
+                    />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="price">Price</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      className="w-full"
+                      defaultValue={product.price / 100}
+                      onChange={(e) => {
+                        setEdited((prev) => ({
+                          ...prev,
+                          price: parseFloat(e.target.value) * 100,
+                        }));
+                      }}
+                    />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="salePrice">Sale Price</Label>
+                    <Switch />
+                    <Input
+                      id="salePrice"
+                      type="number"
+                      className="w-full"
+                      defaultValue={
+                        product.salePrice ? product.salePrice / 100 : ''
+                      }
+                      onChange={(e) => {
+                        setEdited((prev) => ({
+                          ...prev,
+                          salePrice: e.target.value
+                            ? parseFloat(e.target.value) * 100
+                            : null,
                         }));
                       }}
                     />
@@ -197,9 +371,9 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
             </Card>
             <Card x-chunk="dashboard-07-chunk-1">
               <CardHeader>
-                <CardTitle>Stock</CardTitle>
+                <CardTitle>Variants</CardTitle>
                 <CardDescription>
-                  Lipsum dolor sit amet, consectetur adipiscing elit
+                  Create & remove product variants
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -209,52 +383,81 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                       <TableHead className="w-[100px]">SKU</TableHead>
                       <TableHead>Stock</TableHead>
                       <TableHead>Price</TableHead>
-                      {edited.productsToAttributes.map((attribute, index) => (
-                        <TableHead className="w-[100px]">
-                          {attribute.attribute.attributeName}
-                        </TableHead>
+                      {edited.attributes.map((attr) => (
+                        <TableHead key={attr.name}>{attr.name}</TableHead>
                       ))}
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {edited.variants.map((variant, index) => (
-                      <TableRow key={index}>
+                    {edited.variants.map((variant, i) => (
+                      <TableRow
+                        key={i}
+                        className={cn(
+                          product.variants.find((v) => v.id === variant.id)
+                            ? ''
+                            : 'bg-green-500/10',
+                        )}
+                      >
                         <TableCell className="font-semibold">
                           {variant.sku}
                         </TableCell>
                         <TableCell>
-                          <Label htmlFor="stock" className="sr-only">
+                          <Label htmlFor={`stock-${i}`} className="sr-only">
                             Stock
                           </Label>
                           <Input
-                            id="stock"
+                            id={`stock-${i}`}
                             type="number"
-                            defaultValue={product.stock ?? 0}
+                            defaultValue={variant.stock ?? 0}
                           />
                         </TableCell>
                         <TableCell>
-                          <Label htmlFor="price" className="sr-only">
+                          <Label htmlFor={`price-${i}`} className="sr-only">
                             Price
                           </Label>
                           <Input
-                            id="price"
+                            id={`price-${i}`}
                             name="price"
                             type="number"
                             defaultValue="99.99"
                           />
                         </TableCell>
+                        {edited.attributes.map((attr) => (
+                          <TableCell key={attr.name}>
+                            {variant.attributes[attr.name]}
+                          </TableCell>
+                        ))}
                         <TableCell>
-                          <ToggleGroup type="single" variant="outline">
-                            <ToggleGroupItem value="s">S</ToggleGroupItem>
-                            <ToggleGroupItem value="m">M</ToggleGroupItem>
-                            <ToggleGroupItem value="l">L</ToggleGroupItem>
-                          </ToggleGroup>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setEdited((prev) => ({
+                                    ...prev,
+
+                                    variants: prev.variants.filter(
+                                      (_, index) => index !== i,
+                                    ),
+                                  }));
+                                }}
+                              >
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))}
                     {edited.variants.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center">
+                        <TableCell colSpan={5} className="text-center">
                           No variants
                         </TableCell>
                       </TableRow>
@@ -264,10 +467,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
               </CardContent>
               <CardFooter className="justify-center border-t p-4">
                 <Dialog>
-                  <DialogTrigger
-                    asChild
-                    disabled={edited.productsToAttributes.length === 0}
-                  >
+                  <DialogTrigger asChild>
                     <Button size="sm" variant="ghost" className="gap-1">
                       <PlusCircle className="h-3.5 w-3.5" />
                       Add New Variant
@@ -275,70 +475,119 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                   </DialogTrigger>
 
                   <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add New Variant</DialogTitle>
-                      <DialogDescription>
-                        Lipsum dolor sit amet, consectetur adipiscing elit
-                      </DialogDescription>
-                    </DialogHeader>
-
                     <form action={handleNewVariant}>
+                      <DialogHeader>
+                        <DialogTitle>Add New Variant</DialogTitle>
+                        <DialogDescription>
+                          Lipsum dolor sit amet, consectetur adipiscing elit
+                        </DialogDescription>
+                      </DialogHeader>
+
                       <div className="grid gap-3">
                         <div className="grid gap-3">
                           <Label htmlFor="sku">SKU</Label>
-                          <Input
-                            id="sku"
-                            type="text"
-                            defaultValue={
-                              edited.sku + '-' + edited.variants.length
-                            }
-                          />
+                          <Input id="sku" type="text" name="sku" />
                         </div>
                         <div className="grid gap-3">
                           <Label htmlFor="stock">Stock</Label>
-                          <Input id="stock" type="number" />
+                          <Input id="stock" type="number" name="stock" />
                         </div>
                         <div className="grid gap-3">
                           <Label htmlFor="price">Price</Label>
                           <Input
                             id="price"
                             type="number"
-                            defaultValue={product.regularPrice}
+                            name="price"
+                            defaultValue={edited.price}
                           />
                         </div>
-                        {edited.productsToAttributes.map((pta, index) => (
+                        {edited.attributes.map((attr) => (
                           <div className="grid gap-3">
-                            <Label htmlFor="size">
-                              {pta.attribute.attributeName}
-                            </Label>
-                            <Select>
-                              <SelectTrigger id="size" aria-label="Select size">
-                                <SelectValue placeholder="Select size" />
+                            <Label htmlFor={attr.name}>{attr.name}</Label>
+                            <Select name={attr.name}>
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder={attr.name} />
                               </SelectTrigger>
                               <SelectContent>
-                                {pta.attribute.attributeValues.map(
-                                  ({ attributeId, value }, index) => (
-                                    <SelectItem key={index} value={value ?? ''}>
-                                      {value}
-                                    </SelectItem>
-                                  ),
-                                )}
+                                {attr.values.map((val) => (
+                                  <SelectItem value={val}>{val}</SelectItem>
+                                ))}
                               </SelectContent>
                             </Select>
                           </div>
                         ))}
                       </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button size="sm" variant="ghost" type="submit">
+                            Add Variant
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
                     </form>
-                    <DialogFooter>
-                      <DialogClose asChild>
-                        <Button size="sm" variant="ghost" type="submit">
-                          Add Variant
-                        </Button>
-                      </DialogClose>
-                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
 
+                <Button
+                  onClick={handlePopulateVariants}
+                  disabled={edited.attributes.length === 0}
+                >
+                  Populate variants
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card x-chunk="dashboard-07-chunk-1-attributes">
+              <CardHeader>
+                <CardTitle>Attributes</CardTitle>
+                <CardDescription>Manage product attributes</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Attribute Name</TableHead>
+                      <TableHead>Values</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {edited.attributes.map((attr, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{attr.name}</TableCell>
+                        <TableCell>{attr.values.join(', ')}</TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              // Logic to add a new value
+                            }}
+                          >
+                            Add Value
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              // Logic to remove the attribute
+                              setEdited((prev) => ({
+                                ...prev,
+                                attributes: prev.attributes.filter(
+                                  (_, i) => i !== index,
+                                ),
+                              }));
+                            }}
+                          >
+                            Remove Attribute
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+              <CardFooter>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button size="sm" variant="ghost" className="gap-1">
@@ -347,18 +596,19 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Add New Attribute</DialogTitle>
-                      <DialogDescription>
-                        Create a new attribute for this product.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form>
+                    <form action={handleNewAttribute}>
+                      <DialogHeader>
+                        <DialogTitle>Add New Attribute</DialogTitle>
+                        <DialogDescription>
+                          Create a new attribute for this product.
+                        </DialogDescription>
+                      </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                           <Label htmlFor="attributeName">Attribute Name</Label>
                           <Input
                             id="attributeName"
+                            name="attributeName"
                             placeholder="e.g. Color, Size"
                           />
                         </div>
@@ -368,18 +618,22 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                           </Label>
                           <Input
                             id="attributeValue"
+                            name="attributeValue"
                             placeholder="e.g. Red, Large"
                           />
                         </div>
                       </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button type="submit">Add Attribute</Button>
+                        </DialogClose>
+                      </DialogFooter>
                     </form>
-                    <DialogFooter>
-                      <Button type="submit">Add Attribute</Button>
-                    </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </CardFooter>
             </Card>
+
             <Card x-chunk="dashboard-07-chunk-2">
               <CardHeader>
                 <CardTitle>Product Category</CardTitle>
@@ -487,7 +741,9 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                     ))}
 
                     <CldUploadButton
-                      uploadPreset={CLOUDINARY_UPLOAD_PRESET}
+                      uploadPreset={
+                        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+                      }
                       className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed"
                       onSuccess={({ event, info }) => {
                         if (event !== 'success' || !info) {
@@ -510,29 +766,8 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                 </div>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-07-chunk-5">
-              <CardHeader>
-                <CardTitle>Archive Product</CardTitle>
-                <CardDescription>
-                  Lipsum dolor sit amet, consectetur adipiscing elit.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div></div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => {
-                    setEdited((prev) => ({
-                      ...prev,
-                      status: 'ARCHIVED',
-                    }));
-                  }}
-                >
-                  Archive Product
-                </Button>
-              </CardContent>
-            </Card>
+
+            <ArchiveProductCard product={product} />
           </div>
         </div>
         <div className="flex items-center justify-center gap-2 md:hidden">
@@ -542,6 +777,49 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
           <Button size="sm">Save Product</Button>
         </div>
       </div>
+    </>
+  );
+};
+
+type ArchiveProductCardProps = {
+  product: Product;
+};
+const ArchiveProductCard: React.FC<ArchiveProductCardProps> = ({ product }) => {
+  const { mutate: changeProductStatus } = useMutation({
+    mutationFn: changeProductStatusAction,
+  });
+  const router = useRouter();
+
+  const handleArchiveProduct = () => {
+    changeProductStatus(
+      {
+        id: product.id,
+        status: 'ARCHIVED',
+      },
+      {
+        onSuccess() {
+          toast.success('Product was archived successfully');
+          router.back();
+        },
+      },
+    );
+  };
+  return (
+    <>
+      <Card x-chunk="dashboard-07-chunk-5">
+        <CardHeader>
+          <CardTitle>Archive Product</CardTitle>
+          <CardDescription>
+            Lipsum dolor sit amet, consectetur adipiscing elit.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div></div>
+          <Button size="sm" variant="secondary" onClick={handleArchiveProduct}>
+            Archive Product
+          </Button>
+        </CardContent>
+      </Card>
     </>
   );
 };

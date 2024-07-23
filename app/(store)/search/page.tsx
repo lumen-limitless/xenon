@@ -1,5 +1,5 @@
-import { ProductGrid } from '@/components/ProductGrid';
-import { SearchParamPagination } from '@/components/SearchParamPagination';
+import { ProductGrid } from '@/components/product-grid';
+import { SearchParamPagination } from '@/components/search-param-pagination';
 import { db } from '@/lib/drizzle';
 import { productTable } from '@/schema';
 import { sql } from 'drizzle-orm';

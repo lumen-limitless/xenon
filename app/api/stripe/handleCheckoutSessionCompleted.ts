@@ -60,6 +60,9 @@ export default async function handleCheckoutSessionCompleted(
         country: data.shipping_details?.address?.country,
         userId: cart.userId,
         total: data.amount_total ?? 0,
+        subtotal: data.amount_subtotal ?? 0,
+        shipping: data.shipping_cost?.amount_subtotal ?? 0,
+        tax: 0,
       })
       .returning({ id: orderTable.id })
       .then((res) => res[0].id);
@@ -68,6 +71,7 @@ export default async function handleCheckoutSessionCompleted(
       parsedLineItems.map((item) => ({
         quantity: item.quantity ?? 0,
         productId: item.price.product.metadata['productId'],
+        variantId: item.price.product.metadata['variantId'],
         orderId,
         price: item.price.unit_amount ?? 0,
       })),

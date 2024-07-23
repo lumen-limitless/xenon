@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { RouteSelector } from '@/components/RouteSelector';
+import { RouteSelector } from '@/components/route-selector';
 import { RedirectType, redirect } from 'next/navigation';
 
 const routes = [

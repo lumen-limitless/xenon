@@ -1,7 +1,7 @@
 'use client';
 import { cn } from '@/lib/utils';
 import { MessageSquare } from 'lucide-react';
-import { Slideshow } from './Slideshow';
+import { Slideshow } from './slideshow';
 
 type BannerProps = {};
 

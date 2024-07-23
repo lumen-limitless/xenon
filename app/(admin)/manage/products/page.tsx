@@ -12,7 +12,7 @@ import { db } from '@/lib/drizzle';
 import { File, ListFilter, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cache } from 'react';
-import { ProductTable } from './ProductTable';
+import { ProductTable } from './product-table';
 
 export const runtime = 'nodejs';
 export const dynamic = 'auto';

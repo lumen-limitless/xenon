@@ -2,6 +2,7 @@
 
 import { getCart } from '../cart';
 import { stripe } from '../stripe';
+import { getCartItemPrice } from '../utils';
 
 /**
  * Performs a Stripe checkout action.
@@ -33,7 +34,7 @@ export async function stripeCheckoutAction(): Promise<string | null> {
             },
           },
 
-          unit_amount: item.price,
+          unit_amount: getCartItemPrice(item),
         },
         quantity: item.quantity,
       })),

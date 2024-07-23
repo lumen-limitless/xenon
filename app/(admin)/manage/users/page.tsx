@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table';
 import { db } from '@/lib/drizzle';
 import { cache } from 'react';
 import { columns } from './columns';

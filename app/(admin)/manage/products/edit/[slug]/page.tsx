@@ -3,7 +3,7 @@ import { productTable } from '@/schema';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { EditProductForm } from './EditProductForm';
+import { EditProductForm } from './edit-product-form';
 
 type PageProps = {
   params: { slug: string };
@@ -24,24 +24,6 @@ const getProduct = cache(async (slug: string) => {
   try {
     const product = await db.query.productTable.findFirst({
       where: eq(productTable.slug, slug),
-
-      with: {
-        productsToAttributes: {
-          with: {
-            attribute: {
-              with: {
-                attributeValues: true,
-              },
-            },
-          },
-        },
-
-        variants: {
-          with: {
-            variantValues: true,
-          },
-        },
-      },
     });
 
     return product ?? null;

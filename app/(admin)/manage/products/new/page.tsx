@@ -1,6 +1,6 @@
 import { db } from '@/lib/drizzle';
 import { cache } from 'react';
-import { AddProductForm } from './AddProductForm';
+import { AddProductForm } from './add-product-form';
 
 type PageProps = {
   params: {};

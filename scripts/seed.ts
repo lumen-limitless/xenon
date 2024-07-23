@@ -87,7 +87,7 @@ async function main() {
       stock: Math.floor(Math.random() * 100),
       status: 'PUBLISHED',
       images: [product.image],
-      regularPrice: parseInt((product.price * 100).toFixed(0)),
+      price: parseInt((product.price * 100).toFixed(0)),
     });
   }
 }

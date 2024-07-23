@@ -1,4 +1,4 @@
-import { RouteSelector } from '@/components/RouteSelector';
+import { RouteSelector } from '@/components/route-selector';
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 

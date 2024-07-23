@@ -1,12 +1,11 @@
 'use client';
 
-import { SubmitButton } from '@/components/SubmitButton';
+import { SubmitButton } from '@/components/submit-button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { addProductAction } from '@/lib/actions';
-import { CLOUDINARY_UPLOAD_PRESET } from '@/lib/constants';
 import { categoryTable } from '@/schema';
 import { CloudUploadIcon } from 'lucide-react';
 import {
@@ -97,7 +96,7 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({
 
         <fieldset className="my-5">
           <CldUploadButton
-            uploadPreset={CLOUDINARY_UPLOAD_PRESET}
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
             className="flex w-full flex-col items-center justify-center rounded-md border border-dashed p-5"
             onSuccess={(res) => {
               if (res.event !== 'success') return;

@@ -1,5 +1,5 @@
-import { ProductCarousel } from '@/components/ProductCarousel';
-import { Slideshow } from '@/components/Slideshow';
+import { ProductCarousel } from '@/components/product-carousel';
+import { Slideshow } from '@/components/slideshow';
 import { db } from '@/lib/drizzle';
 import { capitalize } from '@/lib/utils';
 import { client as sanity } from '@/sanity/lib/client';
@@ -22,7 +22,9 @@ const getProducts = cache(async () => {
   try {
     const products = await db.query.productTable.findMany({
       where: eq(productTable.status, 'PUBLISHED'),
+      limit: 100,
     });
+
     return products;
   } catch (err) {
     console.error(err);

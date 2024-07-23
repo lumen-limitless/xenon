@@ -67,11 +67,16 @@ export async function addProductAction(
       title,
       sku,
       slug: generateSlug(title),
-      regularPrice: Math.round(Number(price) * 100),
+      price: Math.round(Number(price) * 100),
       images: validatedImages.uploadedImages.map((image) => image.secure_url),
       stock: Math.round(Number(stock)),
       productDescription: description || '--',
       status: published ? 'PUBLISHED' : 'DRAFT',
+      metadata: {
+        details: {},
+        variants: [],
+        attributes: [],
+      },
     });
 
     return redirect('/manage/products');

@@ -2,14 +2,14 @@
 
 import { updateCartAction } from '@/lib/actions';
 import { useStore } from '@/lib/store';
-import { formatDollars, truncateText } from '@/lib/utils';
+import { formatDollars, getCartItemPrice, truncateText } from '@/lib/utils';
 import { cartItemTable } from '@/schema';
-import { type CartInfo } from '@/types';
+import type { CartInfo } from '@/types';
 import { MinusCircle, PlusCircle, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useOptimistic, useTransition } from 'react';
-import { CheckoutButton } from './CheckoutButton';
+import { CheckoutButton } from './checkout-button';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import {
@@ -38,7 +38,6 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
     toggleCartOpen: state.toggleCartOpen,
   }));
   const [isPending, startTransition] = useTransition();
-  // const router = useRouter();
 
   return (
     <Sheet open={cartOpen} onOpenChange={toggleCartOpen}>
@@ -64,63 +63,82 @@ export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
                 .sort((a, b) => {
                   return a.product.title.localeCompare(b.product.title);
                 })
-                .map((item) => (
-                  <TableRow key={item.productId}>
-                    <TableCell className="relative flex w-full items-center gap-5">
-                      <Button
-                        aria-disabled={isPending}
-                        disabled={isPending}
-                        aria-label="Remove item from cart"
-                        variant={'ghost'}
-                        size={'icon'}
-                        className="absolute right-0 top-0"
-                        onClick={() =>
-                          startTransition(async () => {
-                            await updateCartAction({
-                              productId: item.productId,
-                              value: 0 - item.quantity,
-                            });
+                .map((item) => {
+                  const cartItemPrice = getCartItemPrice(item);
 
-                            // router.refresh();
-                          })
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                  const variant = item.product.variants.find(
+                    (v) => v.id === item.variantId,
+                  );
+                  return (
+                    <TableRow key={item.id}>
+                      <TableCell className="relative flex w-full items-center gap-5">
+                        <Button
+                          aria-disabled={isPending}
+                          disabled={isPending}
+                          aria-label="Remove item from cart"
+                          variant={'ghost'}
+                          size={'icon'}
+                          className="absolute right-0 top-0"
+                          onClick={() =>
+                            startTransition(async () => {
+                              await updateCartAction({
+                                productId: item.productId,
+                                value: 0 - item.quantity,
+                              });
+                            })
+                          }
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
 
-                      <SheetClose asChild>
-                        <Link href={`/products/${item.product.slug}`}>
-                          <Image
-                            className="h-auto w-auto"
-                            src={
-                              item.product.images?.[0]
-                                ? item.product.images?.[0]
-                                : '/img/placeholder.webp'
-                            }
-                            alt={item.product.title}
-                            height={50}
-                            width={50}
-                          />
-                        </Link>
-                      </SheetClose>
-
-                      <div className="mt-5 flex-1 space-y-2">
                         <SheetClose asChild>
                           <Link href={`/products/${item.product.slug}`}>
-                            {truncateText(item.product.title, 25)}
+                            <Image
+                              className="h-auto w-auto"
+                              src={
+                                item.product.images?.[0]
+                                  ? item.product.images?.[0]
+                                  : '/img/placeholder.webp'
+                              }
+                              alt={item.product.title}
+                              height={50}
+                              width={50}
+                            />
                           </Link>
                         </SheetClose>
 
-                        <div className="flex w-full items-center">
-                          <CartQuantitySelector item={item} />
-                          <span>
-                            {formatDollars(item.price * item.quantity)}
-                          </span>
+                        <div className="mt-5 flex-1 space-y-2">
+                          <SheetClose asChild>
+                            <Link href={`/products/${item.product.slug}`}>
+                              {truncateText(item.product.title, 25)}
+                            </Link>
+                          </SheetClose>
+
+                          <div id="variant">
+                            {variant &&
+                              Object.values(variant.attributes).map(
+                                (attr, i) => (
+                                  <span
+                                    className="mx-1 text-sm text-muted-foreground"
+                                    key={i}
+                                  >
+                                    {attr}
+                                  </span>
+                                ),
+                              )}
+                          </div>
+
+                          <div className="flex w-full items-center">
+                            <CartQuantitySelector item={item} />
+                            <span>
+                              {formatDollars(cartItemPrice * item.quantity)}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
             </TableBody>
           </Table>
         </ScrollArea>

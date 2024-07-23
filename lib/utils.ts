@@ -1,3 +1,4 @@
+import { CartItemWithProduct } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -70,4 +71,16 @@ export function calculatePercentageDifference(
   current: number,
 ): string {
   return (((current - previous) / previous) * 100).toFixed(0);
+}
+
+export function getCartItemPrice(item: CartItemWithProduct): number {
+  if (item.variantId) {
+    return (
+      item.product.variants.find((v) => v.id === item.variantId)?.customPrice ??
+      item.product.salePrice ??
+      item.product.price
+    );
+  } else {
+    return item.product.salePrice ?? item.product.price;
+  }
 }

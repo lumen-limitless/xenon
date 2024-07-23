@@ -1,7 +1,7 @@
 'use server';
 
-import { cartItemTable, productTable } from '@/schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { cartItemTable } from '@/schema';
+import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { createCart, getCart } from '../cart';
 import { db } from '../drizzle';
@@ -57,7 +57,6 @@ export async function updateCartAction({
             productId,
             variantId,
             quantity: value,
-            price: sql`(SELECT COALESCE(${productTable.salePrice}, ${productTable.regularPrice}) FROM ${productTable} WHERE ${productTable.id} = ${productId})`,
           });
         }
       }

@@ -1,8 +1,8 @@
-import { productTable } from '@/schema';
-import { ProductCard } from './ProductCard';
+import type { Product } from '@/types';
+import { ProductCard } from './product-card';
 
 type ProductGridProps = {
-  products?: Array<typeof productTable.$inferSelect>;
+  products?: Array<Product>;
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {

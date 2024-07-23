@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { db } from '@/lib/drizzle';
 import { formatDollars } from '@/lib/utils';
 import { orderTable } from '@/schema';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,6 +30,7 @@ const getOrdersForUser = cache(async (userId: string) => {
           },
         },
       },
+      orderBy: desc(orderTable.createdAt),
     });
 
     return orders;

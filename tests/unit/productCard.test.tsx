@@ -13,7 +13,7 @@ jest.mock('@tanstack/react-query', () => ({
   })),
 }));
 
-import { ProductCard } from '@/components/ProductCard';
+import { ProductCard } from '@/components/product-card';
 import type { Product } from '@/types';
 import { render } from '@testing-library/react';
 

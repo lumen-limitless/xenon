@@ -16,7 +16,7 @@ import {
   Truck,
 } from 'lucide-react';
 
-import { DataTable } from '@/components/DataTable';
+import { DataTable } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import {
   Card,

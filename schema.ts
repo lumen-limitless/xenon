@@ -13,7 +13,12 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import type { AdapterAccountType } from 'next-auth/adapters';
-import { OrderMetadata, ProductMetadata } from './types';
+import type {
+  OrderMetadata,
+  ProductAttribute,
+  ProductMetadata,
+  ProductVariant,
+} from './types';
 
 export const role = pgEnum('Role', ['USER', 'ADMIN', 'SUPER_ADMIN']);
 
@@ -27,7 +32,7 @@ export const orderStatus = pgEnum('OrderStatus', [
   'CANCELLED',
   'COMPLETED',
   'SHIPPED',
-  'PENDING',
+  'PAID',
 ]);
 
 export const returnStatus = pgEnum('ReturnStatus', [
@@ -36,9 +41,11 @@ export const returnStatus = pgEnum('ReturnStatus', [
   'PENDING',
 ]);
 
+export const addressType = pgEnum('AddressType', ['BILLING', 'SHIPPING']);
+
 // Sessions
 export const sessionTable = pgTable('session', {
-  sessionToken: text('sessionToken').notNull().primaryKey(),
+  sessionToken: text('session_token').notNull().primaryKey(),
   userId: uuid('user_id')
     .notNull()
     .references(() => userTable.id, { onDelete: 'cascade' }),
@@ -74,7 +81,7 @@ export const accountTable = pgTable(
       .references(() => userTable.id, { onDelete: 'cascade' }),
     type: text('type').$type<AdapterAccountType>().notNull(),
     provider: text('provider').notNull(),
-    providerAccountId: text('providerAccountId').notNull(),
+    providerAccountId: text('provider_account_id').notNull(),
     refresh_token: text('refresh_token'),
     access_token: text('access_token'),
     expires_at: integer('expires_at'),
@@ -159,18 +166,30 @@ export const productTable = pgTable(
   {
     id: uuid('id').primaryKey().notNull().defaultRandom(),
     title: text('title').notNull(),
-    sku: varchar('sku', { length: 255 }).notNull(),
     slug: text('slug').notNull(),
+    sku: text('sku').notNull(),
     shortDescription: varchar('short_description', { length: 255 }),
     productDescription: text('product_description'),
-    regularPrice: integer('regular_price').notNull(),
-    salePrice: integer('sale_price'),
-    stock: integer('stock').default(0),
-    weight: integer('weight').default(0),
     note: text('note'),
     status: productStatus('status').default('DRAFT').notNull(),
     images: text('images').array(),
-    metadata: jsonb('metadata').$type<ProductMetadata>(),
+    price: integer('price').notNull().default(0),
+    salePrice: integer('sale_price'),
+    stock: integer('stock'),
+    variants: jsonb('variants')
+      .notNull()
+      .default([])
+      .$type<Array<ProductVariant>>(),
+    attributes: jsonb('attributes')
+      .notNull()
+      .default([])
+      .$type<Array<ProductAttribute>>(),
+    metadata: jsonb('metadata')
+      .notNull()
+      .default({
+        details: {},
+      })
+      .$type<ProductMetadata>(),
     createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', {
       mode: 'date',
@@ -191,115 +210,115 @@ export const productTable = pgTable(
 export const productRelations = relations(productTable, ({ one, many }) => ({
   orders: many(orderItemTable),
   reviews: many(reviewTable),
-  variants: many(variantTable),
+  // variants: many(variantTable),
   productsToCategories: many(productToCategoryTable),
-  productsToAttributes: many(productToAttributeTable),
+  // productsToAttributes: many(productToAttributeTable),
 }));
 
 // Product Attributes
-export const productToAttributeTable = pgTable(
-  'product_to_attribute',
-  {
-    productId: uuid('product_id')
-      .notNull()
-      .references(() => productTable.id),
-    attributeId: uuid('attribute_id')
-      .notNull()
-      .references(() => attributeTable.id),
-  },
-  (t) => ({
-    pk: primaryKey({
-      columns: [t.productId, t.attributeId],
-    }),
-  }),
-);
+// export const productToAttributeTable = pgTable(
+//   'product_to_attribute',
+//   {
+//     productId: uuid('product_id')
+//       .notNull()
+//       .references(() => productTable.id),
+//     attributeId: uuid('attribute_id')
+//       .notNull()
+//       .references(() => attributeTable.id),
+//   },
+//   (t) => ({
+//     pk: primaryKey({
+//       columns: [t.productId, t.attributeId],
+//     }),
+//   }),
+// );
 
-export const productToAttributeRelations = relations(
-  productToAttributeTable,
-  ({ one, many }) => ({
-    product: one(productTable, {
-      fields: [productToAttributeTable.productId],
-      references: [productTable.id],
-    }),
-    attribute: one(attributeTable, {
-      fields: [productToAttributeTable.attributeId],
-      references: [attributeTable.id],
-    }),
-  }),
-);
+// export const productToAttributeRelations = relations(
+//   productToAttributeTable,
+//   ({ one, many }) => ({
+//     product: one(productTable, {
+//       fields: [productToAttributeTable.productId],
+//       references: [productTable.id],
+//     }),
+//     attribute: one(attributeTable, {
+//       fields: [productToAttributeTable.attributeId],
+//       references: [attributeTable.id],
+//     }),
+//   }),
+// );
 
 // Attributes
-export const attributeTable = pgTable('attribute', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  attributeName: varchar('attribute_name', { length: 255 }),
-});
+// export const attributeTable = pgTable('attribute', {
+//   id: uuid('id').primaryKey().defaultRandom(),
+//   attributeName: varchar('attribute_name', { length: 255 }),
+// });
 
-export const attributeRelations = relations(
-  attributeTable,
-  ({ one, many }) => ({
-    productsToAttributes: many(productToAttributeTable),
-    attributeValues: many(attributeValueTable),
-  }),
-);
+// export const attributeRelations = relations(
+//   attributeTable,
+//   ({ one, many }) => ({
+//     productsToAttributes: many(productToAttributeTable),
+//     attributeValues: many(attributeValueTable),
+//   }),
+// );
 
 // Attribute Values
-export const attributeValueTable = pgTable('attribute_value', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  attributeId: uuid('attribute_id').references(() => attributeTable.id),
-  value: varchar('value', { length: 255 }),
-  // color: varchar('color', { length: 50 }),
-});
+// export const attributeValueTable = pgTable('attribute_value', {
+//   id: uuid('id').primaryKey().defaultRandom(),
+//   attributeId: uuid('attribute_id').references(() => attributeTable.id),
+//   value: varchar('value', { length: 255 }),
+// });
 
-export const attributeValueRelations = relations(
-  attributeValueTable,
-  ({ one, many }) => ({
-    attribute: one(attributeTable, {
-      fields: [attributeValueTable.attributeId],
-      references: [attributeTable.id],
-    }),
-  }),
-);
+// export const attributeValueRelations = relations(
+//   attributeValueTable,
+//   ({ one, many }) => ({
+//     attribute: one(attributeTable, {
+//       fields: [attributeValueTable.attributeId],
+//       references: [attributeTable.id],
+//     }),
+//   }),
+// );
 
 // Variants
-export const variantTable = pgTable('variant', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  productId: uuid('product_id').references(() => productTable.id),
-  variantAttributeValueId: uuid('variant_attribute_value_id'),
-  sku: varchar('sku', { length: 255 }),
-  stock: integer('stock'),
-  // price: numeric('price'),
-});
+// export const variantTable = pgTable('variant', {
+//   id: uuid('id').primaryKey().defaultRandom(),
+//   productId: uuid('product_id').references(() => productTable.id),
+//   sku: varchar('sku', { length: 255 }).unique(),
+//   price: integer('price').notNull(),
+//   salePrice: integer('sale_price'),
+//   weight: integer('weight').default(0),
+//   stock: integer('stock'),
+// });
 
-export const variantRelations = relations(variantTable, ({ one, many }) => ({
-  product: one(productTable, {
-    fields: [variantTable.productId],
-    references: [productTable.id],
-  }),
-  variantValues: many(variantValueTable),
-}));
+// export const variantRelations = relations(variantTable, ({ one, many }) => ({
+//   product: one(productTable, {
+//     fields: [variantTable.productId],
+//     references: [productTable.id],
+//   }),
+//   // variantValues: many(variantValueTable),
+// }));
 
 // Variant Values
-export const variantValueTable = pgTable('variant_value', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  variantId: uuid('variant_id').references(() => variantTable.id),
-  attributeValueId: uuid('attribute_value_id').references(
-    () => attributeValueTable.id,
-  ),
-});
+// export const variantValueTable = pgTable('variant_value', {
+//   id: uuid('id').primaryKey().defaultRandom(),
+//   variantId: uuid('variant_id').references(() => variantTable.id),
+//   attributeValueId: uuid('attribute_value_id').references(
+//     () => attributeValueTable.id,
+//   ),
+// });
 
-export const variantValueRelations = relations(
-  variantValueTable,
-  ({ one, many }) => ({
-    variant: one(variantTable, {
-      fields: [variantValueTable.variantId],
-      references: [variantTable.id],
-    }),
-    attributeValue: one(attributeValueTable, {
-      fields: [variantValueTable.attributeValueId],
-      references: [attributeValueTable.id],
-    }),
-  }),
-);
+// export const variantValueRelations = relations(
+//   variantValueTable,
+//   ({ one, many }) => ({
+//     variant: one(variantTable, {
+//       fields: [variantValueTable.variantId],
+//       references: [variantTable.id],
+//     }),
+//     attributeValue: one(attributeValueTable, {
+//       fields: [variantValueTable.attributeValueId],
+//       references: [attributeValueTable.id],
+//     }),
+//   }),
+// );
 
 // Categories
 export const categoryTable = pgTable(
@@ -368,7 +387,7 @@ export const productCategoryRelations = relations(
 );
 
 // Coupons
-export const coupons = pgTable('coupons', {
+export const couponTable = pgTable('coupon', {
   id: uuid('id').primaryKey().defaultRandom(),
   code: varchar('code', { length: 50 }),
   description: text('description'),
@@ -383,6 +402,10 @@ export const coupons = pgTable('coupons', {
   createdBy: uuid('created_by'),
   updatedBy: uuid('updated_by'),
 });
+
+export const couponRelations = relations(couponTable, ({ many }) => ({
+  orders: many(orderTable),
+}));
 
 // Carts
 export const cartTable = pgTable(
@@ -428,11 +451,7 @@ export const cartItemTable = pgTable(
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    variantId: uuid('variant_id').references(() => variantTable.id, {
-      onDelete: 'set null',
-      onUpdate: 'cascade',
-    }),
-    price: integer('price').notNull(),
+    variantId: text('variant_id'),
     cartId: uuid('cart_id')
       .notNull()
       .references(() => cartTable.id, {
@@ -449,10 +468,14 @@ export const cartItemTable = pgTable(
   },
   (table) => {
     return {
-      productIdCartIdKey: uniqueIndex('cartItem_productId_cartId_key').on(
-        table.productId,
-        table.cartId,
-      ),
+      // productIdCartIdKey: uniqueIndex('cartItem_productId_cartId_key').on(
+      //   table.productId,
+      //   table.cartId,
+      // ),
+
+      productIdVariantIdKey: uniqueIndex(
+        'cart_item__product_id__variant_id__key',
+      ).on(table.productId, table.variantId),
     };
   },
 );
@@ -462,10 +485,10 @@ export const cartItemRelations = relations(cartItemTable, ({ one, many }) => ({
     fields: [cartItemTable.productId],
     references: [productTable.id],
   }),
-  variant: one(variantTable, {
-    fields: [cartItemTable.variantId],
-    references: [variantTable.id],
-  }),
+  // variant: one(variantTable, {
+  //   fields: [cartItemTable.variantId],
+  //   references: [variantTable.id],
+  // }),
   cart: one(cartTable, {
     fields: [cartItemTable.cartId],
     references: [cartTable.id],
@@ -475,6 +498,7 @@ export const cartItemRelations = relations(cartItemTable, ({ one, many }) => ({
 // Addresses
 export const addressTable = pgTable('address', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
+  type: addressType('type'),
   userId: uuid('user_id').references(() => userTable.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',
@@ -505,8 +529,12 @@ export const addressRelations = relations(addressTable, ({ one, many }) => ({
 // Orders
 export const orderTable = pgTable('order', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
-  status: orderStatus('status').default('PENDING').notNull(),
+  status: orderStatus('status').default('PAID').notNull(),
   total: integer('total').notNull(),
+  subtotal: integer('subtotal').notNull(),
+  tax: integer('tax').notNull(),
+  shipping: integer('shipping').notNull(),
+  couponId: uuid('coupon_id').references(() => couponTable.id),
   userId: uuid('user_id').references(() => userTable.id, {
     onDelete: 'set null',
     onUpdate: 'cascade',
@@ -530,7 +558,10 @@ export const orderTable = pgTable('order', {
 
 export const orderRelations = relations(orderTable, ({ one, many }) => ({
   items: many(orderItemTable),
-
+  coupon: one(couponTable, {
+    fields: [orderTable.couponId],
+    references: [couponTable.id],
+  }),
   user: one(userTable, {
     fields: [orderTable.userId],
     references: [userTable.id],
@@ -550,10 +581,7 @@ export const orderItemTable = pgTable(
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    variantId: uuid('variant_id').references(() => variantTable.id, {
-      onDelete: 'set null',
-      onUpdate: 'cascade',
-    }),
+    variantId: text('variant_id'),
     orderId: uuid('order_id')
       .notNull()
       .references(() => orderTable.id, {
@@ -568,12 +596,11 @@ export const orderItemTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (orderItem) => {
+  (table) => {
     return {
-      productIdOrderIdKey: uniqueIndex('orderItem_productId_orderId_key').on(
-        orderItem.productId,
-        orderItem.orderId,
-      ),
+      productIdVariantIdKey: uniqueIndex(
+        'order_item__product_id__variant_id__key',
+      ).on(table.productId, table.variantId),
     };
   },
 );
