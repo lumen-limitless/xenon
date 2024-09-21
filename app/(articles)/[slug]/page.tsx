@@ -1,5 +1,5 @@
+import { SanityContent } from '@/components/sanity-content';
 import { client } from '@/sanity/lib/client';
-import { PortableText } from '@portabletext/react';
 import { Metadata, ResolvingMetadata } from 'next';
 import { groq } from 'next-sanity';
 import { notFound } from 'next/navigation';
@@ -11,7 +11,7 @@ type PageProps = {
 
 async function getArticle(slug: string): Promise<{
   title: string;
-  content: any;
+  content: any[];
   slug: string;
 } | null> {
   try {
@@ -47,13 +47,11 @@ export default async function Page({ params }: PageProps) {
   const article = await getArticle(params.slug);
   if (article === null) return notFound();
 
+  console.debug(article);
+
   return (
-    <>
-      <section className="flex flex-grow flex-col py-10">
-        <div className="container h-full flex-1 border-x">
-          <PortableText value={article.content} />
-        </div>
-      </section>
-    </>
+    <div className="markdown-content">
+      <SanityContent content={article.content} />
+    </div>
   );
 }

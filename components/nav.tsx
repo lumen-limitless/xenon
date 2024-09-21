@@ -1,4 +1,5 @@
 'use client';
+
 import type { CartInfo } from '@/types';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { Menu } from 'lucide-react';
@@ -31,20 +32,28 @@ type NavProps = {
 export const Nav: React.FC<NavProps> = ({ session, cart }) => {
   return (
     <>
-      <div className="container flex h-16 w-full items-center" id="navigation">
-        <MobileNav />
+      <div
+        className="container relative flex h-16 w-full items-center justify-between"
+        id="navigation"
+      >
+        <div className="flex items-center">
+          <MobileNav />
+        </div>
 
-        <Link href="/" className="ml-2 md:ml-0">
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
           <LogoSVG className="h-6" />
           <span className="sr-only">Xenon</span>
         </Link>
-        <NavigationMenu className="ml-auto">
-          <div className="hidden px-1 md:block">
-            <SearchBar />
-          </div>
-          <NavigationMenuList>
-            <Account session={session} />
 
+        <NavigationMenu>
+          <NavigationMenuList>
+            <div className="hidden px-1 md:block">
+              <SearchBar />
+            </div>
+            <Account session={session} />
             <NavigationMenuItem>
               <div className="relative">
                 <CartSheet cart={cart} />

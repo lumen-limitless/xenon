@@ -1,18 +1,27 @@
 'use client';
 
 import {
+  Boxes,
   Home,
   LineChart,
   LogOut,
   NotebookPen,
   Package,
   Package2,
+  PanelLeft,
   Settings,
   ShoppingCart,
   Users2,
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import {
   Tooltip,
   TooltipContent,
@@ -45,6 +54,11 @@ const navItems = [
     href: '/manage/users',
   },
   {
+    title: 'Categories',
+    icon: Boxes,
+    href: '/manage/categories',
+  },
+  {
     title: 'Content Studio',
     icon: NotebookPen,
     href: '/studio',
@@ -56,7 +70,7 @@ const navItems = [
   },
 ];
 
-export const AdminSideNav: React.FC<AdminSideNavProps> = ({}) => {
+export const AdminDesktopNav: React.FC<AdminSideNavProps> = ({}) => {
   const pathname = usePathname();
 
   return (
@@ -117,6 +131,61 @@ export const AdminSideNav: React.FC<AdminSideNavProps> = ({}) => {
           </Tooltip>
         </nav>
       </aside>
+    </>
+  );
+};
+
+type AdminMobileNavProps = {};
+export const AdminMobileNav: React.FC<AdminMobileNavProps> = ({}) => {
+  const pathname = usePathname();
+
+  return (
+    <>
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button size="icon" variant="outline" className="sm:hidden">
+            <PanelLeft className="h-5 w-5" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="sm:max-w-xs">
+          <nav className="grid gap-6 text-lg font-medium">
+            <Link
+              href="#"
+              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            >
+              <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+              <span className="sr-only">
+                {process.env.NEXT_PUBLIC_APP_NAME}
+              </span>
+            </Link>
+            {navItems.map((item) => (
+              <SheetClose asChild>
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-4 px-2.5',
+                    pathname === item.href
+                      ? 'text-foreground'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.title}
+                </Link>
+              </SheetClose>
+            ))}
+            <Link
+              href="/"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="h-5 w-5" />
+              Leave Admin Panel
+            </Link>
+          </nav>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };
