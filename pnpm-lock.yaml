@@ -208,7 +208,7 @@ importers:
         version: 18.3.1
       react-day-picker:
         specifier: ^9.0.7
-        version: 9.0.7(react@18.3.1)
+        version: 9.1.1(react@18.3.1)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -1108,6 +1108,9 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@date-fns/tz@1.0.2':
+    resolution: {integrity: sha512-iKxj0kXMy7Qe6vjK+flz33cpy2j0dnTKT5i54p3fFlB411J47aSs6HBg7LOO5X9LjDi2iNlctD9rFn738ySOGQ==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -4308,6 +4311,9 @@ packages:
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+
   date-now@1.0.1:
     resolution: {integrity: sha512-yiizelQCqYLUEVT4zqYihOW6Ird7Qyc6fD3Pv5xGxk4+Jz0rsB1dMN2KyNV6jgOHYh5K+sPGCSOknQN4Upa3pg==}
 
@@ -7077,8 +7083,8 @@ packages:
     peerDependencies:
       react: ^15.3.0 || 16 || 17 || 18
 
-  react-day-picker@9.0.7:
-    resolution: {integrity: sha512-JTa9vhhfxWSVfhzTFG5rEXynsDb6zi3NG+0EHbs5JBZuGFlNbg8qyagh9YtIR1ccGThwY339CAqFOH6op55omw==}
+  react-day-picker@9.1.1:
+    resolution: {integrity: sha512-z+xPpd5N42kIqt27XEIyawJgKEya2l5GJMTpZ9FIclqdu40BFfKR4rjQlnXz05h2Gxh0s2F72gL/JCYWuteCIg==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -9590,6 +9596,8 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@date-fns/tz@1.0.2': {}
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -13061,6 +13069,8 @@ snapshots:
 
   date-fns@3.6.0: {}
 
+  date-fns@4.1.0: {}
+
   date-now@1.0.1: {}
 
   debounce@1.0.0:
@@ -13567,7 +13577,7 @@ snapshots:
       eslint: 9.8.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@9.8.0))(eslint@9.8.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@9.8.0))(eslint@9.8.0))(eslint@9.8.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1)(eslint@9.8.0)
       eslint-plugin-jsx-a11y: 6.9.0(eslint@9.8.0)
       eslint-plugin-react: 7.35.0(eslint@9.8.0)
       eslint-plugin-react-hooks: 4.6.2(eslint@9.8.0)
@@ -13595,7 +13605,7 @@ snapshots:
       enhanced-resolve: 5.17.1
       eslint: 9.8.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@9.8.0))(eslint@9.8.0))(eslint@9.8.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@9.8.0))(eslint@9.8.0))(eslint@9.8.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1)(eslint@9.8.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.6
       is-core-module: 2.15.0
@@ -13617,7 +13627,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@9.8.0))(eslint@9.8.0))(eslint@9.8.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.2.0(eslint@9.8.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1)(eslint@9.8.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -16240,9 +16250,10 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
 
-  react-day-picker@9.0.7(react@18.3.1):
+  react-day-picker@9.1.1(react@18.3.1):
     dependencies:
-      date-fns: 3.6.0
+      '@date-fns/tz': 1.0.2
+      date-fns: 4.1.0
       react: 18.3.1
 
   react-dom@18.3.1(react@18.3.1):
