@@ -40,7 +40,7 @@ const formDataSchema = z.object({
 export async function addProductAction(
   uploadedImages: Array<CloudinaryUploadWidgetInfo>,
   formData: FormData,
-): Promise<{ message: string }> {
+): Promise<void> {
   const session = await auth();
 
   if (!session || session.user.role !== 'ADMIN') {
@@ -81,8 +81,6 @@ export async function addProductAction(
   } catch (err) {
     console.error(err);
     if (err instanceof z.ZodError) {
-      return { message: `Validation error: ${err.errors[0].message}` };
     }
-    return { message: 'Error adding product' };
   }
 }

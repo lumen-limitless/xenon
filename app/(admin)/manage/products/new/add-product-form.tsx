@@ -18,10 +18,6 @@ type AddProductFormProps = {
   categories: Array<typeof categoryTable.$inferSelect>;
 };
 
-const initialState = {
-  message: null,
-};
-
 export const AddProductForm: React.FC<AddProductFormProps> = ({
   categories,
 }) => {
