@@ -33,10 +33,8 @@ type CartSheetProps = {
   cart: CartInfo | null;
 };
 export const CartSheet: React.FC<CartSheetProps> = ({ cart }) => {
-  const { cartOpen, toggleCartOpen } = useStore((state) => ({
-    cartOpen: state.cartOpen,
-    toggleCartOpen: state.toggleCartOpen,
-  }));
+  const cartOpen = useStore((state) => state.cartOpen);
+  const toggleCartOpen = useStore((state) => state.toggleCartOpen);
   const [isPending, startTransition] = useTransition();
 
   return (
